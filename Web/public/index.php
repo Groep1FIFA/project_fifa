@@ -2,7 +2,7 @@
 
     <div class="main-content">
 
-        <!-- site's main content goes here -->
+
 
 
     </div>
