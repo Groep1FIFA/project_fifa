@@ -23,3 +23,11 @@ $teams = $db_conn->query($sqlSelTeams)->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
+<header>
+    <ul>
+        <li>
+            <a href="index.php">Home</a>
+            <a href="admin_panel.php">admin_panel</a>
+        </li>
+    </ul>
+</header>

@@ -7,7 +7,7 @@
  */
 require ('database.php');
 
-if (isset($_POST['firstname']) && isset($_POST['lastname']) && isset($_POST['personal_id'])){
+if (!empty($_POST['firstname']) && !empty($_POST['lastname']) && !empty($_POST['personal_id'])){
     $fname = $_POST['firstname'];
     $lname = $_POST['lastname'];
     $id = $_POST['personal_id'];
