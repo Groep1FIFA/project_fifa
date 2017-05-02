@@ -1,7 +1,7 @@
 <?php require(realpath(__DIR__) . '/templates/header.php'); ?>
 
     <div class="main-content">
-
+<h2>=====================================wedstrijdschema=====================================</h2>
         <div>
             <?php
                 
@@ -29,6 +29,7 @@
                 }
             ?>
         </div>
+        <h2>=====================================teams + players=====================================</h2>
         <div class="">
             <?php
 
@@ -48,7 +49,7 @@
             }
             ?>
         </div>
-        
+        <h2>=====================================topscoorders=====================================</h2>
         <div class="">
             <?php
                 $playerGoals = "SELECT * FROM tbl_players ORDER BY goals DESC";
@@ -65,5 +66,5 @@
             ?>
         </div>
     </div>
-
+<h2>=====================================aanmelddinges=====================================</h2>
 <?php require(realpath(__DIR__) . '/templates/footer.php');
