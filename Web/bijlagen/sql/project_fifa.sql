@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Gegenereerd op: 21 apr 2017 om 11:15
+-- Gegenereerd op: 01 mei 2017 om 14:07
 -- Serverversie: 10.1.21-MariaDB
 -- PHP-versie: 5.6.30
 
@@ -74,7 +74,7 @@ INSERT INTO `tbl_matches` (`id`, `team_id_a`, `team_id_b`, `score_team_a`, `scor
 CREATE TABLE `tbl_players` (
   `id` int(11) UNSIGNED NOT NULL,
   `student_id` varchar(10) NOT NULL,
-  `team_id` int(11) UNSIGNED NOT NULL,
+  `team_id` int(11) UNSIGNED DEFAULT NULL,
   `first_name` varchar(255) NOT NULL,
   `last_name` varchar(255) NOT NULL,
   `goals` int(10) NOT NULL DEFAULT '0',
@@ -94,7 +94,8 @@ INSERT INTO `tbl_players` (`id`, `student_id`, `team_id`, `first_name`, `last_na
 (5, 'd74745', 2, 'Luuk', 'de Jong', 0, '2017-04-13 09:48:23', NULL),
 (6, 'd987665', 2, 'Siem', 'de Jong', 0, '2017-04-13 09:48:23', NULL),
 (7, 'd11555', 2, 'Jeroen', 'Zoet', 0, '2017-04-13 09:48:23', NULL),
-(8, 'd544566', 2, 'Hector', 'Moreno', 0, '2017-04-13 09:48:23', NULL);
+(8, 'd544566', 2, 'Hector', 'Moreno', 0, '2017-04-13 09:48:23', NULL),
+(21, 'd11', NULL, 'dd', 'dd', 0, '2017-04-21 12:10:26', NULL);
 
 -- --------------------------------------------------------
 
@@ -190,7 +191,7 @@ ALTER TABLE `tbl_matches`
 -- AUTO_INCREMENT voor een tabel `tbl_players`
 --
 ALTER TABLE `tbl_players`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 --
 -- AUTO_INCREMENT voor een tabel `tbl_poules`
 --
