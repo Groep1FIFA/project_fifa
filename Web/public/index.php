@@ -1,7 +1,7 @@
 <?php require(realpath(__DIR__) . '/templates/header.php'); ?>
 
     <div class="main-content">
-
+<h2>=====================================wedstrijdschema=====================================</h2>
         <div>
             <?php
                 
@@ -12,43 +12,45 @@
                     foreach ($matchTeamsA as $matchTeamA) {
                         echo "<ul>
                                     <li>{$matchTeamA['name']}</li>
-                              </ul>";
+                              ";
                     }
-                    
+
                     $matchTeamsB = "SELECT * FROM tbl_teams WHERE id='{$match['team_id_b']}'";
                     $matchTeamsB = $db_conn->query($matchTeamsB);
                     foreach ($matchTeamsB as $matchTeamB){
-                        echo "<ul>
+                        echo "
                                 <li>{$matchTeamB['name']}</li>
-                              </ul>";
+                              ";
                     }
     
-                    echo "<ul>
+                    echo "
                                 <li>{$match['start_time']}</li>
                             </ul>";
                 }
             ?>
         </div>
+        <h2>=====================================teams + players=====================================</h2>
+
         <div class="">
             <?php
 
             foreach ($teams as $team){
                 echo "<ul>
                         <li>{$team['name']}</li>
-                       </ul>";
+                       ";
                 $teamPlayers = "SELECT * FROM tbl_players WHERE team_id='{$team['id']}'";
                 $teamPlayers = $db_conn->query($teamPlayers);
                 foreach ($teamPlayers as $teamPlayer){
                     echo
                     "<ul>
-                        <li>{$teamPlayer['first_name']}</li>
-                    </ul>
-                    ";
+                        <li>{$teamPlayer['first_name']} {$teamPlayer['last_name']}</li>
+                    </ul>";
                 }
+                echo "</ul>";
             }
             ?>
         </div>
-        
+        <h2>=====================================topscoorders=====================================</h2>
         <div class="">
             <?php
                 $playerGoals = "SELECT * FROM tbl_players ORDER BY goals DESC";
@@ -65,5 +67,5 @@
             ?>
         </div>
     </div>
-
+<h2>=====================================aanmelddinges=====================================</h2>
 <?php require(realpath(__DIR__) . '/templates/footer.php');
