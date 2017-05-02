@@ -27,7 +27,8 @@
     </div>
 
     <div class="players">
-        <h2>Unasigned Players</h2>
+        <h2>Players</h2>
+        <h3>Unasigned Players</h3>
             <?php
                 $sqlSel = "SELECT * FROM tbl_players WHERE team_id IS NULL ";
                 $players = $db_conn->query($sqlSel);
@@ -37,15 +38,15 @@
                         <li>{$player['last_name']}</li>
                     </ul>
                     <form action=\"../app/admin_manager.php\" method=\"post\">
-                        <label for=\"addTeam\"></label>
-                        <input type=\"text\" name=\"addTeam\" placeholder=\"Team Name\">
-                        <input type=\"hidden\" name=\"form-type\" value=\"addTeam\">
+                        <label for=\"addToTeam\"></label>
+                        <input type=\"text\" name=\"addToTeam\" placeholder=\"Team Name\">
+                        <input type=\"hidden\" name=\"form-type\" value=\"addToTeam\">
                         <input type=\"hidden\" name=\"player_id\" value=\"{$player['id']}\">
                         <input type=\"submit\" value=\"Add\">
                     </form>";
                 }
             ?>
-        <h2>Singed Players</h2>
+        <h3>Asinged Players</h3>
         <?php
             $sqlSel = "SELECT * FROM tbl_players WHERE team_id IS NOT NULL ";
             $players = $db_conn->query($sqlSel);
@@ -66,8 +67,37 @@
             }
         ?>
     </div>
+    <div class="poules">
+        <h2>Poules</h2>
+        <h3>Unasigned Teams</h3>
+        <?php
+        $sqlSel = "SELECT * FROM tbl_teams WHERE poule_id IS NULL";
+        $teams = $db_conn->query($sqlSel);
+        foreach ($teams as $team){
+            echo "<ul>
+                        <li>{$team['name']}</li>
+                    </ul>
+                    <form action=\"../app/admin_manager.php\" method=\"post\">
+                        <label for=\"pouleName\"></label>
+                        <select name=\"pouleName\" id=\"\">
+                            <option value=\"A\">Poule A</option>
+                            <option value=\"B\">Poule B</option>
+                            <option value=\"C\">Poule C</option>
+                            <option value=\"D\">Poule D</option>
+                        </select>
+                        <input type=\"hidden\" name=\"form-type\" value=\"addToPoule\">
+                        <input type=\"hidden\" name=\"team_id\" value=\"{$team['id']}\">
+                        <input type=\"submit\" value=\"Add\">
+                    </form>";
+        }
+        ?>
+        <h3>Asigned Teams</h3>
+        <?php
 
 
+        ?>
+    </div>
+<!--    <input type="text" name="addToPoule" placeholder="Poule">-->
 </div>
 
 <?php require(realpath(__DIR__) . '/templates/footer.php');

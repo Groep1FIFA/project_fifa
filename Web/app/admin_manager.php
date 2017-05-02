@@ -29,9 +29,9 @@ if (isset($_POST['form-type'])){
             header("Location: ../public/admin_panel.php?message=$message");
         }
     }
-    if ($formType == 'addTeam'){
-        if (!empty($_POST['addTeam'])){
-            $addTeam = $_POST['addTeam'];
+    if ($formType == 'addToTeam'){
+        if (!empty($_POST['addToTeam'])){
+            $addTeam = $_POST['addToTeam'];
             $playerId = $_POST['player_id'];
 
             $sqlSel = "SELECT * FROM tbl_teams WHERE name = '$addTeam'";
@@ -54,7 +54,7 @@ if (isset($_POST['form-type'])){
             }
         }
     }
-    if ($formType == 'changeTeam'){
+    if ($formType == 'addTeam'){
         $playerId = $_POST['player_id'];
 
         $sqlSel = "SELECT * FROM tbl_players WHERE id = '$playerId'";
@@ -65,6 +65,11 @@ if (isset($_POST['form-type'])){
 
         $message = "unasigned {$playerName[0]['first_name']} {$playerName[0]['last_name']}";
         header("Location: ../public/admin_panel.php?message=$message");
+    }
+    if ($formType == 'addToPoule'){
+        $pouleName = $_POST['pouleName'];
+
+        $sqlUpd = "UPDATE tbl_teams SET ";
     }
     else{
         $message = 'Failed';
