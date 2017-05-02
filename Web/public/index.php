@@ -12,18 +12,18 @@
                     foreach ($matchTeamsA as $matchTeamA) {
                         echo "<ul>
                                     <li>{$matchTeamA['name']}</li>
-                              </ul>";
+                              ";
                     }
 
                     $matchTeamsB = "SELECT * FROM tbl_teams WHERE id='{$match['team_id_b']}'";
                     $matchTeamsB = $db_conn->query($matchTeamsB);
                     foreach ($matchTeamsB as $matchTeamB){
-                        echo "<ul>
+                        echo "
                                 <li>{$matchTeamB['name']}</li>
-                              </ul>";
+                              ";
                     }
     
-                    echo "<ul>
+                    echo "
                                 <li>{$match['start_time']}</li>
                             </ul>";
                 }
@@ -37,16 +37,16 @@
             foreach ($teams as $team){
                 echo "<ul>
                         <li>{$team['name']}</li>
-                       </ul>";
+                       ";
                 $teamPlayers = "SELECT * FROM tbl_players WHERE team_id='{$team['id']}'";
                 $teamPlayers = $db_conn->query($teamPlayers);
                 foreach ($teamPlayers as $teamPlayer){
                     echo
                     "<ul>
-                        <li>{$teamPlayer['first_name']}</li>
-                    </ul>
-                    ";
+                        <li>{$teamPlayer['first_name']} {$teamPlayer['last_name']}</li>
+                    </ul>";
                 }
+                echo "</ul>";
             }
             ?>
         </div>

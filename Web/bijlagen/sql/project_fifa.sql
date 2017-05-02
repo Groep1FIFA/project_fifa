@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Gegenereerd op: 01 mei 2017 om 14:07
+-- Gegenereerd op: 02 mei 2017 om 16:02
 -- Serverversie: 10.1.21-MariaDB
 -- PHP-versie: 5.6.30
 
@@ -95,7 +95,9 @@ INSERT INTO `tbl_players` (`id`, `student_id`, `team_id`, `first_name`, `last_na
 (6, 'd987665', 2, 'Siem', 'de Jong', 0, '2017-04-13 09:48:23', NULL),
 (7, 'd11555', 2, 'Jeroen', 'Zoet', 0, '2017-04-13 09:48:23', NULL),
 (8, 'd544566', 2, 'Hector', 'Moreno', 0, '2017-04-13 09:48:23', NULL),
-(21, 'd11', NULL, 'dd', 'dd', 0, '2017-04-21 12:10:26', NULL);
+(23, 'd233407', NULL, 'Youri', 'van der Sande', 10, '2017-05-02 14:30:33', NULL),
+(24, 'd228788', 5, 'Alex', 'Haverkamp', 0, '2017-05-02 14:31:07', NULL),
+(25, 'd167788', 3, 'Dave', 'van Oosterhout', 0, '2017-05-02 15:43:00', NULL);
 
 -- --------------------------------------------------------
 
@@ -118,7 +120,7 @@ CREATE TABLE `tbl_poules` (
 
 CREATE TABLE `tbl_teams` (
   `id` int(11) UNSIGNED NOT NULL,
-  `poule_id` int(11) NOT NULL,
+  `poule_id` int(11) DEFAULT NULL,
   `name` varchar(255) NOT NULL,
   `points` int(10) NOT NULL DEFAULT '0',
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -131,7 +133,10 @@ CREATE TABLE `tbl_teams` (
 
 INSERT INTO `tbl_teams` (`id`, `poule_id`, `name`, `points`, `created_at`, `deleted_at`) VALUES
 (1, 1, 'Ajax', 0, '2017-04-13 09:42:45', NULL),
-(2, 1, 'PSV', 0, '2017-04-13 09:42:45', NULL);
+(2, 1, 'PSV', 0, '2017-04-13 09:42:45', NULL),
+(3, NULL, 'FC Twente', 0, '2017-05-01 16:22:55', NULL),
+(4, NULL, 'NEC', 0, '2017-05-02 13:56:57', NULL),
+(5, NULL, 'NAC', 0, '2017-05-02 13:57:03', NULL);
 
 --
 -- Indexen voor geëxporteerde tabellen
@@ -191,7 +196,7 @@ ALTER TABLE `tbl_matches`
 -- AUTO_INCREMENT voor een tabel `tbl_players`
 --
 ALTER TABLE `tbl_players`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 --
 -- AUTO_INCREMENT voor een tabel `tbl_poules`
 --
@@ -201,7 +206,7 @@ ALTER TABLE `tbl_poules`
 -- AUTO_INCREMENT voor een tabel `tbl_teams`
 --
 ALTER TABLE `tbl_teams`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- Beperkingen voor geëxporteerde tabellen
 --
