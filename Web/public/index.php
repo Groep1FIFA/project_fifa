@@ -1,7 +1,7 @@
 <?php require(realpath(__DIR__) . '/templates/header.php'); ?>
 
     <div class="main-content">
-
+        <p>------------------------------------------------------------------</p>
         <div>
             <?php
                 
@@ -14,7 +14,7 @@
                                     <li>{$matchTeamA['name']}</li>
                               </ul>";
                     }
-                    
+
                     $matchTeamsB = "SELECT * FROM tbl_teams WHERE id='{$match['team_id_b']}'";
                     $matchTeamsB = $db_conn->query($matchTeamsB);
                     foreach ($matchTeamsB as $matchTeamB){
@@ -29,6 +29,7 @@
                 }
             ?>
         </div>
+        <p>------------------------------------------------------------------</p>
         <div class="">
             <?php
 
@@ -48,7 +49,7 @@
             }
             ?>
         </div>
-        
+        <p>------------------------------------------------------------------</p>
         <div class="">
             <?php
                 $playerGoals = "SELECT * FROM tbl_players ORDER BY goals DESC";
@@ -65,5 +66,5 @@
             ?>
         </div>
     </div>
-
+    <p>------------------------------------------------------------------</p>
 <?php require(realpath(__DIR__) . '/templates/footer.php');
