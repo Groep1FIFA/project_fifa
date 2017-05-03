@@ -68,8 +68,7 @@
         ?>
     </div>
     <div class="poules">
-        <h2>Poules</h2>
-        <h3>Unasigned Teams</h3>
+        <h2>Unasigned Teams</h2>
         <?php
         $sqlSel = "SELECT * FROM tbl_teams WHERE poule_id IS NULL";
         $teams = $db_conn->query($sqlSel);
@@ -91,9 +90,31 @@
                     </form>";
         }
         ?>
-        <h3>Asigned Teams</h3>
+        <h2>Poules</h2>
         <?php
-
+            $sqlSel = "SELECT * FROM tbl_teams WHERE poule_id IS NOT NULL";
+            $teams = $db_conn->query($sqlSel);
+            foreach ($poules as $poule){
+                echo "<ul>
+                    <li>{$poule['naam']}";
+                    $sqlSel = "SELECT * FROM tbl_poules WHERE naam = '{$poule['naam']}'";
+                        $pouleId = $db_conn->query($sqlSel)->fetchAll(PDO::FETCH_ASSOC);
+                        $pouleId = $pouleId[0]['id'];
+                        $sqlSel = "SELECT * FROM tbl_teams WHERE poule_id = '$pouleId'";
+                        $teams = $db_conn->query($sqlSel);
+            
+                        foreach ($teams as $team){
+                            echo "<ul><li>{$team['name']}</li></ul>
+                            <form action=\"../app/admin_manager.php\" method=\"post\">
+                                <label for=\"changePoule\"></label>
+                                <input type=\"hidden\" name=\"form-type\" value=\"changePoule\">
+                                <input type=\"hidden\" name=\"changePoule\" value=\"{$team['id']}\">
+                                <input type=\"submit\" value=\"Change poule\">
+                            </form>";
+                        }
+                    echo "</li>
+                    </ul>";
+            }
 
         ?>
     </div>

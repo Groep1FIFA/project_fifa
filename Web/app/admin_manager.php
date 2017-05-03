@@ -29,7 +29,7 @@ if (isset($_POST['form-type'])){
             header("Location: ../public/admin_panel.php?message=$message");
         }
     }
-    if ($formType == 'addToTeam'){
+    elseif ($formType == 'addToTeam'){
         if (!empty($_POST['addToTeam'])){
             $addTeam = $_POST['addToTeam'];
             $playerId = $_POST['player_id'];
@@ -37,7 +37,7 @@ if (isset($_POST['form-type'])){
             $sqlSel = "SELECT * FROM tbl_teams WHERE name = '$addTeam'";
             $sqlCount = $db_conn->query($sqlSel)->rowCount();
 
-            if ($sqlCount = 1){
+            if ($sqlCount == 1){
                 $team_id = "SELECT * FROM tbl_teams WHERE name = '$addTeam'";
                 $team_id = $db_conn->query($team_id)->fetchAll(PDO::FETCH_ASSOC);
                 $team_id = $team_id[0]['id'];
@@ -53,8 +53,11 @@ if (isset($_POST['form-type'])){
                 header("Location: ../public/admin_panel.php?message=$message");
             }
         }
+        else{
+            
+        }
     }
-    if ($formType == 'addTeam'){
+    elseif ($formType == 'changeTeam'){
         $playerId = $_POST['player_id'];
 
         $sqlSel = "SELECT * FROM tbl_players WHERE id = '$playerId'";
@@ -66,10 +69,30 @@ if (isset($_POST['form-type'])){
         $message = "unasigned {$playerName[0]['first_name']} {$playerName[0]['last_name']}";
         header("Location: ../public/admin_panel.php?message=$message");
     }
-    if ($formType == 'addToPoule'){
+    elseif ($formType == 'addToPoule'){
         $pouleName = $_POST['pouleName'];
+        $teamId = $_POST['team_id'];
 
-        $sqlUpd = "UPDATE tbl_teams SET ";
+        $sqlSel = "SELECT * FROM tbl_poules WHERE naam = '$pouleName'";
+        $pouleId = $db_conn->query($sqlSel)->fetchAll(PDO::FETCH_ASSOC);
+
+        $sqlUpd = "UPDATE tbl_teams SET poule_id = '{$pouleId[0]['id']}' WHERE id = '$teamId'";
+        $db_conn->query($sqlUpd);
+
+        $message = "Succesfully added";
+        header("Location: ../public/admin_panel.php?message=$message");
+    }
+    elseif ($formType == 'changePoule'){
+        $changePoule = $_POST['changePoule'];
+
+        $sqlSel = "SELECT * FROM tbl_teams WHERE id = '$changePoule'";
+        $pouleId = $db_conn->query($sqlSel);
+
+        $sqlUpd = "UPDATE tbl_teams SET poule_id = NULL WHERE id = '$changePoule'";
+        $db_conn->query($sqlUpd);
+
+        $message = "Succesfully changed";
+        header("Location: ../public/admin_panel.php?message=$message");
     }
     else{
         $message = 'Failed';
