@@ -54,7 +54,7 @@ if (isset($_POST['form-type'])){
             }
         }
         else{
-            
+
         }
     }
     elseif ($formType == 'changeTeam'){
