@@ -66,6 +66,30 @@
             
             ?>
         </div>
+        <h2>=====================================Poules=====================================</h2>
+        <div class="">
+            <?php
+            
+            $sqlSel = "SELECT * FROM tbl_teams WHERE poule_id IS NOT NULL";
+            $teams = $db_conn->query($sqlSel);
+            foreach ($poules as $poule){
+                echo "<ul>
+                    <li>{$poule['naam']}";
+                $sqlSel = "SELECT * FROM tbl_poules WHERE naam = '{$poule['naam']}'";
+                $pouleId = $db_conn->query($sqlSel)->fetchAll(PDO::FETCH_ASSOC);
+                $pouleId = $pouleId[0]['id'];
+                $sqlSel = "SELECT * FROM tbl_teams WHERE poule_id = '$pouleId'";
+                $teams = $db_conn->query($sqlSel);
+    
+                foreach ($teams as $team){
+                    echo "<ul><li>{$team['name']}</li></ul>";
+                }
+                
+                echo "</li>
+                      </ul>";
+            }
+            ?>
+        </div>
     </div>
 <h2>=====================================aanmelddinges=====================================</h2>
 <?php require(realpath(__DIR__) . '/templates/footer.php');

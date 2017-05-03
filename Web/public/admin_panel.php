@@ -115,7 +115,6 @@
                     echo "</li>
                     </ul>";
             }
-
         ?>
     </div>
 <!--    <input type="text" name="addToPoule" placeholder="Poule">-->
