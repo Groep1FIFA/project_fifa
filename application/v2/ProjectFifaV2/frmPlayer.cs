@@ -17,6 +17,8 @@ namespace ProjectFifaV2
         private Form frmRanking;
         private DatabaseHandler dbh;
         private string userName;
+        private DataTable tblUsers;
+        private DataRow rowUser;
 
         List<TextBox> txtBoxList;
         TextBox[,] rows = new TextBox[2, lengthInnerArray];
@@ -26,15 +28,24 @@ namespace ProjectFifaV2
             this.ControlBox = false;
             frmRanking = frm;
             dbh = new DatabaseHandler();
-
+            
             InitializeComponent();
-            if (DisableEditButton())
+            this.unLbl.Text = un;
+            tblUsers = dbh.FillDT("select * from tblUsers WHERE (Username='" + unLbl.Text + "')");
+            rowUser = tblUsers.Rows[0];
+            if (DisableButtons())
             {
                 btnEditPrediction.Enabled = false;
+                btnClearPrediction.Enabled = false;
+            }
+            else
+            {
+                btnInsertPrediction.Enabled = false;
             }
             ShowResults();
             ShowScoreCard();
             this.Text = "Welcome " + un;
+            
         }
 
         private void btnLogOut_Click(object sender, EventArgs e)
@@ -52,20 +63,35 @@ namespace ProjectFifaV2
             DialogResult result = MessageBox.Show("Are you sure you want to clear your prediction?", "Clear Predictions", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
             if (result.Equals(DialogResult.OK))
             {
+                DataTable tblUsers = dbh.FillDT("select * from tblUsers WHERE (Username='" + unLbl.Text + "')");
+                DataRow rowUser = tblUsers.Rows[0];
                 // Clear predections
                 // Update DB
+                dbh.Execute("DELETE FROM tblPredictions WHERE (User_id=" + rowUser["id"] + ")");
+                if (DisableButtons())
+                {
+                    btnClearPrediction.Enabled = false;
+                    btnEditPrediction.Enabled = false;
+                    btnInsertPrediction.Enabled = true;
+                }
+                else
+                {
+                    btnClearPrediction.Enabled = true;
+                    btnEditPrediction.Enabled = true;
+                    btnInsertPrediction.Enabled = false;
+                }
             }
         }
 
-        private bool DisableEditButton()
+        private bool DisableButtons()
         {
             bool hasPassed;
             //This is the deadline for filling in the predictions
             DateTime deadline = new DateTime(2020, 06, 12);
             DateTime curTime = DateTime.Now;
             int result = DateTime.Compare(deadline, curTime);
-
-            if (result < 0)
+            DataTable predCheck = dbh.FillDT("SELECT * from tblPredictions WHERE (User_id='" + rowUser["id"] + "')");
+            if (result < 0 || predCheck.Rows.Count == 0)
             {
                 hasPassed = true;
             }
@@ -158,44 +184,33 @@ namespace ProjectFifaV2
 
         private void btnEditPrediction_Click(object sender, EventArgs e)
         {
-            //DataTable tblUsers = dbh.FillDT("select * from tblUsers WHERE (Username='" + userName + "')");
-            DataTable tblUsers = dbh.FillDT("SELECT * from tblUsers");
+            DataTable tblUsers = dbh.FillDT("select * from tblUsers WHERE (Username='" + unLbl.Text + "')");
             DataRow rowUser = tblUsers.Rows[0];
-            int home = 0;
-            int away = 0;
-            for (int i = 1; i < pnlPredCard.Controls.Count; i++)
-            {
-                if (i % 4 == 0 && i != 0)
-                {
-                    
-                    MessageBox.Show(pnlPredCard.Controls[i-1].Text);
-                    away = Convert.ToInt32(pnlPredCard.Controls[2].Text);
-                    dbh.Execute("UPDATE tblPredictions SET (Game_id=" + 0 + ", PredictedAwayScore=" + away + ") WHERE (User_id='" + rowUser["id"] + "')");
-                }
-                else if (i % 2 == 0 && i != 0)
-                {
-                    MessageBox.Show(pnlPredCard.Controls[i-1].Text);
-                    home = Convert.ToInt32(pnlPredCard.Controls[1].Text);
-                    dbh.Execute("UPDATE tblPredictions SET (Game_id=" + 0 + ", PredictedHomeScore=" + home + ") WHERE (User_id='" + rowUser["id"] + "')");
-                }
-                else if (i % 3 == 0 && i != 0)
-                {
-                    MessageBox.Show(pnlPredCard.Controls[i-1].Text);
-                    
-                    
-                }
-                else
-                {
-                    MessageBox.Show(pnlPredCard.Controls[i - 1].Text);
-                }
-                
-            }
+            string home = "";
+            string away = "";
             
+            for (int j = 0; j < lengthOutterArray; j++)
+            {
+                for (int k = 0; k < lengthInnerArray; k++)
+                {
+                    if (k == 0)
+                    {
+                        home = rows[j, k].Text;
+                    }
+                    else
+                    {
+                        away = rows[j, k].Text;
+                    }
+                }
+                dbh.Execute("UPDATE tblPredictions SET PredictedHomeScore=" + home + ", PredictedAwayScore=" + away + " WHERE (User_id=" + 
+                    rowUser["id"] + " AND Game_id=" + Convert.ToInt32(j) + ")");
+            }
+
         }
 
         private void btnInsertPrediction_Click(object sender, EventArgs e)
         {
-            DataTable tblUsers = dbh.FillDT("SELECT * from tblUsers");
+            DataTable tblUsers = dbh.FillDT("SELECT * from tblUsers WHERE (Username='" + unLbl.Text + "')");
             DataRow rowUser = tblUsers.Rows[0];
             string home = "";
             string away = "";
@@ -212,21 +227,20 @@ namespace ProjectFifaV2
                         away = rows[j, k].Text;
                     }
                 }
-                dbh.Execute("Insert Into tblPredictions (User_id, Game_id, PredictedHomeScore, PredictedAwayScore) VALUES ('" + rowUser["id"] + "', " + Convert.ToInt32(j) + ", '" + /*pnlPredCard.Controls[1].Text*/ home + "', '" + /*pnlPredCard.Controls[2].Text*/ away + "')");
+                dbh.Execute("Insert Into tblPredictions (User_id, Game_id, PredictedHomeScore, PredictedAwayScore) VALUES ('" + rowUser["id"] + "', " + Convert.ToInt32(j) + ", '" + home + "', '" + away + "')");
             }
-            /*for (int i = 0; i < pnlPredCard.Controls.Count; i++)
+            if (DisableButtons())
             {
-                MessageBox.Show(pnlPredCard.Controls[i].Text + "|" + i);
-                if (i % 2 == 0 && i != 0)
-                {
-                    away = pnlPredCard.Controls[i].Text;
-                }
-                else if (i % 2 == 1)
-                {
-                    home = pnlPredCard.Controls[i].Text;
-                }
-            }*/
-            
+                btnClearPrediction.Enabled = false;
+                btnEditPrediction.Enabled = false;
+                btnInsertPrediction.Enabled = true;
+            }
+            else
+            {
+                btnClearPrediction.Enabled = true;
+                btnEditPrediction.Enabled = true;
+                btnInsertPrediction.Enabled = false;
+            }
         }
     }
 }

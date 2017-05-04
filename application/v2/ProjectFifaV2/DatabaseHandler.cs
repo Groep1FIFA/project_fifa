@@ -68,15 +68,16 @@ namespace ProjectFifaV2
             SqlCommand queryExecute = new SqlCommand(query, con);
 
             try
-            {
+            { 
                 OpenConnectionToDB();
                 int result = queryExecute.ExecuteNonQuery();
-                this.CloseConnectionToDB();
+                MessageBox.Show("Success saving to database");
+                CloseConnectionToDB();
             }
-            catch
+            catch (Exception ex)
             {
-                MessageBox.Show("Error to save on database");
-                this.CloseConnectionToDB();
+                MessageBox.Show(ex.ToString(), "Error");
+                CloseConnectionToDB();
             }
         }
 

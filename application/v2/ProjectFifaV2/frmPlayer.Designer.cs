@@ -40,6 +40,7 @@
             this.clmAwayTeam = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.pnlPredCard = new System.Windows.Forms.Panel();
             this.btnInsertPrediction = new System.Windows.Forms.Button();
+            this.unLbl = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnEditPrediction
@@ -152,11 +153,20 @@
             this.btnInsertPrediction.UseVisualStyleBackColor = true;
             this.btnInsertPrediction.Click += new System.EventHandler(this.btnInsertPrediction_Click);
             // 
+            // unLbl
+            // 
+            this.unLbl.AutoSize = true;
+            this.unLbl.Location = new System.Drawing.Point(12, 9);
+            this.unLbl.Name = "unLbl";
+            this.unLbl.Size = new System.Drawing.Size(0, 17);
+            this.unLbl.TabIndex = 10;
+            // 
             // frmPlayer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1344, 898);
+            this.Controls.Add(this.unLbl);
             this.Controls.Add(this.btnInsertPrediction);
             this.Controls.Add(this.pnlPredCard);
             this.Controls.Add(this.lvOverview);
@@ -187,5 +197,6 @@
         private System.Windows.Forms.Panel pnlPredCard;
         private System.Windows.Forms.Button btnEditPrediction;
         private System.Windows.Forms.Button btnInsertPrediction;
+        private System.Windows.Forms.Label unLbl;
     }
 }
