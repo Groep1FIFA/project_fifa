@@ -4,28 +4,26 @@
 <h2>=====================================wedstrijdschema=====================================</h2>
         <div>
             <?php
-                
-                foreach ($matches as $match){
-                    
-                    $matchTeamsA = "SELECT * FROM tbl_teams WHERE id='{$match['team_id_a']}'";
-                    $matchTeamsA = $db_conn->query($matchTeamsA);
-                    foreach ($matchTeamsA as $matchTeamA) {
-                        echo "<ul>
-                                    <li>{$matchTeamA['name']}</li>
-                              ";
-                    }
+                foreach ($matches as $match) {
+                    $sqlPoules = "SELECT * FROM tbl_poules WHERE id = '{$match['poule_id']}'";
+                    $sqlPoules = $db_conn->query($sqlPoules)->fetchAll(PDO::FETCH_ASSOC);
+                    $sqlTeams = "SELECT * FROM tbl_teams WHERE poule_id = '{$match['poule_id']}'
+                        AND team_nr = '{$match['team_id_a']}' OR team_nr = '{$match['team_id_b']}'";
+                    $sqlTeams = $db_conn->query($sqlTeams)->fetchAll(PDO::FETCH_ASSOC);
 
-                    $matchTeamsB = "SELECT * FROM tbl_teams WHERE id='{$match['team_id_b']}'";
-                    $matchTeamsB = $db_conn->query($matchTeamsB);
-                    foreach ($matchTeamsB as $matchTeamB){
-                        echo "
-                                <li>{$matchTeamB['name']}</li>
-                              ";
+                    if (!isset($sqlTeams[1]['name'])){
+                        echo 'Vul de poulen tot maximaal 4 teams.';
+                        break;
                     }
-    
-                    echo "
-                                <li>{$match['start_time']}</li>
-                            </ul>";
+                    else {
+                        echo "<ul>
+                            <li>Poule: {$sqlPoules[0]['naam']}
+                                <ul>
+                                    <li>{$sqlTeams[0]['name']} VS {$sqlTeams[1]['name']} {$match['start_time']}</li>
+                                </ul>
+                            </li>
+                        </ul>";
+                    }
                 }
             ?>
         </div>
