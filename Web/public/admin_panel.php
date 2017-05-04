@@ -115,7 +115,6 @@
                     echo "</li>
                     </ul>";
             }
-
         ?>
     </div>
 <!--    <form action=\"../app/admin_manager.php\" method=\"post\">-->
