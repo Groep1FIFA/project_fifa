@@ -96,7 +96,13 @@
             $teams = $db_conn->query($sqlSel);
             foreach ($poules as $poule){
                 echo "<ul>
-                    <li>{$poule['naam']}";
+                    <li>{$poule['naam']}
+                    <form action=\"../app/admin_manager.php\" method=\"post\">
+                        <label for=\"\"></label>
+                        <input type=\"hidden\" name=\"form-type\" value=\"changePoule\">
+                        <input type=\"hidden\" name=\"clearPoule\" value=\"{$poule['id']}\">
+                        <input type=\"submit\" value=\"Clear Poule\">
+                    </form>";
                     $sqlSel = "SELECT * FROM tbl_poules WHERE naam = '{$poule['naam']}'";
                         $pouleId = $db_conn->query($sqlSel)->fetchAll(PDO::FETCH_ASSOC);
                         $pouleId = $pouleId[0]['id'];
@@ -104,17 +110,24 @@
                         $teams = $db_conn->query($sqlSel);
             
                         foreach ($teams as $team){
-                            echo "<ul><li>{$team['name']}</li></ul>
-                            <form action=\"../app/admin_manager.php\" method=\"post\">
-                                <label for=\"changePoule\"></label>
-                                <input type=\"hidden\" name=\"form-type\" value=\"changePoule\">
-                                <input type=\"hidden\" name=\"changePoule\" value=\"{$team['id']}\">
-                                <input type=\"submit\" value=\"Change poule\">
-                            </form>";
+                            echo "<ul><li>{$team['name']}</li></ul>";
                         }
                     echo "</li>
                     </ul>";
             }
+
+        ?>
+    </div>
+<!--    <form action=\"../app/admin_manager.php\" method=\"post\">-->
+<!--        <label for=\"changePoule\"></label>-->
+<!--        <input type=\"hidden\" name=\"form-type\" value=\"changePoule\">-->
+<!--        <input type=\"hidden\" name=\"changePoule\" value=\"{$team['id']}\">-->
+<!--        <input type=\"submit\" value=\"Change poule\">-->
+<!--    </form>-->
+    <div class="schedule">
+        <h2>Schedule</h2>
+        <?php
+
 
         ?>
     </div>
