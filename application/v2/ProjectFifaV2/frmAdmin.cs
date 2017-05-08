@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Data.SqlClient;
 using MySql.Data;
+using System.IO;
 
 namespace ProjectFifaV2
 {
@@ -38,22 +39,22 @@ namespace ProjectFifaV2
         {
             if (txtQuery.TextLength > 0)
             {
-                //try
-                //{
-                table.Clear();
-                dgvAdminData.Columns.Clear();
+                try
+                {
+                    table.Clear();
+                    dgvAdminData.Columns.Clear();
                     ExecuteSQL(txtQuery.Text);
-                //}
-                //catch (Exception ex)
-                //{
-                //    MessageBox.Show(ex.ToString(), "Error", MessageBoxButtons.OK);
-                //}
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.ToString(), "Error", MessageBoxButtons.OK);
+                }
             }
         }
 
         private void ExecuteSQL(string selectCommandText)
         {
-            dbh.TestConnection();
+            //dbh.TestConnection();
             SqlDataAdapter dataAdapter = new SqlDataAdapter(selectCommandText, dbh.GetCon());
             dataAdapter.Fill(table);
             dgvAdminData.DataSource = table;
@@ -77,11 +78,40 @@ namespace ProjectFifaV2
 
         private void btnLoadData_Click(object sender, EventArgs e)
         {
-            if (!(txtPath.Text == null))
+            if (!(txtPath.Text == null) || !(txtPath.Text == ""))
             {
+                /*string insert = "BULK INSERT TblTeams" +
+               " FROM '" + txtPath.Text + "'" +
+                "WITH" +
+                "(" +
+                   " FIRSTROW = 1," +
+                   " FIELDTERMINATOR = ',', " +
+                   " ROWTERMINATOR = ';', " +
+                   " TABLOCK" +
+                ")";
                 dbh.OpenConnectionToDB();
-
-                dbh.CloseConnectionToDB();
+                ExecuteSQL(insert);
+                dbh.CloseConnectionToDB();*/
+                using (StreamReader reader = new StreamReader(txtPath.Text))
+                {
+                    string line;
+                    string[] lineWords;
+                    do
+                    {
+                        line = reader.ReadLine();
+                        lineWords = line.Split(',');
+                        string insert = "INSERT tblTeams (Team_id, TeamName) VALUES ('" + lineWords[0].Trim('"') + "', '" + lineWords[1].Trim('"') + "')";
+                        dbh.Execute(insert);
+                    } while (!reader.EndOfStream);
+                }
+                //string[][] data = File.ReadLines(filePath).Select(x => x.Split(',')).ToArray();
+                //foreach (var dataI in data)
+                //{
+                //    foreach (var dataJ in dataI)
+                //    {
+                //        MessageBox.Show(dataJ);
+                //    }
+                //}
             }
             else
             {
