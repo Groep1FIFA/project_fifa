@@ -1,7 +1,6 @@
 <?php require(realpath(__DIR__) . '/templates/header.php'); ?>
 
     <div class="main-content">
-<h2>=====================================wedstrijdschema=====================================</h2>
         <div>
             <?php
                 foreach ($matches as $match) {
@@ -17,7 +16,7 @@
                     }
                     else {
                         echo "<ul>
-                            <li>Poule: {$sqlPoules[0]['naam']}
+                            <li>Poule: {$sqlPoules[0]['name']}
                                 <ul>
                                     <li>{$sqlTeams[0]['name']} VS {$sqlTeams[1]['name']} {$match['start_time']}</li>
                                 </ul>
@@ -27,7 +26,6 @@
                 }
             ?>
         </div>
-        <h2>=====================================teams + players=====================================</h2>
 
         <div class="">
             <?php
@@ -48,7 +46,6 @@
             }
             ?>
         </div>
-        <h2>=====================================topscoorders=====================================</h2>
         <div class="">
             <?php
                 $playerGoals = "SELECT * FROM tbl_players ORDER BY goals DESC";
@@ -64,7 +61,6 @@
             
             ?>
         </div>
-        <h2>=====================================Poules=====================================</h2>
         <div class="">
             <?php
             
@@ -72,8 +68,8 @@
             $teams = $db_conn->query($sqlSel);
             foreach ($poules as $poule){
                 echo "<ul>
-                    <li>{$poule['naam']}";
-                $sqlSel = "SELECT * FROM tbl_poules WHERE naam = '{$poule['naam']}'";
+                    <li>{$poule['name']}";
+                $sqlSel = "SELECT * FROM tbl_poules WHERE name = '{$poule['name']}'";
                 $pouleId = $db_conn->query($sqlSel)->fetchAll(PDO::FETCH_ASSOC);
                 $pouleId = $pouleId[0]['id'];
                 $sqlSel = "SELECT * FROM tbl_teams WHERE poule_id = '$pouleId'";
@@ -89,5 +85,4 @@
             ?>
         </div>
     </div>
-<h2>=====================================aanmelddinges=====================================</h2>
 <?php require(realpath(__DIR__) . '/templates/footer.php');
