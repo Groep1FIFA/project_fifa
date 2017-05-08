@@ -8,7 +8,7 @@
 require ("database.php");
 if (isset($_POST['form-type'])){
     $formType = $_POST['form-type'];
-
+//CREATE TEAM
     if ($formType == 'createTeam'){
         if (!empty($_POST['teamName'])){
             $teamName = $_POST['teamName'];
@@ -29,6 +29,7 @@ if (isset($_POST['form-type'])){
             header("Location: ../public/admin_panel.php?message=$message");
         }
     }
+//ADD PLAYER TO TEAM
     elseif ($formType == 'addToTeam'){
         if (!empty($_POST['addToTeam'])){
             $addTeam = $_POST['addToTeam'];
@@ -57,6 +58,7 @@ if (isset($_POST['form-type'])){
 
         }
     }
+//DELETE PLAYER FROM TEAM
     elseif ($formType == 'changeTeam'){
         $playerId = $_POST['player_id'];
 
@@ -69,6 +71,7 @@ if (isset($_POST['form-type'])){
         $message = "unasigned {$playerName[0]['first_name']} {$playerName[0]['last_name']}";
         header("Location: ../public/admin_panel.php?message=$message");
     }
+//ADD TEAM TO POULE
     elseif ($formType == 'addToPoule'){
         $pouleName = $_POST['pouleName'];
         $teamId = $_POST['team_id'];
@@ -79,16 +82,22 @@ if (isset($_POST['form-type'])){
         $sqlUpd = "UPDATE tbl_teams SET poule_id = '{$pouleId[0]['id']}' WHERE id = '$teamId'";
         $db_conn->query($sqlUpd);
 
+        $sqlSel = "SELECT * FROM tbl_teams WHERE poule_id = {$pouleId[0]['id']}";
+        $pouleId = $db_conn->query($sqlSel)->rowCount();
+
+        $teamNr = $pouleId;
+
+        $sqlUpd = "UPDATE tbl_teams SET team_nr = '$teamNr' WHERE id = '$teamId'";
+        $db_conn->query($sqlUpd);
+
         $message = "Succesfully added";
         header("Location: ../public/admin_panel.php?message=$message");
     }
+//DELETE TEAM FROM POULE
     elseif ($formType == 'changePoule'){
-        $changePoule = $_POST['changePoule'];
+        $changePoule = $_POST['clearPoule'];
 
-        $sqlSel = "SELECT * FROM tbl_teams WHERE id = '$changePoule'";
-        $pouleId = $db_conn->query($sqlSel);
-
-        $sqlUpd = "UPDATE tbl_teams SET poule_id = NULL WHERE id = '$changePoule'";
+        $sqlUpd = "UPDATE tbl_teams SET poule_id = NULL , team_nr = NULL WHERE poule_id = '$changePoule'";
         $db_conn->query($sqlUpd);
 
         $message = "Succesfully changed";
