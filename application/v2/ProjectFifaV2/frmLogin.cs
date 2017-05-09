@@ -100,8 +100,7 @@ namespace ProjectFifaV2
                 cmd.Parameters.AddWithValue("Username", username);
                 cmd.Parameters.AddWithValue("Password", password);
                 exist = (int)cmd.ExecuteScalar() > 0;
-            }           
-
+            }
             if (exist)
             {
                 bool admin;

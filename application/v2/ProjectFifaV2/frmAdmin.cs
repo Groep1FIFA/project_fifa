@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Data.SqlClient;
-using MySql.Data;
 using System.IO;
 
 namespace ProjectFifaV2
@@ -99,11 +98,11 @@ namespace ProjectFifaV2
                     dbh.Execute("DROP table " + tableName);
                     if (tableName == "tblTeams")
                     {
-                        dbh.Execute("CREATE table tblTeams (id int NOT NULL, teamName varchar(255) NOT NULL, PRIMARY KEY (id)) ");
+                        dbh.Execute("CREATE table tblTeams (id int NOT NULL, teamName varchar(255) NOT NULL, teamNr int NOT NULL, PRIMARY KEY (id)) ");
                     }
                     else if (tableName == "tblGames")
                     {
-                        dbh.Execute("CREATE table tblGames (Game_ID int NOT NULL, homeTeam int NOT NULL, awayTeam int NOT NULL, ");
+                        dbh.Execute("CREATE table tblGames (Game_ID int NOT NULL, homeTeam int NOT NULL, awayTeam int NOT NULL, pooleId int NOT NULL, HomeTeamScore int NOT NULL, AwayTeamScore int NOT NULL, PRIMARY KEY (Game_ID))");
                     }
                 }
                 using (StreamReader reader = new StreamReader(txtPath.Text))
@@ -116,12 +115,12 @@ namespace ProjectFifaV2
                         lineWords = line.Split(',');
                         if (tableName == "tblTeams")
                         {
-                            string insert = "INSERT tblTeams (id, teamName) VALUES ('" + lineWords[0].Trim('"') + "', '" + lineWords[1].Trim('"') + "')";
+                            string insert = "INSERT tblTeams (id, teamName, teamNr) VALUES ('" + lineWords[0].Trim('"') + "', '" + lineWords[1].Trim('"') + "')";
                             dbh.Execute(insert);
                         }
                         else if (tableName == "tblGames")
                         {
-                            string insert = "INSERT tblGames (Game_ID, homeTeam, awayTeam) VALUES ('" + lineWords[0].Trim('"') + "', '" + lineWords[1].Trim('"') + "', '" + lineWords[2].Trim('"') + "')";
+                            string insert = "INSERT tblGames (Game_ID, homeTeam, awayTeam, pooleId, HomeTeamScore, AwayTeamScore) VALUES ('" + lineWords[0].Trim('"') + "', '" + lineWords[1].Trim('"') + "', '" + lineWords[2].Trim('"') + "', '" + lineWords[3].Trim('"') + "', '" + lineWords[4].Trim('"') + "', '" + lineWords[5].Trim('"') + "')";
                             dbh.Execute(insert);
                         }
                         else
