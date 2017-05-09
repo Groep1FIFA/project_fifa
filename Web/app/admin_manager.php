@@ -76,7 +76,7 @@ if (isset($_POST['form-type'])){
         $pouleName = $_POST['pouleName'];
         $teamId = $_POST['team_id'];
 
-        $sqlSel = "SELECT * FROM tbl_poules WHERE naam = '$pouleName'";
+        $sqlSel = "SELECT * FROM tbl_poules WHERE name = '$pouleName'";
         $pouleId = $db_conn->query($sqlSel)->fetchAll(PDO::FETCH_ASSOC);
 
         $sqlUpd = "UPDATE tbl_teams SET poule_id = '{$pouleId[0]['id']}' WHERE id = '$teamId'";

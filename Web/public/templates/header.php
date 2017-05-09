@@ -20,11 +20,18 @@ $teams = $db_conn->query($sqlSelTeams)->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-<header>
-    <ul>
-        <li>
-            <a href="index.php">Home</a>
-            <a href="admin_panel.php">admin_panel</a>
-        </li>
-    </ul>
-</header>
+<div class="wrapper">
+    <img class="background" src="assets/img/banner_stadium.jpg" alt="">
+    <header>
+       <h1>Project <span>FIFA</span></h1>
+        <nav>
+            <ul>
+                <li><a href="index.php">Home</a></li>
+                <li><a href="schedule.php">Schedule</a></li>
+                <li><a href="standins.php">Standings</a></li>
+                <li><a href="teams.php">Teams</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="main-content">
+        <div class="container">

@@ -96,14 +96,14 @@
             $teams = $db_conn->query($sqlSel);
             foreach ($poules as $poule){
                 echo "<ul>
-                    <li>{$poule['naam']}
+                    <li>{$poule['name']}
                     <form action=\"../app/admin_manager.php\" method=\"post\">
                         <label for=\"\"></label>
                         <input type=\"hidden\" name=\"form-type\" value=\"changePoule\">
                         <input type=\"hidden\" name=\"clearPoule\" value=\"{$poule['id']}\">
                         <input type=\"submit\" value=\"Clear Poule\">
                     </form>";
-                    $sqlSel = "SELECT * FROM tbl_poules WHERE naam = '{$poule['naam']}'";
+                    $sqlSel = "SELECT * FROM tbl_poules WHERE name = '{$poule['name']}'";
                         $pouleId = $db_conn->query($sqlSel)->fetchAll(PDO::FETCH_ASSOC);
                         $pouleId = $pouleId[0]['id'];
                         $sqlSel = "SELECT * FROM tbl_teams WHERE poule_id = '$pouleId'";
@@ -117,17 +117,50 @@
             }
         ?>
     </div>
-<!--    <form action=\"../app/admin_manager.php\" method=\"post\">-->
-<!--        <label for=\"changePoule\"></label>-->
-<!--        <input type=\"hidden\" name=\"form-type\" value=\"changePoule\">-->
-<!--        <input type=\"hidden\" name=\"changePoule\" value=\"{$team['id']}\">-->
-<!--        <input type=\"submit\" value=\"Change poule\">-->
-<!--    </form>-->
+
     <div class="schedule">
         <h2>Schedule</h2>
         <?php
+        foreach ($matches as $match) {
+            $sqlPoules = "SELECT * FROM tbl_poules WHERE id = '{$match['poule_id']}'";
+            $sqlPoules = $db_conn->query($sqlPoules)->fetchAll(PDO::FETCH_ASSOC);
+            $sqlTeams = "SELECT * FROM tbl_teams WHERE poule_id = '{$match['poule_id']}'
+                        AND team_nr = '{$match['team_id_a']}' OR team_nr = '{$match['team_id_b']}'";
+            $sqlTeams = $db_conn->query($sqlTeams)->fetchAll(PDO::FETCH_ASSOC);
 
-
+            if (!isset($sqlTeams[1]['name'])){
+                echo 'Vul de poulen tot maximaal 4 teams.';
+                break;
+            }
+            else {
+                $sqlT1Players = "SELECT * FROM tbl_players WHERE team_id = '{$sqlTeams[0]['id']}'";
+                $sqlT1Players = $db_conn->query($sqlT1Players);
+                $sqlT2Players = "SELECT * FROM tbl_players WHERE team_id = '{$sqlTeams[1]['id']}'";
+                $sqlT2Players = $db_conn->query($sqlT2Players);
+                
+                echo "<ul>
+                        <li>Poule: {$sqlPoules[0]['name']}
+                            <ul>
+                                <li>{$sqlTeams[0]['name']} VS {$sqlTeams[1]['name']} {$match['start_time']}</li>";
+                echo "<form action=\"\" method=\"post\">
+                        <select name=\"\" id=\"\">";
+                            foreach ($sqlT1Players as $sqlT1Player){
+                                echo "<option value=\"\">{$sqlT1Player['first_name']} {$sqlT1Player['last_name']}</option>";
+                            }
+                echo "</select>
+                        <li>{$match['score_team_a']}</li>
+                        <li>{$match['score_team_b']}</li>
+                        <select>";
+                            foreach ($sqlT2Players as $sqlT2Player){
+                                echo "<option value=\"\">{$sqlT2Player['first_name']} {$sqlT2Player['last_name']}</option>";
+                            }
+                echo "  </select>
+                      </form>
+                      </ul>
+                        </li>
+                      </ul>";
+            }
+        }
         ?>
     </div>
 <!--    <input type="text" name="addToPoule" placeholder="Poule">-->
