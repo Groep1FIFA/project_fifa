@@ -108,29 +108,53 @@ namespace ProjectFifaV2
             //dbh.TestConnection();
             //dbh.OpenConnectionToDB();
 
-            DataTable hometable = dbh.FillDT("SELECT tblTeams.teamName, tblGames.pooleId, tblGames.HomeTeamScore, tblTeams.teamNr FROM tblGames INNER JOIN tblTeams ON tblGames.HomeTeam = tblTeams.id");
-            DataTable awayTable = dbh.FillDT("SELECT tblTeams.teamName, tblGames.pooleId, tblGames.AwayTeamScore, tblTeams.teamNr FROM tblGames INNER JOIN tblTeams ON tblGames.AwayTeam = tblTeams.id");
+            DataTable hometable1 = dbh.FillDT("SELECT tblTeams.teamName, tblGames.HomeTeamScore, tblTeams.teamNr FROM tblGames INNER JOIN tblTeams ON tblGames.HomeTeam = tblTeams.id WHERE tblGames.pooleId=1");
+            DataTable awayTable1 = dbh.FillDT("SELECT tblTeams.teamName, tblGames.AwayTeamScore, tblTeams.teamNr FROM tblGames INNER JOIN tblTeams ON tblGames.AwayTeam = tblTeams.id WHERE tblGames.pooleId=1");
 
             dbh.CloseConnectionToDB();
 
-            for (int i = 0; i < hometable.Rows.Count; i++)
+            for (int i = 0; i < hometable1.Rows.Count; i++)
             {
-                
-                DataRow dataRowHome = hometable.Rows[i];
-                DataRow dataRowAway = awayTable.Rows[i];
-                ListViewItem lstItem = new ListViewItem(dataRowHome["teamName"].ToString());
-                lstItem.SubItems.Add(dataRowHome["HomeTeamScore"].ToString());
-                lstItem.SubItems.Add(dataRowAway["AwayTeamScore"].ToString());
-                lstItem.SubItems.Add(dataRowAway["teamName"].ToString());
-                if (dataRowHome["pooleId"].ToString() == "1" && (dataRowHome["teamNr"].ToString() == "1" || dataRowHome["teamNr"].ToString() == "2"))
+                DataRow dataRowHome1 = hometable1.Rows[i];
+                DataRow dataRowAway1 = awayTable1.Rows[i];
+                ListViewItem lstItem = new ListViewItem(dataRowHome1["teamName"].ToString());
+                lstItem.SubItems.Add(dataRowHome1["HomeTeamScore"].ToString());
+                lstItem.SubItems.Add(dataRowAway1["AwayTeamScore"].ToString());
+                lstItem.SubItems.Add(dataRowAway1["teamName"].ToString());
+
+                /*string[,,,,] poole1 = new string[hometable.Rows.Count,1,1,1,1];
+
+                if (dataRowHome["pooleId"].ToString() == "1" )
                 {
-                    lvOverviewP1.Items.Add(lstItem);
-                }
-                else
-                {
-                    lvOverviewP2.Items.Add(lstItem);
-                }
-                
+                    if (dataRowHome["teamNr"].ToString() == "1")
+                    {
+                        for  (int j = 0; j < awayTable.Rows.Count; j++)
+                        {
+                            DataRow dataRowAwayNew = awayTable.Rows[j];
+                            if (dataRowAwayNew["pooleId"].ToString() == "1")
+                            {
+                                if (dataRowAwayNew["teamNr"].ToString() == "2")
+                                {
+                                    poole1 = [ i.ToString(), dataRowHome["teamName"].ToString(), dataRowHome["HomeTeamScore"].ToString(), dataRowAwayNew["AwayTeamScore"].ToString(), dataRowAwayNew["teamName"].ToString() ];
+                                }
+                            }
+                        }
+                    }
+                }*/
+                lvOverviewP1.Items.Add(lstItem);
+            }
+            DataTable hometable2 = dbh.FillDT("SELECT tblTeams.teamName, tblGames.HomeTeamScore, tblTeams.teamNr FROM tblGames INNER JOIN tblTeams ON tblGames.HomeTeam = tblTeams.id WHERE tblGames.pooleId=2");
+            DataTable awayTable2 = dbh.FillDT("SELECT tblTeams.teamName, tblGames.AwayTeamScore, tblTeams.teamNr FROM tblGames INNER JOIN tblTeams ON tblGames.AwayTeam = tblTeams.id WHERE tblGames.pooleId=2");
+
+            for (int j = 0; j < hometable2.Rows.Count; j++)
+            {
+                DataRow dataRowHome2 = hometable1.Rows[j];
+                DataRow dataRowAway2 = awayTable1.Rows[j];
+                ListViewItem lstItem = new ListViewItem(dataRowHome2["teamName"].ToString());
+                lstItem.SubItems.Add(dataRowHome2["HomeTeamScore"].ToString());
+                lstItem.SubItems.Add(dataRowAway2["AwayTeamScore"].ToString());
+                lstItem.SubItems.Add(dataRowAway2["teamName"].ToString());
+                lvOverviewP2.Items.Add(lstItem);
             }
         }
 
