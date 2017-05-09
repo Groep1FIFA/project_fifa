@@ -8,7 +8,8 @@
             <li class=\"poule-name\">Poule: {$poule['name']}</li>
             <ul class=\"poule-teams\">";
             foreach ($teams as $team){
-                echo "<li>{$team['name']}</li>";
+                echo "<li><a data-scroll data-options='{ \"easing\": \"linear\" }' 
+                href=\"#teams\">{$team['name']}</a></li>";
             }
             echo "</ul>
             </ul>";
@@ -33,13 +34,12 @@
                 foreach ($matches as $match) {
                     $sqlPoules = "SELECT * FROM tbl_poules WHERE id = '{$match['poule_id']}'";
                     $sqlPoules = $db_conn->query($sqlPoules)->fetchAll(PDO::FETCH_ASSOC);
-                    $sqlTeams = "SELECT * FROM tbl_teams WHERE poule_id = '{$match['poule_id']}' AND team_nr = '{$match['team_id_a']}' OR poule_id = '{$match['poule_id']}' AND team_nr = '{$match['team_id_b']}'";
-                    $sqlTeams = $db_conn->query($sqlTeams)->fetchAll(PDO::FETCH_ASSOC);
+                    $sqlTeamsA = "SELECT * FROM tbl_teams WHERE poule_id = '{$match['poule_id']}' AND team_nr = '{$match['team_id_a']}'";
+                    $sqlTeamsA = $db_conn->query($sqlTeamsA)->fetchAll(PDO::FETCH_ASSOC);
+                    $sqlTeamsB = "SELECT * FROM tbl_teams WHERE poule_id = '{$match['poule_id']}' AND team_nr = '{$match['team_id_b']}'";
+                    $sqlTeamsB = $db_conn->query($sqlTeamsB)->fetchAll(PDO::FETCH_ASSOC);
 
-                    echo "<pre>";
-                    var_dump($sqlTeams);
-
-                    if (!isset($sqlTeams[1]['name'])){
+                    if (!isset($sqlTeamsA[0]['name']) && !isset($sqlTeamsB[0]['name'])){
                         echo 'Vul de poulen tot maximaal 4 teams.';
                         break;
                     }
@@ -47,9 +47,9 @@
                         echo "<tr class=\"match-data align-center\">
                     <td>{$match['start_time']}</td>
                     <td>{$sqlPoules[0]['name']}</td>
-                    <td>{$sqlTeams[0]['name']}</td>
+                    <td>{$sqlTeamsA[0]['name']}</td>
                     <td>{$match['score_team_a']} - {$match['score_team_b']}</td> 
-                    <td class=\"last-match-data\">{$sqlTeams[1]['name']}</td>
+                    <td class=\"last-match-data\">{$sqlTeamsB[0]['name']}</td>
                     </tr>";
 
                     }
@@ -67,10 +67,9 @@
                 $playerGoals = $db_conn->query($playerGoals);
                 $playerGoals = $playerGoals->fetchAll(PDO::FETCH_ASSOC);
                 foreach ($playerGoals as $playerGoal){
-                    echo "<tr class=\"align-center\">
-                             <td>{$playerGoal['first_name']}</td>
-                             <td>{$playerGoal['last_name']}</td>
-                             <td>{$playerGoal['goals']}</td>
+                    echo "<tr>
+                             <td>{$playerGoal['first_name']} {$playerGoal['last_name']}</td>
+                             <td class=\"align-center\">{$playerGoal['goals']}</td>
                         </tr>";
                     $i++;
                     if ($i == 10){
@@ -83,48 +82,55 @@
         </div>
     </div>
 </section>
-
-
-    <div class="">
-        <?php
-        foreach ($teams as $team){
-            echo "<ul>
-                    <li>{$team['name']}</li>
-                   ";
-            $teamPlayers = "SELECT * FROM tbl_players WHERE team_id='{$team['id']}'";
-            $teamPlayers = $db_conn->query($teamPlayers);
-            foreach ($teamPlayers as $teamPlayer){
-                echo
-                "<ul>
-                    <li>{$teamPlayer['first_name']} {$teamPlayer['last_name']}</li>
-                </ul>";
-            }
-            echo "</ul>";
-        }
-        ?>
-    </div>
-
-    <div class="">
-        <?php
-
-        $sqlSel = "SELECT * FROM tbl_teams WHERE poule_id IS NOT NULL";
-        $teams = $db_conn->query($sqlSel);
-        foreach ($poules as $poule){
-            echo "<ul>
-                <li>{$poule['name']}";
-            $sqlSel = "SELECT * FROM tbl_poules WHERE name = '{$poule['name']}'";
-            $pouleId = $db_conn->query($sqlSel)->fetchAll(PDO::FETCH_ASSOC);
-            $pouleId = $pouleId[0]['id'];
-            $sqlSel = "SELECT * FROM tbl_teams WHERE poule_id = '$pouleId'";
+<section>
+    <div class="teams align-center">
+        <h2>Teams</h2>
+        <div class="teams-container" id="teams">
+            <?php
+            $sqlSel = "SELECT * FROM tbl_teams";
             $teams = $db_conn->query($sqlSel);
 
             foreach ($teams as $team){
-                echo "<ul><li>{$team['name']}</li></ul>";
+                echo "<ul class=\"team align-center\">
+                        <li class=\"team-name\">{$team['name']}</li>
+                        <li class=\"cross\">{$team['name']}</li>
+                        <ul class=\"team-players\">";
+                $teamPlayers = "SELECT * FROM tbl_players WHERE team_id='{$team['id']}'";
+                $teamPlayers = $db_conn->query($teamPlayers);
+                foreach ($teamPlayers as $teamPlayer){
+                    echo "<li>{$teamPlayer['first_name']} {$teamPlayer['last_name']}</li>";
+                }
+                echo "</ul>
+                </ul>";
             }
-
-            echo "</li>
-                  </ul>";
-        }
-        ?>
+            ?>
+        </div>
     </div>
+</section>
+
+
+
+<!--    <div class="">-->
+<!--        --><?php
+//
+//        $sqlSel = "SELECT * FROM tbl_teams WHERE poule_id IS NOT NULL";
+//        $teams = $db_conn->query($sqlSel);
+//        foreach ($poules as $poule){
+//            echo "<ul>
+//                <li>{$poule['name']}";
+//            $sqlSel = "SELECT * FROM tbl_poules WHERE name = '{$poule['name']}'";
+//            $pouleId = $db_conn->query($sqlSel)->fetchAll(PDO::FETCH_ASSOC);
+//            $pouleId = $pouleId[0]['id'];
+//            $sqlSel = "SELECT * FROM tbl_teams WHERE poule_id = '$pouleId'";
+//            $teams = $db_conn->query($sqlSel);
+//
+//            foreach ($teams as $team){
+//                echo "<ul><li>{$team['name']}</li></ul>";
+//            }
+//
+//            echo "</li>
+//                  </ul>";
+//        }
+//        ?>
+<!--    </div>-->
 <?php require(realpath(__DIR__) . '/templates/footer.php');

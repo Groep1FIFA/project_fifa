@@ -3,7 +3,7 @@
 require("../app/database.php");
 $sqlSelAdmin = "SELECT * FROM tbl_admin";
 $admins = $db_conn->query($sqlSelAdmin)->fetchAll(PDO::FETCH_ASSOC);
-$sqlSelMatches = "SELECT * FROM tbl_matches ORDER BY start_time ASC";
+$sqlSelMatches = "SELECT * FROM tbl_matches WHERE finished = '0' ORDER BY id ASC";
 $matches = $db_conn->query($sqlSelMatches)->fetchAll(PDO::FETCH_ASSOC);
 $sqlSelPlayers = "SELECT * FROM  tbl_players";
 $players = $db_conn->query($sqlSelPlayers)->fetchAll(PDO::FETCH_ASSOC);
