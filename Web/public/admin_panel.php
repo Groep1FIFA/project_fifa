@@ -1,9 +1,5 @@
 <?php require(realpath(__DIR__) . '/templates/header.php'); ?>
 
-<div class="main-content">
-
-
-
     <div class="teams">
         <h2>Teams</h2>
         <ol>
@@ -164,6 +160,5 @@
         ?>
     </div>
 <!--    <input type="text" name="addToPoule" placeholder="Poule">-->
-</div>
 
 <?php require(realpath(__DIR__) . '/templates/footer.php');
