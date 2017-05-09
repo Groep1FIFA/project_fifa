@@ -115,7 +115,7 @@ namespace ProjectFifaV2
                         lineWords = line.Split(',');
                         if (tableName == "tblTeams")
                         {
-                            string insert = "INSERT tblTeams (id, teamName, teamNr) VALUES ('" + lineWords[0].Trim('"') + "', '" + lineWords[1].Trim('"') + "')";
+                            string insert = "INSERT tblTeams (id, teamName, teamNr) VALUES ('" + lineWords[0].Trim('"') + "', '" + lineWords[1].Trim('"') + "', '" + lineWords[2].Trim('"') + "')";
                             dbh.Execute(insert);
                         }
                         else if (tableName == "tblGames")
