@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Gegenereerd op: 04 mei 2017 om 11:10
+-- Gegenereerd op: 09 mei 2017 om 13:11
 -- Serverversie: 10.1.21-MariaDB
 -- PHP-versie: 5.6.30
 
@@ -53,28 +53,29 @@ CREATE TABLE `tbl_matches` (
   `team_id_a` int(10) UNSIGNED NOT NULL,
   `team_id_b` int(10) UNSIGNED NOT NULL,
   `poule_id` int(10) NOT NULL,
-  `score_team_a` int(10) UNSIGNED DEFAULT NULL,
-  `score_team_b` int(10) UNSIGNED DEFAULT NULL,
-  `start_time` datetime NOT NULL
+  `score_team_a` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `score_team_b` int(10) UNSIGNED NOT NULL DEFAULT '0',
+  `start_time` datetime NOT NULL,
+  `finished` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
 
 --
 -- Gegevens worden geëxporteerd voor tabel `tbl_matches`
 --
 
-INSERT INTO `tbl_matches` (`id`, `team_id_a`, `team_id_b`, `poule_id`, `score_team_a`, `score_team_b`, `start_time`) VALUES
-(1, 1, 2, 1, 2, 4, '2017-04-13 18:00:00'),
-(2, 1, 2, 2, NULL, NULL, '2017-05-04 00:00:00'),
-(3, 3, 4, 1, NULL, NULL, '2017-05-05 00:00:00'),
-(4, 3, 4, 2, NULL, NULL, '2017-05-04 00:00:00'),
-(5, 1, 4, 1, NULL, NULL, '2017-05-04 00:00:00'),
-(6, 1, 4, 2, NULL, NULL, '2017-05-04 00:00:00'),
-(7, 2, 3, 1, NULL, NULL, '2017-05-04 00:00:00'),
-(8, 2, 3, 2, NULL, NULL, '2017-05-04 00:00:00'),
-(9, 1, 3, 1, NULL, NULL, '2017-05-04 00:00:00'),
-(10, 1, 3, 2, NULL, NULL, '2017-05-04 00:00:00'),
-(11, 2, 4, 1, NULL, NULL, '2017-05-04 00:00:00'),
-(12, 2, 4, 2, NULL, NULL, '2017-05-04 00:00:00');
+INSERT INTO `tbl_matches` (`id`, `team_id_a`, `team_id_b`, `poule_id`, `score_team_a`, `score_team_b`, `start_time`, `finished`) VALUES
+(1, 1, 2, 1, 2, 4, '2017-04-13 18:00:00', 0),
+(2, 1, 2, 2, 0, 0, '2017-05-04 00:00:00', 0),
+(3, 3, 4, 1, 0, 0, '2017-05-05 00:00:00', 0),
+(4, 3, 4, 2, 0, 0, '2017-05-04 00:00:00', 0),
+(5, 1, 4, 1, 0, 0, '2017-05-04 00:00:00', 0),
+(6, 1, 4, 2, 0, 0, '2017-05-04 00:00:00', 0),
+(7, 2, 3, 1, 0, 0, '2017-05-04 00:00:00', 0),
+(8, 2, 3, 2, 0, 0, '2017-05-04 00:00:00', 0),
+(9, 1, 3, 1, 0, 0, '2017-05-04 00:00:00', 0),
+(10, 1, 3, 2, 0, 0, '2017-05-04 00:00:00', 0),
+(11, 2, 4, 1, 0, 0, '2017-05-04 00:00:00', 0),
+(12, 2, 4, 2, 0, 0, '2017-05-04 00:00:00', 0);
 
 -- --------------------------------------------------------
 
@@ -121,7 +122,7 @@ INSERT INTO `tbl_players` (`id`, `student_id`, `team_id`, `first_name`, `last_na
 
 CREATE TABLE `tbl_poules` (
   `id` int(11) NOT NULL,
-  `naam` varchar(10) NOT NULL,
+  `name` varchar(10) NOT NULL,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -130,7 +131,7 @@ CREATE TABLE `tbl_poules` (
 -- Gegevens worden geëxporteerd voor tabel `tbl_poules`
 --
 
-INSERT INTO `tbl_poules` (`id`, `naam`, `created_at`, `deleted_at`) VALUES
+INSERT INTO `tbl_poules` (`id`, `name`, `created_at`, `deleted_at`) VALUES
 (1, 'A', '2017-05-02 16:31:27', NULL),
 (2, 'B', '2017-05-02 16:31:27', NULL),
 (3, 'C', '2017-05-02 16:32:21', NULL),
@@ -161,13 +162,14 @@ CREATE TABLE `tbl_teams` (
 --
 
 INSERT INTO `tbl_teams` (`id`, `poule_id`, `name`, `points`, `team_nr`, `win`, `lose`, `tie`, `goal_balance`, `created_at`, `deleted_at`) VALUES
-(1, NULL, 'Ajax', 0, NULL, 0, 0, 0, 0, '2017-04-13 09:42:45', NULL),
-(2, NULL, 'PSV', 0, NULL, 0, 0, 0, 0, '2017-04-13 09:42:45', NULL),
-(3, NULL, 'FC Twente', 0, NULL, 0, 0, 0, 0, '2017-05-01 16:22:55', NULL),
-(4, NULL, 'NEC', 0, NULL, 0, 0, 0, 0, '2017-05-02 13:56:57', NULL),
-(5, NULL, 'NAC', 0, NULL, 0, 0, 0, 0, '2017-05-02 13:57:03', NULL),
-(6, NULL, 'Sparta', 0, NULL, 0, 0, 0, 0, '2017-05-02 16:27:08', NULL),
-(7, NULL, 'Willem II', 0, NULL, 0, 0, 0, 0, '2017-05-03 13:44:24', NULL);
+(1, 1, 'Ajax', 0, 1, 0, 0, 0, 0, '2017-04-13 09:42:45', NULL),
+(2, 1, 'PSV', 0, 2, 0, 0, 0, 0, '2017-04-13 09:42:45', NULL),
+(3, 1, 'FC Twente', 0, 3, 0, 0, 0, 0, '2017-05-01 16:22:55', NULL),
+(4, 1, 'NEC', 0, 4, 0, 0, 0, 0, '2017-05-02 13:56:57', NULL),
+(5, 2, 'NAC', 0, 1, 0, 0, 0, 0, '2017-05-02 13:57:03', NULL),
+(6, 2, 'Sparta', 0, 2, 0, 0, 0, 0, '2017-05-02 16:27:08', NULL),
+(7, 2, 'Willem II', 0, 3, 0, 0, 0, 0, '2017-05-03 13:44:24', NULL),
+(8, 2, 'Vitesse', 0, 4, 0, 0, 0, 0, '2017-05-04 11:55:20', NULL);
 
 --
 -- Indexen voor geëxporteerde tabellen
@@ -200,7 +202,7 @@ ALTER TABLE `tbl_players`
 --
 ALTER TABLE `tbl_poules`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `naam` (`naam`);
+  ADD UNIQUE KEY `naam` (`name`);
 
 --
 -- Indexen voor tabel `tbl_teams`
@@ -237,7 +239,7 @@ ALTER TABLE `tbl_poules`
 -- AUTO_INCREMENT voor een tabel `tbl_teams`
 --
 ALTER TABLE `tbl_teams`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- Beperkingen voor geëxporteerde tabellen
 --
