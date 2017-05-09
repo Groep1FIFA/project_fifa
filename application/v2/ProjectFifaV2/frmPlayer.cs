@@ -12,7 +12,7 @@ namespace ProjectFifaV2
     public partial class frmPlayer : Form
     {
         const int lengthInnerArray = 2;
-        const int lengthOutterArray = 2;
+        const int lengthOutterArray = 12;
 
         private Form frmRanking;
         private DatabaseHandler dbh;
@@ -21,7 +21,7 @@ namespace ProjectFifaV2
         private DataRow rowUser;
 
         List<TextBox> txtBoxList;
-        TextBox[,] rows = new TextBox[2, lengthInnerArray];
+        TextBox[,] rows = new TextBox[lengthOutterArray, lengthInnerArray];
         List<TextBox>[,] newRows = new List<TextBox>[2,2];
         public frmPlayer(Form frm, string un)
         {
@@ -108,8 +108,8 @@ namespace ProjectFifaV2
             //dbh.TestConnection();
             //dbh.OpenConnectionToDB();
 
-            DataTable hometable = dbh.FillDT("SELECT tblTeams.teamName, tblGames.HomeTeamScore FROM tblGames INNER JOIN tblTeams ON tblGames.HomeTeam = tblTeams.id");
-            DataTable awayTable = dbh.FillDT("SELECT tblTeams.teamName, tblGames.AwayTeamScore FROM tblGames INNER JOIN tblTeams ON tblGames.AwayTeam = tblTeams.id");
+            DataTable hometable = dbh.FillDT("SELECT tblTeams.teamName, tblGames.pooleId, tblGames.HomeTeamScore, tblTeams.teamNr FROM tblGames INNER JOIN tblTeams ON tblGames.HomeTeam = tblTeams.id");
+            DataTable awayTable = dbh.FillDT("SELECT tblTeams.teamName, tblGames.pooleId, tblGames.AwayTeamScore, tblTeams.teamNr FROM tblGames INNER JOIN tblTeams ON tblGames.AwayTeam = tblTeams.id");
 
             dbh.CloseConnectionToDB();
 
@@ -122,7 +122,15 @@ namespace ProjectFifaV2
                 lstItem.SubItems.Add(dataRowHome["HomeTeamScore"].ToString());
                 lstItem.SubItems.Add(dataRowAway["AwayTeamScore"].ToString());
                 lstItem.SubItems.Add(dataRowAway["teamName"].ToString());
-                lvOverview.Items.Add(lstItem);
+                if (dataRowHome["pooleId"].ToString() == "1" && (dataRowHome["teamNr"].ToString() == "1" || dataRowHome["teamNr"].ToString() == "2"))
+                {
+                    lvOverviewP1.Items.Add(lstItem);
+                }
+                else
+                {
+                    lvOverviewP2.Items.Add(lstItem);
+                }
+                
             }
         }
 
@@ -131,13 +139,14 @@ namespace ProjectFifaV2
             //dbh.TestConnection();
             //dbh.OpenConnectionToDB();
 
-            DataTable hometable = dbh.FillDT("SELECT tblTeams.teamName FROM tblGames INNER JOIN tblTeams ON tblGames.HomeTeam = tblTeams.id");
-            DataTable awayTable = dbh.FillDT("SELECT tblTeams.teamName FROM tblGames INNER JOIN tblTeams ON tblGames.AwayTeam = tblTeams.id");
+            DataTable hometable = dbh.FillDT("SELECT tblTeams.teamName FROM tblGames INNER JOIN tblTeams ON tblGames.homeTeam = tblTeams.id");
+            DataTable awayTable = dbh.FillDT("SELECT tblTeams.teamName FROM tblGames INNER JOIN tblTeams ON tblGames.awayTeam = tblTeams.id");
 
             dbh.CloseConnectionToDB();
 
             for (int i = 0; i < hometable.Rows.Count; i++)
             {
+                
                 DataRow dataRowHome = hometable.Rows[i];
                 DataRow dataRowAway = awayTable.Rows[i];
                 

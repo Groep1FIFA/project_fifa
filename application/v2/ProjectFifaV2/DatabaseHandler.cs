@@ -71,7 +71,6 @@ namespace ProjectFifaV2
             { 
                 OpenConnectionToDB();
                 int result = queryExecute.ExecuteNonQuery();
-                MessageBox.Show("Success saving to database");
                 CloseConnectionToDB();
             }
             catch (Exception ex)
