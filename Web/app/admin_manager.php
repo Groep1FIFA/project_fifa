@@ -103,6 +103,99 @@ if (isset($_POST['form-type'])){
         $message = "Succesfully changed";
         header("Location: ../public/admin_panel.php?message=$message");
     }
+//TEAM A SCORED
+    elseif($formType == 'team-a-scored'){
+        $matchId = $_POST['match-id'];
+        $playerId = $_POST['player-name'];
+
+        $matchSel = "SELECT * FROM tbl_matches WHERE id = '$matchId'";
+        $match = $db_conn->query($matchSel)->fetchAll(PDO::FETCH_ASSOC);
+
+        $matchGoals = $match[0]['score_team_a'] + 1;
+
+        $playerSel = "SELECT * FROM tbl_players WHERE id='$playerId'";
+        $player = $db_conn->query($playerSel)->fetchAll(PDO::FETCH_ASSOC);
+
+        $playerGoals = $player[0]['goals'] + 1;
+
+        $matchUpdate = "UPDATE tbl_matches SET score_team_a = '$matchGoals' WHERE id = '$matchId'";
+        $db_conn->query($matchUpdate);
+        $playerUpdate = "UPDATE tbl_players SET goals = '$playerGoals' WHERE id = '$playerId'";
+        $db_conn->query($playerUpdate);
+
+        $message = 'Succesfully updated';
+        header("Location: ../public/admin_panel.php?message=$message");
+    }
+//MATCH FINISHED
+    elseif($formType == 'match-finished'){
+        $matchId = $_POST['match-id'];
+        $teamIdA = $_POST['team-id-a'];
+        $teamIdB = $_POST['team-id-b'];
+
+        $matchSel = "SELECT * FROM tbl_matches WHERE id = '$matchId'";
+        $match = $db_conn->query($matchSel)->fetchAll(PDO::FETCH_ASSOC);
+
+        $selTeamA = "SELECT * FROM tbl_teams WHERE id = '$teamIdA'";
+        $teamA = $db_conn->query($selTeamA)->fetchAll(PDO::FETCH_ASSOC);
+
+        $selTeamB = "SELECT * FROM tbl_teams WHERE id = '$teamIdB'";
+        $teamB = $db_conn->query($selTeamB)->fetchAll(PDO::FETCH_ASSOC);
+
+        $matchUpdateFinished = "UPDATE tbl_matches SET finished = 1 WHERE id = '$matchId'";
+        $db_conn->query($matchUpdateFinished);
+
+        //TEAMS WIN/LOSE/TIE
+        $result = $match[0]['score_team_a'] - $match[0]['score_team_b'];
+        $resultB = $match[0]['score_team_b'] - $match[0]['score_team_a'];
+        if ($result == 0){
+            $tiesA = $teamA[0]['tie'] + 1;
+            $tiesB = $teamB[0]['tie'] + 1;
+
+            $pointsA = $teamA[0]['points'] + 1;
+            $pointsB = $teamB[0]['points'] + 1;
+
+            $updateTeamA = "UPDATE tbl_teams SET tie = '$tiesA', points = '$pointsA' WHERE id = '$teamIdA'";
+            $db_conn->query($updateTeamA);
+            $updateTeamB = "UPDATE tbl_teams SET tie = '$tiesB', points = '$pointsB' WHERE id = '$teamIdB'";
+            $db_conn->query($updateTeamB);
+        }
+        elseif ($result > 0){
+            $winsA = $teamA[0]['win'] + 1;
+            $losesB = $teamB[0]['lose'] + 1;
+
+            $pointsA = $teamA[0]['points'] + 3;
+
+            $updateTeamA = "UPDATE tbl_teams SET win = '$winsA', points = '$pointsA' WHERE id = '$teamIdA'";
+            $db_conn->query($updateTeamA);
+            $updateTeamB = "UPDATE tbl_teams SET lose = '$losesB' WHERE id = '$teamIdB'";
+            $db_conn->query($updateTeamB);
+        }
+        elseif ($result < 0){
+            $losesA = $teamA[0]['lose'] + 1;
+            $winsB = $teamB[0]['win'] + 1;
+
+            $pointsB = $teamB[0]['points'] + 3;
+
+            $updateTeamA = "UPDATE tbl_teams SET lose = '$losesA' WHERE id = '$teamIdA'";
+            $db_conn->query($updateTeamA);
+            $updateTeamB = "UPDATE tbl_teams SET win = '$winsB', points = '$pointsB' WHERE id = '$teamIdB'";
+            $db_conn->query($updateTeamB);
+        }
+        else{
+            $message = 'Something went wrong';
+            header("Location: ../public/admin_panel.php?message=$message");
+        }
+        $goalBalanceA = $teamA[0]['goal_balance'] + $result;
+        $goalBalanceB = $teamB[0]['goal_balance'] + $resultB;
+
+        $updateTeamA = "UPDATE tbl_teams SET goal_balance = '$goalBalanceA' WHERE id = '$teamIdA'";
+        $db_conn->query($updateTeamA);
+        $updateTeamB = "UPDATE tbl_teams SET goal_balance = '$goalBalanceB' WHERE id = '$teamIdB'";
+        $db_conn->query($updateTeamB);
+
+        $message = 'Succesfully updated';
+        header("Location: ../public/admin_panel.php?message=$message");
+    }
     else{
         $message = 'Failed';
         header("Location: ../public/admin_panel.php?message=$message");

@@ -198,6 +198,28 @@ h1 span{
     background: rgba(0, 0, 0, 0.5);
     cursor: pointer;
 }
+/*POULE PHASE*/
+.poule-phase{
+    margin: 120px 0 0 0;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid #FFF;
+}
+.poule-phase table{
+    border-spacing: 0;
+}
+.poule-phase .match-data{
+    display: inline-block;
+    width: 496.6px;
+    border-right: 1px solid #FFF;
+    border-left: 1px solid #FFF;
+}
+.poule-phase td{
+    width:20%;
+}
+.finished-match{
+    background: rgb(100, 100, 100);
+    opacity: 0.8;
+}
 /*FOOTER*/
 footer{
     background: rgba(0, 0, 0, 0.7);
