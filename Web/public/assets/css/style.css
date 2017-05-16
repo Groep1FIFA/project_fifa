@@ -3,6 +3,7 @@
     margin: 0;
     color: #FFF;
     font-size: 10px;
+    font-family: Arial;
 }
 .flex{
     display: -webkit-flex;
@@ -34,6 +35,14 @@
     display: -o-flex;
     display: flex;
     justify-content: center;
+}
+.flex-column{
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flex;
+    display: -o-flex;
+    display: flex;
+    flex-direction: column;
 }
 .align-center{
     -ms-align-items: center;
@@ -84,6 +93,9 @@ h1 span{
     color: rgb(25, 255, 255);
     border-bottom: 1px solid #fff;
 }
+h3{
+    font-size: 2.5em;
+}
 .navigation a{
     font-size: 2.5em;
 }
@@ -105,7 +117,7 @@ h1 span{
     margin: 0 auto;
 }
 .poule-item{
-    width: 19%;
+    width: 19.5%;
     background: rgba(0, 0, 0, 0.5);
     border: 2px solid #FFF;
 }
@@ -113,7 +125,7 @@ h1 span{
     padding: 10px 20px;
 }
 .poule-name{
-    font-size: 3em;
+    font-size: 2.7em;
 }
 .poule-teams li{
     border-top: 1px solid #FFF;
@@ -220,6 +232,227 @@ h1 span{
     background: rgb(100, 100, 100);
     opacity: 0.8;
 }
+/*SCHEDULE*/
+.play-offs{
+    margin: 50px 0 0 0;
+}
+.playoffs-title{
+    width: 840px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid #FFF;
+    padding: 20px 0 0 0;
+}
+.playoffs-schedule{
+    width: 800px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 30px 20px;
+    border: 2px solid #FFF;
+    border-top: none;
+}
+.play-offs .flex-column{
+    width: 25%;
+    text-align: center;
+}
+.play-offs .quaters {
+    height: 200px;
+}
+.play-offs .semis{
+    height: 140px;
+}
+/*STANDINGS*/
+.standings{
+    margin: 120px 0;
+}
+.play-offs li{
+    border: 1px solid #FFF;
+    padding: 10px;
+}
+.standings .poule-name{
+    font-size: 8em;
+    width: 100px;
+}
+.standings ul{
+    border: 2px solid #FFF;
+    margin: 50px 0 0 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+.standings table{
+    width: 90%;
+    border-spacing: 0;
+}
+.standings th{
+    font-size: 2.5em;
+    padding: 5px 0;
+    border-left: 1px solid #FFF;
+    border-bottom: 1px solid #FFF;
+}
+.standings td{
+    font-size: 2em;
+    padding: 3px 0;
+    border-left: 1px solid #FFF;
+}
+/*ADMIN PANEL*/
+.admin-header{
+    padding:30px 0;
+}
+.admin-banner{
+    padding: 120px 0 50px 0;
+    width: 800px;
+    margin: 0 auto;
+}
+.team-item{
+    font-size: 2.5em;
+    padding: 10px 20px;
+    width: 17%;
+    margin: 0 0 20px 20px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid #FFF;
+    display: inline-block;
+}
+.create-team input{
+    width: 300px;
+    padding: 10px 20px;
+    border-radius: 25px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgb(200, 200, 200);
+}
+.create-team .submit{
+    width:100px;
+    margin: 10px 0 0 0;
+    background: rgb(60 ,60, 60);
+}
+.create-team .submit:hover{
+    cursor: pointer;
+}
+.unasigned-players, .asigned-players{
+    width:47%;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid #FFF;
+    padding: 20px 0;
+    height: 397px;
+    overflow-y: auto;
+}
+.players ul{
+    border-bottom: 1px solid #FFF;
+    position: relative;
+}
+.players li{
+    font-size: 2em;
+    padding: 10px 20px;
+}
+.add-player{
+    display: none;
+    position: absolute;
+    top: 50%;
+    transform: translate( 0, -50%);
+    -ms-transform: translate( 0, -50%);
+    left: 240px;
+    width: 100px;
+    padding: 5px 20px;
+    border: 1px solid rgb(200, 200, 200);
+    background: #000;
+    cursor: pointer;
+}
+.player-add{
+    top: 50%;
+    left: 390px;
+    width: 50px;
+    padding: 5px 0;
+}
+.players ul:hover .add-player{
+    display: block;
+}
+.players ul:hover{
+    background: rgba(120, 120 , 120, 0.5);
+}
+.asigned-players li{
+    width: 150px;
+}
+.player-name{
+    border-right: 1px solid #FFF;
+}
+.unasigned-teams, .asigned-teams{
+    margin: 50px 0;
+    width:47%;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid #FFF;
+    padding: 20px 0;
+    height: 200px;
+    overflow-y: auto;
+}
+.poules ul{
+    border-bottom: 1px solid #FFF;
+    position: relative;
+}
+.poules li{
+    font-size: 2em;
+    padding: 10px 20px;
+}
+.poules ul:hover .add-player{
+    display: block;
+}
+.poules ul:hover{
+    background: rgba(120, 120 , 120, 0.5);
+}
+.asigned-teams .player-add{
+    left: 50%;
+    transform: translate( -50%, -50%);
+    -ms-transform: translate( -50%, -50%);
+    z-index: 999;
+    padding: 10px 0;
+    width: 100px;
+}
+.admin-schedule{
+    width:100%;
+}
+.player-selector{
+    width: 120px;
+    background: #000;
+    border: 1px solid rgba(200, 200, 200, 0.6);
+    padding: 2px 10px;
+}
+.admin-schedule td{
+    font-size: 1.3em;
+    padding: 10px 0;
+    border-bottom: 1px solid #FFF;
+}
+.admin-schedule tr:hover{
+    background: rgba(120, 120, 120, 0.5);
+    cursor: pointer;
+}
+.score-button{
+    width: 100px;
+    background: rgba(120, 120, 120, 0.5);
+    border: none;
+    padding: 5px 0;
+    cursor: pointer;
+}
+.end-button{
+    width: 60px;
+    background: rgba(120, 120, 120, 0.5);
+    border: none;
+    padding: 5px 0;
+    cursor: pointer;
+}
+.playoffs{
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid #FFF;
+    padding: 20px 0 0 0;
+    margin: 50px 0 0 0;
+}
+.playoffs table{
+    width:100%;
+    border-spacing: 0;
+    border-top: 1px solid #FFF;
+}
+.playoffs td{
+    padding: 7px 0;
+    font-size: 1.5em;
+    border-bottom: 1px solid #FFF;
+}
+.to-be-decided td{
+    border-bottom: none;
+}
 /*FOOTER*/
 footer{
     background: rgba(0, 0, 0, 0.7);
@@ -231,6 +464,11 @@ footer form input{
     background: rgba(0, 0, 0, 0.3);
     border: 1px solid rgb(200, 200, 200);
 }
+.admin-footer .playoffs-schedule{
+    background: none;
+    border: none;
+    padding: 0;
+}
 .submit{
     width: 100px;
     padding:10px 20px;
@@ -240,6 +478,7 @@ footer h3{
     padding: 5px 0;
     font-size: 1.2em;
     background: rgba(0, 0, 0, 0.4);
+    font-family: Arial;
 }
 
 

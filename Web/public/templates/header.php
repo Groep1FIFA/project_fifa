@@ -29,8 +29,7 @@ $teams = $db_conn->query($sqlSelTeams)->fetchAll(PDO::FETCH_ASSOC);
                 <ul class="flex">
                     <li id="left-nav"><a href="index.php">Home</a></li>
                     <li><a href="schedule.php">Schedule</a></li>
-                    <li><a href="standins.php">Standings</a></li>
-                    <li><a href="teams.php">Teams</a></li>
+                    <li><a href="standings.php">Standings</a></li>
                 </ul>
             </nav>
         </div>
