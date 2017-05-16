@@ -16,6 +16,8 @@ namespace ProjectFifaV2
         private DatabaseHandler dbh;
         private OpenFileDialog opfd;
 
+        private Form frmScoreInput;
+
         DataTable table;
 
         public frmAdmin()
@@ -92,19 +94,25 @@ namespace ProjectFifaV2
                 dbh.OpenConnectionToDB();
                 ExecuteSQL(insert);
                 dbh.CloseConnectionToDB();*/
-                DataTable table = dbh.FillDT("SELECT * FROM " + tableName);
-                if (table.Rows.Count != 0)
-                {
-                    dbh.Execute("DROP table " + tableName);
+                //DataTable table = dbh.FillDT("SELECT * FROM " + tableName);
+                //if (table.Rows.Count != 0)
+                //{
+                    try {
+                        dbh.Execute("DROP table " + tableName);
+                    }
+                    catch
+                    {
+               
+                    }
                     if (tableName == "tblTeams")
                     {
-                        dbh.Execute("CREATE table tblTeams (id int NOT NULL, teamName varchar(255) NOT NULL, teamNr int NOT NULL, PRIMARY KEY (id)) ");
+                        dbh.Execute("CREATE table tblTeams (id int NOT NULL, pouleId int NOT NULL, teamName varchar(255) NOT NULL, teamNr int NOT NULL, PRIMARY KEY (id)) ");
                     }
                     else if (tableName == "tblGames")
                     {
-                        dbh.Execute("CREATE table tblGames (Game_ID int NOT NULL, homeTeam int NOT NULL, awayTeam int NOT NULL, pooleId int NOT NULL, HomeTeamScore int NOT NULL, AwayTeamScore int NOT NULL, PRIMARY KEY (Game_ID))");
+                        dbh.Execute("CREATE table tblGames (Game_ID int NOT NULL, homeTeam int NOT NULL, awayTeam int NOT NULL, pouleId int NOT NULL, HomeTeamScore int NULL, AwayTeamScore int NULL, PRIMARY KEY (Game_ID))");
                     }
-                }
+                //}
                 using (StreamReader reader = new StreamReader(txtPath.Text))
                 {
                     string line;
@@ -115,12 +123,12 @@ namespace ProjectFifaV2
                         lineWords = line.Split(',');
                         if (tableName == "tblTeams")
                         {
-                            string insert = "INSERT tblTeams (id, teamName, teamNr) VALUES ('" + lineWords[0].Trim('"') + "', '" + lineWords[1].Trim('"') + "', '" + lineWords[2].Trim('"') + "')";
+                            string insert = "INSERT INTO tblTeams (id, pouleId, teamName, teamNr) VALUES ('" + lineWords[0].Trim('"') + "', '" + lineWords[1].Trim('"') + "', '" + lineWords[2].Trim('"') + "', '" + lineWords[3].Trim('"') + "')";
                             dbh.Execute(insert);
                         }
                         else if (tableName == "tblGames")
                         {
-                            string insert = "INSERT tblGames (Game_ID, homeTeam, awayTeam, pooleId, HomeTeamScore, AwayTeamScore) VALUES ('" + lineWords[0].Trim('"') + "', '" + lineWords[1].Trim('"') + "', '" + lineWords[2].Trim('"') + "', '" + lineWords[3].Trim('"') + "', '" + lineWords[4].Trim('"') + "', '" + lineWords[5].Trim('"') + "')";
+                            string insert = "INSERT INTO tblGames (Game_ID, homeTeam, awayTeam, pouleId) VALUES ('" + lineWords[0].Trim('"') + "', '" + lineWords[1].Trim('"') + "', '" + lineWords[2].Trim('"') + "', '" + lineWords[3].Trim('"') + /*"', '" + /*lineWords[4].Trim('"')*/  /*"', '"  /*lineWords[5].Trim('"')*/ "')";
                             dbh.Execute(insert);
                         }
                         else
@@ -175,6 +183,12 @@ namespace ProjectFifaV2
             {
                 return false;
             }
+        }
+
+        private void insertBtn_Click(object sender, EventArgs e)
+        {
+            frmScoreInput = new frmScoreInput();
+            frmScoreInput.Show();
         }
     }
 }

@@ -36,13 +36,14 @@
             this.dgvAdminData = new System.Windows.Forms.DataGridView();
             this.btnAdminLogOut = new System.Windows.Forms.Button();
             this.tableSelector = new System.Windows.Forms.ComboBox();
+            this.insertBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAdminData)).BeginInit();
             this.SuspendLayout();
             // 
             // btnLoadData
             // 
             this.btnLoadData.Location = new System.Drawing.Point(884, 41);
-            this.btnLoadData.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnLoadData.Margin = new System.Windows.Forms.Padding(4);
             this.btnLoadData.Name = "btnLoadData";
             this.btnLoadData.Size = new System.Drawing.Size(108, 25);
             this.btnLoadData.TabIndex = 0;
@@ -53,7 +54,7 @@
             // txtPath
             // 
             this.txtPath.Location = new System.Drawing.Point(189, 41);
-            this.txtPath.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtPath.Margin = new System.Windows.Forms.Padding(4);
             this.txtPath.MaxLength = 256;
             this.txtPath.Name = "txtPath";
             this.txtPath.Size = new System.Drawing.Size(685, 22);
@@ -62,7 +63,7 @@
             // btnSelectFile
             // 
             this.btnSelectFile.Location = new System.Drawing.Point(73, 41);
-            this.btnSelectFile.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnSelectFile.Margin = new System.Windows.Forms.Padding(4);
             this.btnSelectFile.Name = "btnSelectFile";
             this.btnSelectFile.Size = new System.Drawing.Size(108, 25);
             this.btnSelectFile.TabIndex = 2;
@@ -73,8 +74,8 @@
             // txtQuery
             // 
             this.txtQuery.Location = new System.Drawing.Point(73, 171);
-            this.txtQuery.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.txtQuery.MaxLength = 150;
+            this.txtQuery.Margin = new System.Windows.Forms.Padding(4);
+            this.txtQuery.MaxLength = 13333337;
             this.txtQuery.Multiline = true;
             this.txtQuery.Name = "txtQuery";
             this.txtQuery.Size = new System.Drawing.Size(685, 102);
@@ -83,7 +84,7 @@
             // btnExecute
             // 
             this.btnExecute.Location = new System.Drawing.Point(768, 207);
-            this.btnExecute.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnExecute.Margin = new System.Windows.Forms.Padding(4);
             this.btnExecute.Name = "btnExecute";
             this.btnExecute.Size = new System.Drawing.Size(108, 25);
             this.btnExecute.TabIndex = 5;
@@ -95,7 +96,7 @@
             // 
             this.dgvAdminData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvAdminData.Location = new System.Drawing.Point(16, 282);
-            this.dgvAdminData.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dgvAdminData.Margin = new System.Windows.Forms.Padding(4);
             this.dgvAdminData.Name = "dgvAdminData";
             this.dgvAdminData.Size = new System.Drawing.Size(1247, 334);
             this.dgvAdminData.TabIndex = 6;
@@ -103,7 +104,7 @@
             // btnAdminLogOut
             // 
             this.btnAdminLogOut.Location = new System.Drawing.Point(1121, 41);
-            this.btnAdminLogOut.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnAdminLogOut.Margin = new System.Windows.Forms.Padding(4);
             this.btnAdminLogOut.Name = "btnAdminLogOut";
             this.btnAdminLogOut.Size = new System.Drawing.Size(141, 49);
             this.btnAdminLogOut.TabIndex = 7;
@@ -124,11 +125,23 @@
             this.tableSelector.Size = new System.Drawing.Size(685, 24);
             this.tableSelector.TabIndex = 8;
             // 
+            // insertBtn
+            // 
+            this.insertBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.insertBtn.Location = new System.Drawing.Point(1121, 97);
+            this.insertBtn.Name = "insertBtn";
+            this.insertBtn.Size = new System.Drawing.Size(141, 56);
+            this.insertBtn.TabIndex = 9;
+            this.insertBtn.Text = "Insert scores";
+            this.insertBtn.UseVisualStyleBackColor = true;
+            this.insertBtn.Click += new System.EventHandler(this.insertBtn_Click);
+            // 
             // frmAdmin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1279, 630);
+            this.Controls.Add(this.insertBtn);
             this.Controls.Add(this.tableSelector);
             this.Controls.Add(this.btnAdminLogOut);
             this.Controls.Add(this.dgvAdminData);
@@ -137,7 +150,7 @@
             this.Controls.Add(this.btnSelectFile);
             this.Controls.Add(this.txtPath);
             this.Controls.Add(this.btnLoadData);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "frmAdmin";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Admin";
@@ -157,5 +170,6 @@
         private System.Windows.Forms.DataGridView dgvAdminData;
         private System.Windows.Forms.Button btnAdminLogOut;
         private System.Windows.Forms.ComboBox tableSelector;
+        private System.Windows.Forms.Button insertBtn;
     }
 }

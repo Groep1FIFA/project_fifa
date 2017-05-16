@@ -53,3 +53,5 @@ C:\Users\D181761\Documents\GitHub\fifa\project_fifa\application\v2\ProjectFifaV2
 C:\Users\D181761\Documents\GitHub\fifa\project_fifa\application\v2\ProjectFifaV2\obj\x86\Debug\ProjectFifaV2.exe
 C:\Users\D181761\Documents\GitHub\fifa\project_fifa\application\v2\ProjectFifaV2\obj\x86\Debug\ProjectFifaV2.pdb
 C:\Users\D181761\Documents\GitHub\fifa\project_fifa\application\v2\ProjectFifaV2\obj\x86\Debug\ProjectFifaV2.csprojResolveAssemblyReference.cache
+C:\Users\D181761\Documents\GitHub\fifa\project_fifa\application\v2\ProjectFifaV2\obj\x86\Debug\ProjectFifaV2.Browser.resources
+C:\Users\D181761\Documents\GitHub\fifa\project_fifa\application\v2\ProjectFifaV2\obj\x86\Debug\ProjectFifaV2.frmScoreInput.resources
