@@ -1,5 +1,5 @@
 <?php
-require("../app/database.php");
+require("../../app/database.php");
 $sqlSelAdmin = "SELECT * FROM tbl_admin";
 $admins = $db_conn->query($sqlSelAdmin)->fetchAll(PDO::FETCH_ASSOC);
 $sqlSelMatches = "SELECT * FROM tbl_matches WHERE finished = '0' ORDER BY start_time ASC";
@@ -12,22 +12,40 @@ $sqlSelPoules = "SELECT * FROM tbl_poules";
 $poules = $db_conn->query($sqlSelPoules)->fetchAll(PDO::FETCH_ASSOC);
 $sqlSelTeams = "SELECT * FROM tbl_teams";
 $teams = $db_conn->query($sqlSelTeams)->fetchAll(PDO::FETCH_ASSOC);
+
+session_start();
+
+if (!isset($_SESSION['admin_login'])){
+    session_unset();
+    session_destroy();
+
+    header("Location: ../admin");
+}
+else{
+
+}
 ?>
     <!doctype html>
     <html lang="en">
     <head>
         <meta charset="UTF-8">
         <title>Project Fifa</title>
-        <link rel="stylesheet" href="assets/css/style.css">
+        <link rel="stylesheet" href="../assets/css/style.css">
     </head>
 <body>
 <div class="wrapper">
-    <img class="background" src="assets/img/banner_stadium.jpg" alt="">
+    <img class="background" src="../assets/img/banner_stadium.jpg" alt="">
     <section>
         <header>
             <div class="admin-header container flex-between align-center">
                 <h1>Project <span>FIFA</span></h1>
                 <h1>Admin <span>Panel</span></h1>
+            </div>
+            <div class="logout">
+                <form action="../../app/login_manager.php" method="post">
+                    <input type="hidden" name="form-type" value="logout">
+                    <input type="submit" value="Logout">
+                </form>
             </div>
         </header>
     </section>
@@ -35,7 +53,6 @@ $teams = $db_conn->query($sqlSelTeams)->fetchAll(PDO::FETCH_ASSOC);
         <div class="container">
         <section>
             <div class="admin-banner">
-                <h2>Teams</h2>
                 <ul>
                     <?php
 
@@ -47,7 +64,7 @@ $teams = $db_conn->query($sqlSelTeams)->fetchAll(PDO::FETCH_ASSOC);
                 </ul>
 
                 <div class="create-team flex-center">
-                    <form action="../app/admin_manager.php" method="post" class="flex-column align-center">
+                    <form action="../../app/admin_manager.php" method="post" class="flex-column align-center">
                         <input type="text" name="teamName" placeholder="Create a new team">
                         <input type="hidden" name="form-type" value="createTeam">
                         <input type="submit" value="Add" class="submit">
@@ -67,7 +84,7 @@ $teams = $db_conn->query($sqlSelTeams)->fetchAll(PDO::FETCH_ASSOC);
                             echo "<ul class=\"flex\">
                                 <li>{$player['first_name']} {$player['last_name']}</li>";
                             if($matchesFinished == 0) {
-                                echo "<form class=\"flex align-center\" action=\"../app/admin_manager.php\" method=\"post\">
+                                echo "<form class=\"flex align-center\" action=\"../../app/admin_manager.php\" method=\"post\">
                                     <input class=\"add-player\" type=\"text\" name=\"addToTeam\" placeholder=\"Team Name\">
                                     <input type=\"hidden\" name=\"form-type\" value=\"addToTeam\">
                                     <input type=\"hidden\" name=\"player_id\" value=\"{$player['id']}\">
@@ -75,7 +92,7 @@ $teams = $db_conn->query($sqlSelTeams)->fetchAll(PDO::FETCH_ASSOC);
                                 </form>";
                             }
                             else{
-                                echo "FUCKCKCK";
+
                             }
                             echo "</ul>";
                         }
@@ -93,7 +110,7 @@ $teams = $db_conn->query($sqlSelTeams)->fetchAll(PDO::FETCH_ASSOC);
                         <li class=\"player-name\">{$player['first_name']} {$player['last_name']}</li>
                         <li>{$teamName[0]['name']}</li>";
                         if($matchesFinished == 0) {
-                            echo "<form action = \"../app/admin_manager.php\" method=\"post\" class=\"adjust\">
+                            echo "<form action = \"../../app/admin_manager.php\" method=\"post\" class=\"adjust\">
                                 <label for=\"player_id\"></label>
                                 <input type=\"hidden\" name=\"player_id\" value=\"{$player['id']}\">
                                 <input type=\"hidden\" name=\"form-type\" value=\"changeTeam\">
@@ -120,7 +137,7 @@ $teams = $db_conn->query($sqlSelTeams)->fetchAll(PDO::FETCH_ASSOC);
                         echo "<ul class=\"flex\">
                                 <li>{$team['name']}</li>";
                         if($matchesFinished == 0) {
-                            echo "<form action=\"../app/admin_manager.php\" method=\"post\">
+                            echo "<form action=\"../../app/admin_manager.php\" method=\"post\">
                                 <label for=\"pouleName\"></label>
                                 <select class=\"add-player\" name=\"pouleName\" id=\"\">
                                     <option value=\"A\">Poule A</option>
@@ -146,7 +163,7 @@ $teams = $db_conn->query($sqlSelTeams)->fetchAll(PDO::FETCH_ASSOC);
                         echo "<ul>
                             <li>{$poule['name']}";
                         if($matchesFinished == 0) {
-                            echo "<form action=\"../app/admin_manager.php\" method=\"post\">
+                            echo "<form action=\"../../app/admin_manager.php\" method=\"post\">
                                 <input class=\"add-player\" type=\"hidden\" name=\"form-type\" value=\"changePoule\">
                                 <input type=\"hidden\" name=\"clearPoule\" value=\"{$poule['id']}\">
                                 <input class=\"add-player player-add\" type=\"submit\" value=\"Clear Poule\">
@@ -194,7 +211,7 @@ $teams = $db_conn->query($sqlSelTeams)->fetchAll(PDO::FETCH_ASSOC);
                         echo "<tr class=\"align-center\">
                                 <td>Poule: {$sqlPoules[0]['name']}</td>
                                 <td>{$sqlATeams[0]['name']} VS {$sqlBTeams[0]['name']} {$match['start_time']}</td>";
-                        echo "<form action=\"../app/admin_manager.php\" method=\"post\">
+                        echo "<form action=\"../../app/admin_manager.php\" method=\"post\">
                                 <td><select class=\"player-selector\" name=\"player-name\" id=\"\">";
                                     foreach ($sqlT1Players as $sqlT1Player){
                                         echo "<option value=\"{$sqlT1Player['id']}\">{$sqlT1Player['first_name']} {$sqlT1Player['last_name']}</option>";
@@ -205,7 +222,7 @@ $teams = $db_conn->query($sqlSelTeams)->fetchAll(PDO::FETCH_ASSOC);
                                 <td><input class=\"score-button\" type=\"submit\" value=\"{$sqlATeams[0]['name']} scored\"></td>
                               </form>
                                 <td>{$match['score_team_a']} - {$match['score_team_b']}</td>
-                              <form action=\"../app/admin_manager.php\" method=\"post\">
+                              <form action=\"../../app/admin_manager.php\" method=\"post\">
                                 <input type=\"hidden\" name=\"form-type\" value=\"team-b-scored\">
                                 <input type=\"hidden\" name=\"match-id\" value=\"{$match['id']}\">
                                 <td><input class=\"score-button\" type=\"submit\" value=\"{$sqlBTeams[0]['name']} scored\"></td>
@@ -216,7 +233,7 @@ $teams = $db_conn->query($sqlSelTeams)->fetchAll(PDO::FETCH_ASSOC);
                                     }
                         echo "  </select></td>
                               </form>
-                              <form action=\"../app/admin_manager.php\" method=\"post\">
+                              <form action=\"../../app/admin_manager.php\" method=\"post\">
                                 <input type=\"hidden\" name=\"form-type\" value=\"match-finished\">
                                 <input type=\"hidden\" name=\"match-id\" value=\"{$match['id']}\">
                                 <input type=\"hidden\" name=\"team-id-a\" value=\"{$sqlATeams[0]['id']}\">
@@ -266,7 +283,7 @@ $teams = $db_conn->query($sqlSelTeams)->fetchAll(PDO::FETCH_ASSOC);
                             <td>Quater-Final</td>
                             <td>{$quaterFinal['start_time']}</td>
                             <td>{$teamA[0]['name']} VS {$teamB[0]['name']}</td>
-                            <form action=\"../app/admin_manager.php\" method=\"post\">
+                            <form action=\"../../app/admin_manager.php\" method=\"post\">
                             <td><select class=\"player-selector\" name=\"player-name\" id=\"\">";
                             foreach ($aTeamPlayers as $aTeamPlayer) {
                                 echo "<option value=\"{$aTeamPlayer['id']}\">{$aTeamPlayer['first_name']} {$aTeamPlayer['last_name']}</option>";
@@ -277,7 +294,7 @@ $teams = $db_conn->query($sqlSelTeams)->fetchAll(PDO::FETCH_ASSOC);
                             <td><input class=\"score-button\" type=\"submit\" value=\"{$teamA[0]['name']} scored\"></td>
                             </form>
                             <td>{$quaterFinal['score_team_a']} VS {$quaterFinal['score_team_b']}</td>
-                            <form action=\"../app/admin_manager.php\" method=\"post\">
+                            <form action=\"../../app/admin_manager.php\" method=\"post\">
                             <input type=\"hidden\" name=\"form-type\" value=\"playoff-b-scored\">
                             <input type=\"hidden\" name=\"match-id\" value=\"{$quaterFinal['id']}\">
                             <td><input class=\"score-button\" type=\"submit\" value=\"{$teamB[0]['name']} scored\"></td>
@@ -288,7 +305,7 @@ $teams = $db_conn->query($sqlSelTeams)->fetchAll(PDO::FETCH_ASSOC);
                             echo "</select>
                                 </td>
                             </form>
-                            <form action=\" ../app/admin_manager.php\" method=\"post\">
+                            <form action=\"../../app/admin_manager.php\" method=\"post\">
                                 <input type=\"hidden\" name=\"form-type\" value=\"playoff-finished\">
                                 <input type=\"hidden\" name=\"match-id\" value=\"{$quaterFinal['id']}\">
                                 <input type=\"hidden\" name=\"team-id-a\" value=\"{$teamA[0]['id']}\">
@@ -320,7 +337,7 @@ $teams = $db_conn->query($sqlSelTeams)->fetchAll(PDO::FETCH_ASSOC);
                             <td>Semi-Final</td>
                             <td>{$semiFinal['start_time']}</td>
                             <td>{$teamA[0]['name']} VS {$teamB[0]['name']}</td>
-                            <form action=\"../app/admin_manager.php\" method=\"post\">
+                            <form action=\"../../app/admin_manager.php\" method=\"post\">
                             <td><select class=\"player-selector\" name=\"player-name\" id=\"\">";
                                 foreach ($aTeamPlayers as $aTeamPlayer) {
                                     echo "<option value=\"{$aTeamPlayer['id']}\">{$aTeamPlayer['first_name']} {$aTeamPlayer['last_name']}</option>";
@@ -331,7 +348,7 @@ $teams = $db_conn->query($sqlSelTeams)->fetchAll(PDO::FETCH_ASSOC);
                             <td><input class=\"score-button\" type=\"submit\" value=\"{$teamA[0]['name']} scored\"></td>
                             </form>
                             <td>{$semiFinal['score_team_a']} VS {$semiFinal['score_team_b']}</td>
-                            <form action=\"../app/admin_manager.php\" method=\"post\">
+                            <form action=\"../../app/admin_manager.php\" method=\"post\">
                             <input type=\"hidden\" name=\"form-type\" value=\"playoff-b-scored\">
                             <input type=\"hidden\" name=\"match-id\" value=\"{$semiFinal['id']}\">
                             <td><input class=\"score-button\" type=\"submit\" value=\"{$teamB[0]['name']} scored\"></td>
@@ -342,7 +359,7 @@ $teams = $db_conn->query($sqlSelTeams)->fetchAll(PDO::FETCH_ASSOC);
                                 echo "</select>
                                 </td>
                             </form>
-                            <form action=\" ../app/admin_manager.php\" method=\"post\">
+                            <form action=\"../../app/admin_manager.php\" method=\"post\">
                                 <input type=\"hidden\" name=\"form-type\" value=\"playoff-finished\">
                                 <input type=\"hidden\" name=\"match-id\" value=\"{$semiFinal['id']}\">
                                 <input type=\"hidden\" name=\"team-id-a\" value=\"{$teamA[0]['id']}\">
@@ -374,7 +391,7 @@ $teams = $db_conn->query($sqlSelTeams)->fetchAll(PDO::FETCH_ASSOC);
                                 <td>Final</td>
                                 <td>{$final['start_time']}</td>
                                 <td>{$teamA[0]['name']} VS {$teamB[0]['name']}</td>
-                                <form action=\"../app/admin_manager.php\" method=\"post\">
+                                <form action=\"../../app/admin_manager.php\" method=\"post\">
                                 <td><select class=\"player-selector\" name=\"player-name\" id=\"\">";
                                     foreach ($aTeamPlayers as $aTeamPlayer) {
                                         echo "<option value=\"{$aTeamPlayer['id']}\">{$aTeamPlayer['first_name']} {$aTeamPlayer['last_name']}</option>";
@@ -385,7 +402,7 @@ $teams = $db_conn->query($sqlSelTeams)->fetchAll(PDO::FETCH_ASSOC);
                                 <td><input class=\"score-button\" type=\"submit\" value=\"{$teamA[0]['name']} scored\"></td>
                                 </form>
                                 <td>{$final['score_team_a']} VS {$final['score_team_b']}</td>
-                                <form action=\"../app/admin_manager.php\" method=\"post\">
+                                <form action=\"../../app/admin_manager.php\" method=\"post\">
                                 <input type=\"hidden\" name=\"form-type\" value=\"playoff-b-scored\">
                                 <input type=\"hidden\" name=\"match-id\" value=\"{$final['id']}\">
                                 <td><input class=\"score-button\" type=\"submit\" value=\"{$teamB[0]['name']} scored\"></td>
@@ -396,7 +413,7 @@ $teams = $db_conn->query($sqlSelTeams)->fetchAll(PDO::FETCH_ASSOC);
                                 echo "</select>
                                 </td>
                             </form>
-                            <form action=\" ../app/admin_manager.php\" method=\"post\">
+                            <form action=\" ../../app/admin_manager.php\" method=\"post\">
                                 <input type=\"hidden\" name=\"form-type\" value=\"playoff-finished\">
                                 <input type=\"hidden\" name=\"match-id\" value=\"{$final['id']}\">
                                 <input type=\"hidden\" name=\"team-id-a\" value=\"{$teamA[0]['id']}\">
@@ -432,7 +449,7 @@ $teams = $db_conn->query($sqlSelTeams)->fetchAll(PDO::FETCH_ASSOC);
                 $pouleRanking = $db_conn->query($sqlSel)->rowCount();
 
                 if ($finishedMatches == 0 && $pouleRanking == 0){
-                    echo "<form action=\"../app/admin_manager.php\" method=\"post\">
+                    echo "<form action=\"../../app/admin_manager.php\" method=\"post\">
                         <input type=\"hidden\" name=\"form-type\" value=\"start-playoffs\">
                         <input type=\"submit\" value=\"Start The Playoffs\">
                       </form>";
@@ -444,9 +461,9 @@ $teams = $db_conn->query($sqlSelTeams)->fetchAll(PDO::FETCH_ASSOC);
         </div>
         <h3 class="align-center">Copyright &copy; 2017, Project FIFA Groep 1</h3>
     </footer>
-    <script src="assets/js/jquery.js"></script>
-    <script src="assets/js/team_players.js"></script>
-    <script src="assets/js/smooth-scroll.js"></script>
+    <script src="../../assets/js/jquery.js"></script>
+    <script src="../../assets/js/team_players.js"></script>
+    <script src="../../assets/js/smooth-scroll.js"></script>
     <script>smoothScroll.init();</script>
 </div>
 </body>

@@ -1,4 +1,5 @@
-<?php require(realpath(__DIR__) . '/templates/header.php'); ?>
+<?php require(realpath(__DIR__) . '/../templates/header.php');
+$currentPage = "index.php";?>
 
 <section>
     <div class="poule-phase">
@@ -253,4 +254,4 @@
     </ul>
 </div>
 
-<?php require(realpath(__DIR__) . '/templates/footer.php');
+<?php require(realpath(__DIR__) . '/../templates/footer.php');

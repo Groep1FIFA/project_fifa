@@ -6,7 +6,7 @@
  * Time: 3:09 PM
  */
 ?>
-<?php require(realpath(__DIR__) . '/templates/header.php'); ?>
+<?php require(realpath(__DIR__) . '/../templates/header.php'); ?>
 
 <div class="standings">
     <?php
@@ -42,4 +42,4 @@
     ?>
 </div>
 
-<?php require(realpath(__DIR__) . '/templates/footer.php');
+<?php require(realpath(__DIR__) . '/../templates/footer.php');

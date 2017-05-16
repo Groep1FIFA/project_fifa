@@ -13,20 +13,26 @@ if (isset($_POST['form-type'])){
         if (!empty($_POST['teamName'])){
             $teamName = $_POST['teamName'];
 
-            $sqlSel = "SELECT * FROM tbl_teams WHERE name = '$teamName'";
-            $count = $db_conn->query($sqlSel)->rowCount();
+            $sqlSel = "SELECT * FROM tbl_teams WHERE name = :teamName";
+            $count = $db_conn->prepare($sqlSel);
+            $count->execute(['teamName' => $teamName]);
 
-            if ($count == 0){
-                $sqlIns = "INSERT INTO tbl_teams (name) VALUES ('$teamName')";
-                $db_conn->query($sqlIns);
+            if ($count->rowCount() == 0){
+                $sqlIns = "INSERT INTO tbl_teams (name) VALUES (:teamName)";
+                $sqlPre = $db_conn->prepare($sqlIns);
+                $sqlPre->execute(['teamName' => $teamName]);
 
                 $message = 'Team succesfully added';
-                header("Location: ../public/admin_panel.php?message=$message");
+                header("Location: ../public/admin/admin_panel.php?message=$message");
+            }
+            else{
+                $message = 'Team already exists';
+                header("Location: ../public/admin/admin_panel.php?message=$message");
             }
         }
         else{
             $message = 'please enter a team name';
-            header("Location: ../public/admin_panel.php?message=$message");
+            header("Location: ../public/admin/admin_panel.php?message=$message");
         }
     }
 //ADD PLAYER TO TEAM
@@ -35,23 +41,27 @@ if (isset($_POST['form-type'])){
             $addTeam = $_POST['addToTeam'];
             $playerId = $_POST['player_id'];
 
-            $sqlSel = "SELECT * FROM tbl_teams WHERE name = '$addTeam'";
-            $sqlCount = $db_conn->query($sqlSel)->rowCount();
+            $sqlSel = "SELECT * FROM tbl_teams WHERE name = :addTeam";
+            $sqlCount = $db_conn->prepare($sqlSel);
+            $sqlCount->execute(['addTeam' => $addTeam]);
 
-            if ($sqlCount == 1){
-                $team_id = "SELECT * FROM tbl_teams WHERE name = '$addTeam'";
-                $team_id = $db_conn->query($team_id)->fetchAll(PDO::FETCH_ASSOC);
+            if ($sqlCount->rowCount() == 1){
+                $team_id = "SELECT * FROM tbl_teams WHERE name = :addTeam";
+                $team_id = $db_conn->prepare($team_id);
+                $team_id->execute(['addTeam' => $addTeam]);
+                $team_id->fetchAll(PDO::FETCH_ASSOC);
                 $team_id = $team_id[0]['id'];
 
-                $sqlUpd = "UPDATE tbl_players SET team_id = '$team_id' WHERE id = '$playerId'";
-                $db_conn->query($sqlUpd);
+                $sqlUpd = "UPDATE tbl_players SET team_id = :team_id WHERE id = :playerId";
+                $sqlPre = $db_conn->prepare($sqlUpd);
+                $sqlPre->execute(['team_id' => $team_id, 'playerId' => $playerId]);
 
                 $message = "Player added to $addTeam";
-                header("Location: ../public/admin_panel.php?message=$message");
+                header("Location: ../public/admin/admin_panel.php?message=$message");
             }
             else{
                 $message = 'Team does not exists';
-                header("Location: ../public/admin_panel.php?message=$message");
+                header("Location: ../public/admin/admin_panel.php?message=$message");
             }
         }
         else{
@@ -62,14 +72,17 @@ if (isset($_POST['form-type'])){
     elseif ($formType == 'changeTeam'){
         $playerId = $_POST['player_id'];
 
-        $sqlSel = "SELECT * FROM tbl_players WHERE id = '$playerId'";
-        $playerName = $db_conn->query($sqlSel)->fetchAll(PDO::FETCH_ASSOC);
+        $sqlSel = "SELECT * FROM tbl_players WHERE id = :playerId";
+        $playerName = $db_conn->prepare($sqlSel);
+        $playerName->execute(['playerId' => $playerId]);
+        $playerName->fetchAll(PDO::FETCH_ASSOC);
 
-        $sqlUpd = "UPDATE tbl_players SET team_id = NULL WHERE id = '$playerId'";
-        $db_conn->query($sqlUpd);
+        $sqlUpd = "UPDATE tbl_players SET team_id = NULL WHERE id = :playerId";
+        $sqlPre = $db_conn->prepare($sqlUpd);
+        $sqlPre->execute(['playerId' => $playerId]);
 
         $message = "unasigned {$playerName[0]['first_name']} {$playerName[0]['last_name']}";
-        header("Location: ../public/admin_panel.php?message=$message");
+        header("Location: ../public/admin/admin_panel.php?message=$message");
     }
 //ADD TEAM TO POULE
     elseif ($formType == 'addToPoule'){
@@ -92,11 +105,11 @@ if (isset($_POST['form-type'])){
             $db_conn->query($sqlUpd);
 
             $message = "Succesfully added";
-            header("Location: ../public/admin_panel.php?message=$message");
+            header("Location: ../public/admin/admin_panel.php?message=$message");
         }
         else{
             $message = "this poule is full";
-            header("Location: ../public/admin_panel.php?message=$message");
+            header("Location: ../public/admin/admin_panel.php?message=$message");
         }
     }
 //DELETE TEAM FROM POULE
@@ -107,7 +120,7 @@ if (isset($_POST['form-type'])){
         $db_conn->query($sqlUpd);
 
         $message = "Succesfully changed";
-        header("Location: ../public/admin_panel.php?message=$message");
+        header("Location: ../public/admin/admin_panel.php?message=$message");
     }
 //TEAM A SCORED
     elseif($formType == 'team-a-scored') {
@@ -130,7 +143,7 @@ if (isset($_POST['form-type'])){
         $db_conn->query($playerUpdate);
 
         $message = 'Succesfully updated';
-        header("Location: ../public/admin_panel.php?message=$message");
+        header("Location: ../public/admin/admin_panel.php?message=$message");
     }
 //QUATERFINALS TEAM A SCORED
     elseif($formType == 'playoff-a-scored'){
@@ -153,7 +166,7 @@ if (isset($_POST['form-type'])){
         $db_conn->query($playerUpdate);
 
         $message = 'Succesfully updated';
-        header("Location: ../public/admin_panel.php?message=$message");
+        header("Location: ../public/admin/admin_panel.php?message=$message");
     }
 //TEAM B SCORED
     elseif($formType == 'team-b-scored'){
@@ -176,7 +189,7 @@ if (isset($_POST['form-type'])){
         $db_conn->query($playerUpdate);
 
         $message = 'Succesfully updated';
-        header("Location: ../public/admin_panel.php?message=$message");
+        header("Location: ../public/admin/admin_panel.php?message=$message");
     }
 // QUATERFINALS TEAM B SCORED
     elseif($formType == 'playoff-b-scored'){
@@ -199,7 +212,7 @@ if (isset($_POST['form-type'])){
         $db_conn->query($playerUpdate);
 
         $message = 'Succesfully updated';
-        header("Location: ../public/admin_panel.php?message=$message");
+        header("Location: ../public/admin/admin_panel.php?message=$message");
     }
 //MATCH FINISHED
     elseif($formType == 'match-finished'){
@@ -258,7 +271,7 @@ if (isset($_POST['form-type'])){
         }
         else{
             $message = 'Something went wrong';
-            header("Location: ../public/admin_panel.php?message=$message");
+            header("Location: ../public/admin/admin_panel.php?message=$message");
         }
         $goalBalanceA = $teamA[0]['goal_balance'] + $result;
         $goalBalanceB = $teamB[0]['goal_balance'] + $resultB;
@@ -269,7 +282,7 @@ if (isset($_POST['form-type'])){
         $db_conn->query($updateTeamB);
 
         $message = 'Succesfully updated';
-        header("Location: ../public/admin_panel.php?message=$message");
+        header("Location: ../public/admin/admin_panel.php?message=$message");
     }
 //QUATERFINAL FINISHED
     elseif($formType == 'playoff-finished'){
@@ -291,7 +304,7 @@ if (isset($_POST['form-type'])){
         $resultB = $match[0]['score_team_b'] - $match[0]['score_team_a'];
         if ($result == 0){
             $message = 'There are no ties in the Playoffs';
-            header("Location: ../public/admin_panel.php?message=$message");
+            header("Location: ../public/admin/admin_panel.php?message=$message");
             die();
         }
         elseif ($result > 0){
@@ -326,7 +339,7 @@ if (isset($_POST['form-type'])){
         }
         else{
             $message = 'Something went wrong';
-            header("Location: ../public/admin_panel.php?message=$message");
+            header("Location: ../public/admin/admin_panel.php?message=$message");
         }
         $goalBalanceA = $teamA[0]['goal_balance'] + $result;
         $goalBalanceB = $teamB[0]['goal_balance'] + $resultB;
@@ -337,7 +350,7 @@ if (isset($_POST['form-type'])){
         $db_conn->query($updateTeamB);
 
         $message = 'Succesfully updated';
-        header("Location: ../public/admin_panel.php?message=$message");
+        header("Location: ../public/admin/admin_panel.php?message=$message");
     }
 //START PLAYOFFS
     elseif ($formType == 'start-playoffs'){
@@ -390,14 +403,14 @@ if (isset($_POST['form-type'])){
         $db_conn->query($updRankTwoPouleD);
 
         $message = 'The playoffs have been started';
-        header("Location: ../public/admin_panel.php?message=$message");
+        header("Location: ../public/admin/admin_panel.php?message=$message");
     }
     else{
         $message = 'Failed';
-        header("Location: ../public/admin_panel.php?message=$message");
+        header("Location: ../public/admin/admin_panel.php?message=$message");
     }
 }
 else{
     $message = 'Failed';
-    header("Location: ../public/admin_panel.php?message=$message");
+    header("Location: ../public/admin/admin_panel.php?message=$message");
 }
