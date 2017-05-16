@@ -213,12 +213,12 @@ namespace ProjectFifaV2
                     lblHomeTeam.Location = new Point(15, txtHomePred.Bottom + (j * 30));
                     lblHomeTeam.AutoSize = true;
 
-                    txtHomePred.Text = "0";
+                    txtHomePred.Text = "";
                     txtHomePred.Location = new Point(lblHomeTeam.Width, lblHomeTeam.Top - 3);
                     txtHomePred.Width = 40;
                     rows[j, 0] = txtHomePred;
 
-                    txtAwayPred.Text = "0";
+                    txtAwayPred.Text = "";
                     txtAwayPred.Location = new Point(txtHomePred.Width + lblHomeTeam.Width, txtHomePred.Top);
                     txtAwayPred.Width = 40;
                     rows[j, 1] = txtAwayPred;
