@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Gegenereerd op: 09 mei 2017 om 13:11
+-- Gegenereerd op: 10 mei 2017 om 14:06
 -- Serverversie: 10.1.21-MariaDB
 -- PHP-versie: 5.6.30
 
@@ -64,7 +64,7 @@ CREATE TABLE `tbl_matches` (
 --
 
 INSERT INTO `tbl_matches` (`id`, `team_id_a`, `team_id_b`, `poule_id`, `score_team_a`, `score_team_b`, `start_time`, `finished`) VALUES
-(1, 1, 2, 1, 2, 4, '2017-04-13 18:00:00', 0),
+(1, 1, 2, 1, 2, 4, '2017-04-13 18:00:00', 1),
 (2, 1, 2, 2, 0, 0, '2017-05-04 00:00:00', 0),
 (3, 3, 4, 1, 0, 0, '2017-05-05 00:00:00', 0),
 (4, 3, 4, 2, 0, 0, '2017-05-04 00:00:00', 0),
@@ -162,14 +162,14 @@ CREATE TABLE `tbl_teams` (
 --
 
 INSERT INTO `tbl_teams` (`id`, `poule_id`, `name`, `points`, `team_nr`, `win`, `lose`, `tie`, `goal_balance`, `created_at`, `deleted_at`) VALUES
-(1, 1, 'Ajax', 0, 1, 0, 0, 0, 0, '2017-04-13 09:42:45', NULL),
-(2, 1, 'PSV', 0, 2, 0, 0, 0, 0, '2017-04-13 09:42:45', NULL),
-(3, 1, 'FC Twente', 0, 3, 0, 0, 0, 0, '2017-05-01 16:22:55', NULL),
-(4, 1, 'NEC', 0, 4, 0, 0, 0, 0, '2017-05-02 13:56:57', NULL),
-(5, 2, 'NAC', 0, 1, 0, 0, 0, 0, '2017-05-02 13:57:03', NULL),
-(6, 2, 'Sparta', 0, 2, 0, 0, 0, 0, '2017-05-02 16:27:08', NULL),
-(7, 2, 'Willem II', 0, 3, 0, 0, 0, 0, '2017-05-03 13:44:24', NULL),
-(8, 2, 'Vitesse', 0, 4, 0, 0, 0, 0, '2017-05-04 11:55:20', NULL);
+(1, 2, 'Ajax', 0, 1, 0, 0, 0, 0, '2017-04-13 09:42:45', NULL),
+(2, 2, 'PSV', 0, 2, 0, 0, 0, 0, '2017-04-13 09:42:45', NULL),
+(3, 1, 'FC Twente', 0, 2, 0, 0, 0, 0, '2017-05-01 16:22:55', NULL),
+(4, 2, 'NEC', 0, 3, 0, 0, 0, 0, '2017-05-02 13:56:57', NULL),
+(5, 1, 'NAC', 0, 1, 0, 0, 0, 0, '2017-05-02 13:57:03', NULL),
+(6, 2, 'Sparta', 0, 4, 0, 0, 0, 0, '2017-05-02 16:27:08', NULL),
+(7, 1, 'Willem II', 0, 3, 0, 0, 0, 0, '2017-05-03 13:44:24', NULL),
+(8, 1, 'Vitesse', 0, 4, 0, 0, 0, 0, '2017-05-04 11:55:20', NULL);
 
 --
 -- Indexen voor geëxporteerde tabellen
