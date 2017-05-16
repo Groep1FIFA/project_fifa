@@ -38,14 +38,11 @@
             this.clmHomeTeamScore = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmAwayTeamScore = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmAwayTeam = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.clmPoule = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.pnlPredCard = new System.Windows.Forms.Panel();
             this.btnInsertPrediction = new System.Windows.Forms.Button();
             this.unLbl = new System.Windows.Forms.Label();
-            this.lvOverviewP2 = new System.Windows.Forms.ListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.browserLauncher = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnEditPrediction
@@ -108,12 +105,13 @@
             this.clmHomeTeam,
             this.clmHomeTeamScore,
             this.clmAwayTeamScore,
-            this.clmAwayTeam});
+            this.clmAwayTeam,
+            this.clmPoule});
             this.lvOverviewP1.FullRowSelect = true;
             this.lvOverviewP1.Location = new System.Drawing.Point(635, 44);
             this.lvOverviewP1.Margin = new System.Windows.Forms.Padding(4);
             this.lvOverviewP1.Name = "lvOverviewP1";
-            this.lvOverviewP1.Size = new System.Drawing.Size(318, 738);
+            this.lvOverviewP1.Size = new System.Drawing.Size(518, 738);
             this.lvOverviewP1.TabIndex = 7;
             this.lvOverviewP1.UseCompatibleStateImageBehavior = false;
             this.lvOverviewP1.View = System.Windows.Forms.View.Details;
@@ -139,6 +137,10 @@
             // 
             this.clmAwayTeam.Text = "Away Team";
             this.clmAwayTeam.Width = 100;
+            // 
+            // clmPoule
+            // 
+            this.clmPoule.Text = "Poule";
             // 
             // pnlPredCard
             // 
@@ -167,50 +169,22 @@
             this.unLbl.Size = new System.Drawing.Size(0, 17);
             this.unLbl.TabIndex = 10;
             // 
-            // lvOverviewP2
+            // browserLauncher
             // 
-            this.lvOverviewP2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
-            this.columnHeader2,
-            this.columnHeader3,
-            this.columnHeader4});
-            this.lvOverviewP2.FullRowSelect = true;
-            this.lvOverviewP2.Location = new System.Drawing.Point(961, 44);
-            this.lvOverviewP2.Margin = new System.Windows.Forms.Padding(4);
-            this.lvOverviewP2.Name = "lvOverviewP2";
-            this.lvOverviewP2.Size = new System.Drawing.Size(318, 738);
-            this.lvOverviewP2.TabIndex = 11;
-            this.lvOverviewP2.UseCompatibleStateImageBehavior = false;
-            this.lvOverviewP2.View = System.Windows.Forms.View.Details;
-            // 
-            // columnHeader1
-            // 
-            this.columnHeader1.Text = "HomeTeam";
-            this.columnHeader1.Width = 100;
-            // 
-            // columnHeader2
-            // 
-            this.columnHeader2.Text = "Score";
-            this.columnHeader2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.columnHeader2.Width = 50;
-            // 
-            // columnHeader3
-            // 
-            this.columnHeader3.Text = "Score";
-            this.columnHeader3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.columnHeader3.Width = 50;
-            // 
-            // columnHeader4
-            // 
-            this.columnHeader4.Text = "Away Team";
-            this.columnHeader4.Width = 100;
+            this.browserLauncher.Location = new System.Drawing.Point(484, 187);
+            this.browserLauncher.Name = "browserLauncher";
+            this.browserLauncher.Size = new System.Drawing.Size(141, 23);
+            this.browserLauncher.TabIndex = 12;
+            this.browserLauncher.Text = "Browser";
+            this.browserLauncher.UseVisualStyleBackColor = true;
+            this.browserLauncher.Click += new System.EventHandler(this.browserLauncher_Click);
             // 
             // frmPlayer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1344, 898);
-            this.Controls.Add(this.lvOverviewP2);
+            this.Controls.Add(this.browserLauncher);
             this.Controls.Add(this.unLbl);
             this.Controls.Add(this.btnInsertPrediction);
             this.Controls.Add(this.pnlPredCard);
@@ -243,10 +217,7 @@
         private System.Windows.Forms.Button btnEditPrediction;
         private System.Windows.Forms.Button btnInsertPrediction;
         private System.Windows.Forms.Label unLbl;
-        private System.Windows.Forms.ListView lvOverviewP2;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.ColumnHeader columnHeader3;
-        private System.Windows.Forms.ColumnHeader columnHeader4;
+        private System.Windows.Forms.ColumnHeader clmPoule;
+        private System.Windows.Forms.Button browserLauncher;
     }
 }
