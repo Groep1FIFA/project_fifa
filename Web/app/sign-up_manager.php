@@ -8,9 +8,9 @@
 require ('database.php');
 
 if (!empty($_POST['firstname']) && !empty($_POST['lastname']) && !empty($_POST['personal_id'])){
-    $fname = $_POST['firstname'];
-    $lname = $_POST['lastname'];
-    $id = $_POST['personal_id'];
+    $fname = trim($_POST['firstname']);
+    $lname = trim($_POST['lastname']);
+    $id = trim($_POST['personal_id']);
 
     $sqlSel = "SELECT * FROM tbl_players WHERE student_id = :id";
     $sqlCount = $db_conn->prepare($sqlSel);

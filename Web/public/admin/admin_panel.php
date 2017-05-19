@@ -285,9 +285,11 @@ else{
                 <table class="align-center">
                     <?php
                     $sqlSel = "SELECT * FROM tbl_matches WHERE finished = 0";
-                    $sqlCount = $db_conn->query($sqlSel)->rowCount();
+                    $sqlPre = $db_conn->prepare($sqlSel);
+                    $sqlPre->execute();
+                    $sqlCount = $sqlPre->rowCount();
 
-                    if ($sqlCount >= 1) {
+                    if ($sqlCount == 0) {
                     $sqlSel = "SELECT * FROM tbl_playoffs WHERE playoff_ranking_a = 0 AND playoff_ranking_b = 0 AND finished = 0";
                     $quaterFinals = $db_conn->prepare($sqlSel);
                     $quaterFinals->execute();
@@ -303,20 +305,34 @@ else{
                     $finals->execute();
 
                     foreach ($quaterFinals as $quaterFinal){
-                        $sqlSel = "SELECT * FROM tbl_teams WHERE poule_ranking = '{$quaterFinal['poule_ranking_a']}'";
-                        $countA = $db_conn->query($sqlSel)->rowCount();
-                        $sqlSel = "SELECT * FROM tbl_teams WHERE poule_ranking = '{$quaterFinal['poule_ranking_b']}'";
-                        $countB = $db_conn->query($sqlSel)->rowCount();
+                        $sqlSel = "SELECT * FROM tbl_teams WHERE poule_ranking = :poule_ranking_a";
+                        $sqlPre = $db_conn->prepare($sqlSel);
+                        $sqlPre->execute(['poule_ranking_a' => $quaterFinal['poule_ranking_a']]);
+                        $countA = $sqlPre->rowCount();
+
+                        $sqlSel = "SELECT * FROM tbl_teams WHERE poule_ranking = :poule_ranking_b";
+                        $sqlPre = $db_conn->prepare($sqlSel);
+                        $sqlPre->execute(['poule_ranking_b' => $quaterFinal['poule_ranking_b']]);
+                        $countB = $sqlPre->rowCount();
 
                         if ($countA > 0 && $countB > 0) {
-                            $sqlSel = "SELECT * FROM tbl_teams WHERE poule_id = '{$quaterFinal['poule_id_a']}' AND poule_ranking = '{$quaterFinal['poule_ranking_a']}'";
-                            $teamA = $db_conn->query($sqlSel)->fetchAll(PDO::FETCH_ASSOC);
-                            $sqlSel = "SELECT * FROM tbl_teams WHERE poule_id = '{$quaterFinal['poule_id_b']}' AND poule_ranking = '{$quaterFinal['poule_ranking_b']}'";
-                            $teamB = $db_conn->query($sqlSel)->fetchAll(PDO::FETCH_ASSOC);
-                            $sqlSel = "SELECT * FROM tbl_players WHERE team_id = '{$teamA[0]['id']}'";
-                            $aTeamPlayers = $db_conn->query($sqlSel);
-                            $sqlSel = "SELECT * FROM tbl_players WHERE team_id = '{$teamB[0]['id']}'";
-                            $bTeamPlayers = $db_conn->query($sqlSel);
+                            $sqlSel = "SELECT * FROM tbl_teams WHERE poule_id = :poule_id_a AND poule_ranking = :poule_ranking_a";
+                            $sqlPre = $db_conn->prepare($sqlSel);
+                            $sqlPre->execute(['poule_id_a' => $quaterFinal['poule_id_a'], 'poule_ranking_a' => $quaterFinal['poule_ranking_a']]);
+                            $teamA = $sqlPre->fetchAll(PDO::FETCH_ASSOC);
+
+                            $sqlSel = "SELECT * FROM tbl_teams WHERE poule_id = :poule_id_b AND poule_ranking = :poule_ranking_b";
+                            $sqlPre = $db_conn->prepare($sqlSel);
+                            $sqlPre->execute(['poule_id_b' => $quaterFinal['poule_id_b'], 'poule_ranking_b' => $quaterFinal['poule_ranking_b']]);
+                            $teamB = $sqlPre->fetchAll(PDO::FETCH_ASSOC);
+
+                            $sqlSel = "SELECT * FROM tbl_players WHERE team_id = :id";
+                            $aTeamPlayers = $db_conn->prepare($sqlSel);
+                            $aTeamPlayers->execute(['id' => $teamA[0]['id']]);
+
+                            $sqlSel = "SELECT * FROM tbl_players WHERE team_id = :id";
+                            $bTeamPlayers = $db_conn->prepare($sqlSel);
+                            $bTeamPlayers->execute(['id' => $teamB[0]['id']]);
 
                             echo "<tr class=\"quaters\">
                             <td>Quater-Final</td>
@@ -363,14 +379,23 @@ else{
                     }
                     foreach ($semiFinals as $semiFinal) {
                             if ($quaterCount == 0) {
-                                $sqlSel = "SELECT * FROM tbl_teams WHERE playoff_id = '{$semiFinal['playoff_id_a']}' AND playoff_ranking = '{$semiFinal['playoff_ranking_a']}'";
-                                $teamA = $db_conn->query($sqlSel)->fetchAll(PDO::FETCH_ASSOC);
-                                $sqlSel = "SELECT * FROM tbl_teams WHERE playoff_id = '{$semiFinal['playoff_id_b']}' AND playoff_ranking = '{$semiFinal['playoff_ranking_b']}'";
-                                $teamB = $db_conn->query($sqlSel)->fetchAll(PDO::FETCH_ASSOC);
-                                $sqlSel = "SELECT * FROM tbl_players WHERE team_id = '{$teamA[0]['id']}'";
-                                $aTeamPlayers = $db_conn->query($sqlSel);
-                                $sqlSel = "SELECT * FROM tbl_players WHERE team_id = '{$teamB[0]['id']}'";
-                                $bTeamPlayers = $db_conn->query($sqlSel);
+                                $sqlSel = "SELECT * FROM tbl_teams WHERE playoff_id = :playoff_id_a AND playoff_ranking = :playoff_ranking_a";
+                                $sqlPre = $db_conn->prepare($sqlSel);
+                                $sqlPre->execute(['playoff_id_a' => $semiFinal['playoff_id_a'], 'playoff_ranking_a' => $semiFinal['playoff_ranking_a']]);
+                                $teamA = $sqlPre->fetchAll(PDO::FETCH_ASSOC);
+
+                                $sqlSel = "SELECT * FROM tbl_teams WHERE playoff_id = :playoff_id_b AND playoff_ranking = :playoff_ranking_b";
+                                $sqlPre = $db_conn->prepare($sqlSel);
+                                $sqlPre->execute(['playoff_id_b' => $semiFinal['playoff_id_b'], 'playoff_ranking_b' => $semiFinal['playoff_ranking_b']]);
+                                $teamB = $sqlPre->fetchAll(PDO::FETCH_ASSOC);
+
+                                $sqlSel = "SELECT * FROM tbl_players WHERE team_id = :id";
+                                $aTeamPlayers = $db_conn->prepare($sqlSel);
+                                $aTeamPlayers->execute(['id' => $teamA[0]['id']]);
+
+                                $sqlSel = "SELECT * FROM tbl_players WHERE team_id = :id";
+                                $bTeamPlayers = $db_conn->prepare($sqlSel);
+                                $bTeamPlayers->execute(['id' => $teamB[0]['id']]);
 
                                 echo "<tr class=\"semis\">
                             <td>Semi-Final</td>
@@ -417,14 +442,23 @@ else{
                         }
                         foreach ($finals as $final) {
                             if ($semiCount == 0) {
-                                $sqlSel = "SELECT * FROM tbl_teams WHERE playoff_id = '{$final['playoff_id_a']}' AND playoff_ranking = '{$final['playoff_ranking_a']}'";
-                                $teamA = $db_conn->query($sqlSel)->fetchAll(PDO::FETCH_ASSOC);
-                                $sqlSel = "SELECT * FROM tbl_teams WHERE playoff_id = '{$final['playoff_id_b']}' AND playoff_ranking = '{$final['playoff_ranking_b']}'";
-                                $teamB = $db_conn->query($sqlSel)->fetchAll(PDO::FETCH_ASSOC);
-                                $sqlSel = "SELECT * FROM tbl_players WHERE team_id = '{$teamA[0]['id']}'";
-                                $aTeamPlayers = $db_conn->query($sqlSel);
-                                $sqlSel = "SELECT * FROM tbl_players WHERE team_id = '{$teamB[0]['id']}'";
-                                $bTeamPlayers = $db_conn->query($sqlSel);
+                                $sqlSel = "SELECT * FROM tbl_teams WHERE playoff_id = :playoff_id_a AND playoff_ranking = :playoff_ranking_a";
+                                $sqlPre = $db_conn->prepare($sqlSel);
+                                $sqlPre->execute(['playoff_id_a' => $final['playoff_id_a'], 'playoff_ranking_a' => $final['playoff_ranking_a']]);
+                                $teamA = $sqlPre->fetchAll(PDO::FETCH_ASSOC);
+
+                                $sqlSel = "SELECT * FROM tbl_teams WHERE playoff_id = :playoff_id_b AND playoff_ranking = :playoff_ranking_b";
+                                $sqlPre = $db_conn->prepare($sqlSel);
+                                $sqlPre->execute(['playoff_id_b' => $final['playoff_id_b'], 'playoff_ranking_b' => $final['playoff_ranking_b']]);
+                                $teamB = $sqlPre->fetchAll(PDO::FETCH_ASSOC);
+
+                                $sqlSel = "SELECT * FROM tbl_players WHERE team_id = :id";
+                                $aTeamPlayers = $db_conn->prepare($sqlSel);
+                                $aTeamPlayers->execute(['id' => $teamA[0]['id']]);
+
+                                $sqlSel = "SELECT * FROM tbl_players WHERE team_id = :id";
+                                $bTeamPlayers = $db_conn->prepare($sqlSel);
+                                $bTeamPlayers->execute(['id' => $teamB[0]['id']]);
 
                                 echo "<tr class=\"finals\">
                                 <td>Final</td>
@@ -471,7 +505,39 @@ else{
                         }
                     }
                     else{
+                        $sqlSel = "SELECT * FROM tbl_playoffs WHERE playoff_ranking_a = 0 AND playoff_ranking_b = 0 AND finished = 0";
+                        $quaterFinals = $db_conn->prepare($sqlSel);
+                        $quaterFinals->execute();
 
+                        $sqlSel = "SELECT * FROM tbl_playoffs WHERE playoff_ranking_a = 1 AND playoff_ranking_b = 1 AND finished = 0";
+                        $semiFinals = $db_conn->prepare($sqlSel);
+                        $semiFinals->execute();
+
+                        $sqlSel = "SELECT * FROM tbl_playoffs WHERE playoff_ranking_a = 2 AND playoff_ranking_b = 2 AND finished = 0";
+                        $finals = $db_conn->prepare($sqlSel);
+                        $finals->execute();
+
+                        foreach ($quaterFinals as $quaterFinal){
+                            echo "<tr class=\"to-be-decided quaters\">
+                            <td>Quater-Final</td>
+                            <td>T.B.D {$quaterFinal['score_team_a']} VS {$quaterFinal['score_team_b']} T.B.D</td>
+                            <td>{$quaterFinal['start_time']}</td>
+                            </tr>";
+                        }
+                        foreach ($semiFinals as $semiFinal){
+                            echo "<tr class=\"to-be-decided quaters\">
+                            <td>Semi-Final</td>
+                            <td>T.B.D {$semiFinal['score_team_a']} VS {$semiFinal['score_team_b']} T.B.D</td>
+                            <td>{$semiFinal['start_time']}</td>
+                            </tr>";
+                        }
+                        foreach ($finals as $final) {
+                            echo "<tr class=\"to-be-decided finals\">
+                            <td>Final</td>
+                            <td>T.B.D {$final['score_team_a']} VS {$final['score_team_b']} T.B.D</td>
+                            <td>{$final['start_time']}</td>
+                            </tr>";
+                        }
                     }
                     ?>
                 </table>
@@ -483,9 +549,14 @@ else{
         <div class="container playoffs-schedule">
             <?php
                 $sqlSel = "SELECT * FROM tbl_matches WHERE finished = 0";
-                $finishedMatches = $db_conn->query($sqlSel)->rowCount();
+                $sqlPre = $db_conn->prepare($sqlSel);
+                $sqlPre->execute();
+                $finishedMatches = $sqlPre->rowCount();
+
                 $sqlSel = "SELECT * FROM tbl_teams WHERE poule_ranking = 1 OR poule_ranking = 2";
-                $pouleRanking = $db_conn->query($sqlSel)->rowCount();
+                $sqlPre = $db_conn->prepare($sqlSel);
+                $sqlPre->execute();
+                $pouleRanking = $sqlPre->rowCount();
 
                 if ($finishedMatches == 0 && $pouleRanking == 0){
                     echo "<form action=\"../../app/admin_manager.php\" method=\"post\">

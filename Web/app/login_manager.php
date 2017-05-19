@@ -11,8 +11,8 @@ if (isset($_POST['form-type'])){
     $formType = $_POST['form-type'];
     if ($formType == 'admin_login'){
         if (!empty($_POST['username']) && !empty($_POST['password'])){
-            $username = $_POST['username'];
-            $password = $_POST['password'];
+            $username = trim($_POST['username']);
+            $password = trim($_POST['password']);
 
             $sqlSel = "SELECT * FROM tbl_admin WHERE username = :username AND password = :password";
             $login = $db_conn->prepare($sqlSel);

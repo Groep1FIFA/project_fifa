@@ -11,7 +11,7 @@ if (isset($_POST['form-type'])){
 //CREATE TEAM
     if ($formType == 'createTeam'){
         if (!empty($_POST['teamName'])){
-            $teamName = $_POST['teamName'];
+            $teamName = trim($_POST['teamName']);
 
             $sqlSel = "SELECT * FROM tbl_teams WHERE name = :teamName";
             $count = $db_conn->prepare($sqlSel);
@@ -38,8 +38,8 @@ if (isset($_POST['form-type'])){
 //ADD PLAYER TO TEAM
     elseif ($formType == 'addToTeam'){
         if (!empty($_POST['addToTeam'])){
-            $addTeam = $_POST['addToTeam'];
-            $playerId = $_POST['player_id'];
+            $addTeam = trim($_POST['addToTeam']);
+            $playerId = trim($_POST['player_id']);
 
             $sqlSel = "SELECT * FROM tbl_teams WHERE name = :addTeam";
             $sqlCount = $db_conn->prepare($sqlSel);
@@ -71,7 +71,7 @@ if (isset($_POST['form-type'])){
     }
 //DELETE PLAYER FROM TEAM
     elseif ($formType == 'changeTeam'){
-        $playerId = $_POST['player_id'];
+        $playerId = trim($_POST['player_id']);
 
         $sqlSel = "SELECT * FROM tbl_players WHERE id = :playerId";
         $playerName = $db_conn->prepare($sqlSel);
@@ -87,8 +87,8 @@ if (isset($_POST['form-type'])){
     }
 //ADD TEAM TO POULE
     elseif ($formType == 'addToPoule'){
-        $pouleName = $_POST['pouleName'];
-        $teamId = $_POST['team_id'];
+        $pouleName = trim($_POST['pouleName']);
+        $teamId = trim($_POST['team_id']);
 
         $sqlSel = "SELECT * FROM tbl_poules WHERE name = :pouleName";
         $pouleId = $db_conn->prepare($sqlSel);
@@ -120,7 +120,7 @@ if (isset($_POST['form-type'])){
     }
 //DELETE TEAM FROM POULE
     elseif ($formType == 'changePoule'){
-        $changePoule = $_POST['clearPoule'];
+        $changePoule = trim($_POST['clearPoule']);
 
         $sqlUpd = "UPDATE tbl_teams SET poule_id = NULL , team_nr = NULL WHERE poule_id = :changePoule";
         $sqlPre = $db_conn->prepare($sqlUpd);
@@ -131,8 +131,8 @@ if (isset($_POST['form-type'])){
     }
 //TEAM A SCORED
     elseif($formType == 'team-a-scored') {
-        $matchId = $_POST['match-id'];
-        $playerId = $_POST['player-name'];
+        $matchId = trim($_POST['match-id']);
+        $playerId = trim($_POST['player-name']);
 
         $matchSel = "SELECT * FROM tbl_matches WHERE id = :matchId";
         $match = $db_conn->prepare($matchSel);
@@ -161,8 +161,8 @@ if (isset($_POST['form-type'])){
     }
 //QUATERFINALS TEAM A SCORED
     elseif($formType == 'playoff-a-scored'){
-        $matchId = $_POST['match-id'];
-        $playerId = $_POST['player-name'];
+        $matchId = trim($_POST['match-id']);
+        $playerId = trim($_POST['player-name']);
 
         $matchSel = "SELECT * FROM tbl_playoffs WHERE id = :matchId";
         $match = $db_conn->prepare($matchSel);
@@ -191,8 +191,8 @@ if (isset($_POST['form-type'])){
     }
 //TEAM B SCORED
     elseif($formType == 'team-b-scored'){
-        $matchId = $_POST['match-id'];
-        $playerId = $_POST['player-name'];
+        $matchId = trim($_POST['match-id']);
+        $playerId = trim($_POST['player-name']);
 
         $matchSel = "SELECT * FROM tbl_matches WHERE id = :matchId";
         $match = $db_conn->prepare($matchSel);
@@ -221,20 +221,20 @@ if (isset($_POST['form-type'])){
     }
 // QUATERFINALS TEAM B SCORED
     elseif($formType == 'playoff-b-scored'){
-        $matchId = $_POST['match-id'];
-        $playerId = $_POST['player-name'];
+        $matchId = trim($_POST['match-id']);
+        $playerId = trim($_POST['player-name']);
 
         $matchSel = "SELECT * FROM tbl_playoffs WHERE id = :matchId";
         $match = $db_conn->prepare($matchSel);
         $match->execute(['matchId' => $matchId]);
-        $match->fetchAll(PDO::FETCH_ASSOC);
+        $match = $match->fetchAll(PDO::FETCH_ASSOC);
 
         $matchGoals = $match[0]['score_team_b'] + 1;
 
         $playerSel = "SELECT * FROM tbl_players WHERE id=:playerId";
         $player = $db_conn->prepare($playerSel);
         $player->execute(['playerId' => $playerId]);
-        $player->fetchAll(PDO::FETCH_ASSOC);
+        $player = $player->fetchAll(PDO::FETCH_ASSOC);
 
         $playerGoals = $player[0]['goals'] + 1;
 
@@ -251,9 +251,9 @@ if (isset($_POST['form-type'])){
     }
 //MATCH FINISHED
     elseif($formType == 'match-finished'){
-        $matchId = $_POST['match-id'];
-        $teamIdA = $_POST['team-id-a'];
-        $teamIdB = $_POST['team-id-b'];
+        $matchId = trim($_POST['match-id']);
+        $teamIdA = trim($_POST['team-id-a']);
+        $teamIdB = trim($_POST['team-id-b']);
 
         $matchSel = "SELECT * FROM tbl_matches WHERE id = :matchId";
         $match = $db_conn->prepare($matchSel);
@@ -341,9 +341,9 @@ if (isset($_POST['form-type'])){
     }
 //QUATERFINAL FINISHED
     elseif($formType == 'playoff-finished'){
-        $matchId = $_POST['match-id'];
-        $teamIdA = $_POST['team-id-a'];
-        $teamIdB = $_POST['team-id-b'];
+        $matchId = trim($_POST['match-id']);
+        $teamIdA = trim($_POST['team-id-a']);
+        $teamIdB = trim($_POST['team-id-b']);
 
         $matchSel = "SELECT * FROM tbl_playoffs WHERE id = :matchId";
         $match = $db_conn->prepare($matchSel);
