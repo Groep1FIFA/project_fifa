@@ -22,7 +22,6 @@ namespace ProjectFifaV2
 
         List<TextBox> txtBoxList;
         TextBox[,] rows = new TextBox[lengthOutterArray, lengthInnerArray];
-        List<TextBox>[,] newRows = new List<TextBox>[2,2];
         public frmPlayer(Form frm, string un)
         {
             this.ControlBox = false;
@@ -107,11 +106,11 @@ namespace ProjectFifaV2
         {
             //dbh.TestConnection();
             //dbh.OpenConnectionToDB();
-            DataTable matches = dbh.FillDT("SELECT * FROM tblGames");
+            DataTable matches = dbh.FillDT("SELECT * FROM tblGames ORDER BY pouleId");
             foreach (DataRow match in matches.Rows)
             { 
-                DataTable team1 = dbh.FillDT("SELECT * FROM tblTeams WHERE pouleId='" + match["pouleId"].ToString() + "' AND teamNr='" + match["HomeTeam"].ToString() + "'");
-                DataTable team2 = dbh.FillDT("SELECT * FROM tblTeams WHERE pouleId='" + match["pouleId"].ToString() + "' AND teamNr='" + match["AwayTeam"].ToString() + "'");
+                DataTable team1 = dbh.FillDT("SELECT * FROM tblTeams WHERE pouleId='" + match["pouleId"].ToString() + "' AND teamNr='" + match["HomeTeam"].ToString() + "' ORDER BY pouleId");
+                DataTable team2 = dbh.FillDT("SELECT * FROM tblTeams WHERE pouleId='" + match["pouleId"].ToString() + "' AND teamNr='" + match["AwayTeam"].ToString() + "' ORDER BY pouleId");
                 dbh.CloseConnectionToDB();
                 for (int i = 0; i < team1.Rows.Count; i++)
                 {
@@ -192,11 +191,11 @@ namespace ProjectFifaV2
                 dbh.CloseConnectionToDB();
                 for (int j = 0; j < team1.Rows.Count; j++)
                 {*/
-            DataTable matches = dbh.FillDT("SELECT * FROM tblGames");
+            DataTable matches = dbh.FillDT("SELECT * FROM tblGames ORDER BY pouleId");
             for (int j = 0; j < matches.Rows.Count; j++)
             {
-                DataTable team1 = dbh.FillDT("SELECT * FROM tblTeams WHERE pouleId='" + matches.Rows[j]["pouleId"].ToString() + "' AND teamNr='" + matches.Rows[j]["HomeTeam"].ToString() + "'");
-                DataTable team2 = dbh.FillDT("SELECT * FROM tblTeams WHERE pouleId='" + matches.Rows[j]["pouleId"].ToString() + "' AND teamNr='" + matches.Rows[j]["AwayTeam"].ToString() + "'");
+                DataTable team1 = dbh.FillDT("SELECT * FROM tblTeams WHERE pouleId='" + matches.Rows[j]["pouleId"].ToString() + "' AND teamNr='" + matches.Rows[j]["HomeTeam"].ToString() + "' ORDER BY pouleId");
+                DataTable team2 = dbh.FillDT("SELECT * FROM tblTeams WHERE pouleId='" + matches.Rows[j]["pouleId"].ToString() + "' AND teamNr='" + matches.Rows[j]["AwayTeam"].ToString() + "' ORDER BY pouleId");
                 dbh.CloseConnectionToDB();
                 for (int i = 0; i < team1.Rows.Count; i++)
                 {
@@ -213,12 +212,12 @@ namespace ProjectFifaV2
                     lblHomeTeam.Location = new Point(15, txtHomePred.Bottom + (j * 30));
                     lblHomeTeam.AutoSize = true;
 
-                    txtHomePred.Text = "0";
+                    txtHomePred.Text = "";
                     txtHomePred.Location = new Point(lblHomeTeam.Width, lblHomeTeam.Top - 3);
                     txtHomePred.Width = 40;
                     rows[j, 0] = txtHomePred;
 
-                    txtAwayPred.Text = "0";
+                    txtAwayPred.Text = "";
                     txtAwayPred.Location = new Point(txtHomePred.Width + lblHomeTeam.Width, txtHomePred.Top);
                     txtAwayPred.Width = 40;
                     rows[j, 1] = txtAwayPred;
@@ -231,6 +230,11 @@ namespace ProjectFifaV2
                     pnlPredCard.Controls.Add(txtHomePred);
                     pnlPredCard.Controls.Add(txtAwayPred);
                     pnlPredCard.Controls.Add(lblAwayTeam);
+                    if ((matches.Rows[j]["AwayTeamScore"].ToString() != null && matches.Rows[j]["AwayTeamScore"].ToString() != "") || (matches.Rows[j]["HomeTeamScore"].ToString() != null && matches.Rows[j]["HomeTeamScore"].ToString() != ""))
+                    {
+                        rows[j, 0].ReadOnly = true;
+                        rows[j, 1].ReadOnly = true;
+                    }
                 }
             }
             /*DataTable hometable = dbh.FillDT("SELECT tblTeams.teamName FROM tblGames INNER JOIN tblTeams ON tblGames.homeTeam = tblTeams.id");
@@ -299,11 +303,25 @@ namespace ProjectFifaV2
                 {
                     if (k == 0)
                     {
-                        home = rows[j, k].Text;
+                        if (rows[j, k].Text == "" || rows[j, k].Text == null || game["HomeTeamScore"] == null || game["AwayTeamScore"] == null)
+                        {
+                            home = null;
+                        }
+                        else
+                        {
+                            home = rows[j, k].Text;
+                        }
                     }
                     else
                     {
-                        away = rows[j, k].Text;
+                        if (rows[j, k].Text == "" || rows[j, k].Text == null || game["HomeTeamScore"] == null || game["AwayTeamScore"] == null)
+                        {
+                            away = null;
+                        }
+                        else
+                        {
+                            away = rows[j, k].Text;
+                        }
                     }
                 }
                 if (game["HomeTeamScore"] == null && game["AwayTeamScore"] == null)
@@ -335,14 +353,28 @@ namespace ProjectFifaV2
                 {
                     if (k == 0)
                     {
-                        home = rows[j, k].Text;
+                        if (rows[j, k].Text == "" || rows[j, k].Text == null || game["HomeTeamScore"] == null || game["AwayTeamScore"] == null)
+                        {
+                            home = null;
+                        }
+                        else
+                        {
+                            home = rows[j, k].Text;
+                        }
                     }
                     else
                     {
-                        away = rows[j, k].Text;
+                        if (rows[j, k].Text == "" || rows[j, k].Text == null || game["HomeTeamScore"] == null || game["AwayTeamScore"] == null)
+                        {
+                            away = null;
+                        }
+                        else
+                        {
+                            away = rows[j, k].Text;
+                        }
                     }
                 }
-                if (game["HomeTeamScore"] != null && game["AwayTeamScore"] != null)
+                if (game["HomeTeamScore"] != null && game["AwayTeamScore"] != null && (home != null || away != "") && (away != null || away != ""))
                 {
                     dbh.Execute("Insert Into tblPredictions (User_id, Game_id, PredictedHomeScore, PredictedAwayScore) VALUES ('" + rowUser["id"] + "', " + Convert.ToInt32(j) + ", '" + home + "', '" + away + "')");
                 }

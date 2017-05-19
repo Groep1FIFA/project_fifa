@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmScoreInput));
             this.pnlScores = new System.Windows.Forms.Panel();
             this.button1 = new System.Windows.Forms.Button();
             this.calculateScore = new System.Windows.Forms.Button();
@@ -38,9 +39,11 @@
             this.pnlScores.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.pnlScores.Location = new System.Drawing.Point(0, 0);
+            this.pnlScores.AutoScroll = true;
+            this.pnlScores.BackColor = System.Drawing.Color.White;
+            this.pnlScores.Location = new System.Drawing.Point(22, 26);
             this.pnlScores.Name = "pnlScores";
-            this.pnlScores.Size = new System.Drawing.Size(373, 539);
+            this.pnlScores.Size = new System.Drawing.Size(351, 358);
             this.pnlScores.TabIndex = 0;
             // 
             // button1
@@ -67,6 +70,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(504, 538);
             this.Controls.Add(this.calculateScore);
             this.Controls.Add(this.button1);
