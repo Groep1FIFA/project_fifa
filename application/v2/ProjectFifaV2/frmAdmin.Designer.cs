@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAdmin));
             this.btnLoadData = new System.Windows.Forms.Button();
             this.txtPath = new System.Windows.Forms.TextBox();
             this.btnSelectFile = new System.Windows.Forms.Button();
@@ -42,7 +43,7 @@
             // 
             // btnLoadData
             // 
-            this.btnLoadData.Location = new System.Drawing.Point(884, 41);
+            this.btnLoadData.Location = new System.Drawing.Point(141, 71);
             this.btnLoadData.Margin = new System.Windows.Forms.Padding(4);
             this.btnLoadData.Name = "btnLoadData";
             this.btnLoadData.Size = new System.Drawing.Size(108, 25);
@@ -53,7 +54,7 @@
             // 
             // txtPath
             // 
-            this.txtPath.Location = new System.Drawing.Point(189, 41);
+            this.txtPath.Location = new System.Drawing.Point(16, 41);
             this.txtPath.Margin = new System.Windows.Forms.Padding(4);
             this.txtPath.MaxLength = 256;
             this.txtPath.Name = "txtPath";
@@ -62,7 +63,7 @@
             // 
             // btnSelectFile
             // 
-            this.btnSelectFile.Location = new System.Drawing.Point(73, 41);
+            this.btnSelectFile.Location = new System.Drawing.Point(16, 71);
             this.btnSelectFile.Margin = new System.Windows.Forms.Padding(4);
             this.btnSelectFile.Name = "btnSelectFile";
             this.btnSelectFile.Size = new System.Drawing.Size(108, 25);
@@ -73,7 +74,7 @@
             // 
             // txtQuery
             // 
-            this.txtQuery.Location = new System.Drawing.Point(73, 171);
+            this.txtQuery.Location = new System.Drawing.Point(16, 172);
             this.txtQuery.Margin = new System.Windows.Forms.Padding(4);
             this.txtQuery.MaxLength = 13333337;
             this.txtQuery.Multiline = true;
@@ -83,7 +84,7 @@
             // 
             // btnExecute
             // 
-            this.btnExecute.Location = new System.Drawing.Point(768, 207);
+            this.btnExecute.Location = new System.Drawing.Point(16, 139);
             this.btnExecute.Margin = new System.Windows.Forms.Padding(4);
             this.btnExecute.Name = "btnExecute";
             this.btnExecute.Size = new System.Drawing.Size(108, 25);
@@ -103,7 +104,7 @@
             // 
             // btnAdminLogOut
             // 
-            this.btnAdminLogOut.Location = new System.Drawing.Point(1121, 41);
+            this.btnAdminLogOut.Location = new System.Drawing.Point(1121, 10);
             this.btnAdminLogOut.Margin = new System.Windows.Forms.Padding(4);
             this.btnAdminLogOut.Name = "btnAdminLogOut";
             this.btnAdminLogOut.Size = new System.Drawing.Size(141, 49);
@@ -120,7 +121,7 @@
             this.tableSelector.Items.AddRange(new object[] {
             "tblTeams",
             "tblGames"});
-            this.tableSelector.Location = new System.Drawing.Point(189, 10);
+            this.tableSelector.Location = new System.Drawing.Point(16, 10);
             this.tableSelector.Name = "tableSelector";
             this.tableSelector.Size = new System.Drawing.Size(685, 24);
             this.tableSelector.TabIndex = 8;
@@ -128,7 +129,7 @@
             // insertBtn
             // 
             this.insertBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.insertBtn.Location = new System.Drawing.Point(1121, 97);
+            this.insertBtn.Location = new System.Drawing.Point(1121, 66);
             this.insertBtn.Name = "insertBtn";
             this.insertBtn.Size = new System.Drawing.Size(141, 56);
             this.insertBtn.TabIndex = 9;
@@ -140,6 +141,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(1279, 630);
             this.Controls.Add(this.insertBtn);
             this.Controls.Add(this.tableSelector);
