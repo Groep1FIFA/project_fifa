@@ -110,7 +110,7 @@ namespace ProjectFifaV2
                     }
                     else if (tableName == "tblGames")
                     {
-                        dbh.Execute("CREATE table tblGames (Game_ID int NOT NULL, homeTeam int NOT NULL, awayTeam int NOT NULL, pouleId int NOT NULL, HomeTeamScore int NULL, AwayTeamScore int NULL, PRIMARY KEY (Game_ID))");
+                        dbh.Execute("CREATE table tblGames (Game_ID int NOT NULL, homeTeam int NOT NULL, awayTeam int NOT NULL, pouleId int NOT NULL, HomeTeamScore int NULL, AwayTeamScore int NULL, finished bit NOT NULL, PRIMARY KEY (Game_ID))");
                     }
                 //}
                 using (StreamReader reader = new StreamReader(txtPath.Text))
@@ -128,7 +128,15 @@ namespace ProjectFifaV2
                         }
                         else if (tableName == "tblGames")
                         {
-                            string insert = "INSERT INTO tblGames (Game_ID, homeTeam, awayTeam, pouleId) VALUES ('" + lineWords[0].Trim('"') + "', '" + lineWords[1].Trim('"') + "', '" + lineWords[2].Trim('"') + "', '" + lineWords[3].Trim('"') + /*"', '" + /*lineWords[4].Trim('"')*/  /*"', '"  /*lineWords[5].Trim('"')*/ "')";
+                            string insert;
+                            if (lineWords[6].Trim('"') == "0")
+                            {
+                                insert = "INSERT INTO tblGames (Game_ID, homeTeam, awayTeam, pouleId, finished) VALUES ('" + lineWords[0].Trim('"') + "', '" + lineWords[1].Trim('"') + "', '" + lineWords[2].Trim('"') + "', '" + lineWords[3].Trim('"') + "', '" + lineWords[6].Trim('"') + "')";
+                            }
+                            else
+                            {
+                                insert = "INSERT INTO tblGames (Game_ID, homeTeam, awayTeam, pouleId, HomeTeamScore, AwayTeamScore, finished) VALUES ('" + lineWords[0].Trim('"') + "', '" + lineWords[1].Trim('"') + "', '" + lineWords[2].Trim('"') + "', '" + lineWords[3].Trim('"') + "', '" + lineWords[4].Trim('"') + "', '" + lineWords[5].Trim('"') + "', '" + lineWords[6].Trim('"') + "')";
+                            }
                             dbh.Execute(insert);
                         }
                         else
