@@ -1,17 +1,34 @@
 <?php
 require("../../app/database.php");
 $sqlSelAdmin = "SELECT * FROM tbl_admin";
-$admins = $db_conn->query($sqlSelAdmin)->fetchAll(PDO::FETCH_ASSOC);
+$admins = $db_conn->prepare($sqlSelAdmin);
+$admins->execute();
+$admins = $admins->fetchAll(PDO::FETCH_ASSOC);
+
 $sqlSelMatches = "SELECT * FROM tbl_matches WHERE finished = '0' ORDER BY start_time ASC";
-$matches = $db_conn->query($sqlSelMatches)->fetchAll(PDO::FETCH_ASSOC);
+$matches = $db_conn->prepare($sqlSelMatches);
+$matches->execute();
+$matches = $matches->fetchAll(PDO::FETCH_ASSOC);
+
 $sqlSelMatches = "SELECT * FROM tbl_matches WHERE finished = '1'";
-$matchesFinished = $db_conn->query($sqlSelMatches)->rowCount();
+$matchesFinished = $db_conn->prepare($sqlSelMatches);
+$matchesFinished->execute();
+$matchesFinished = $matchesFinished->rowCount();
+
 $sqlSelPlayers = "SELECT * FROM  tbl_players";
-$players = $db_conn->query($sqlSelPlayers)->fetchAll(PDO::FETCH_ASSOC);
+$players = $db_conn->prepare($sqlSelPlayers);
+$players->execute();
+$players = $players->fetchAll(PDO::FETCH_ASSOC);
+
 $sqlSelPoules = "SELECT * FROM tbl_poules";
-$poules = $db_conn->query($sqlSelPoules)->fetchAll(PDO::FETCH_ASSOC);
+$poules = $db_conn->prepare($sqlSelPoules);
+$poules->execute();
+$poules = $poules->fetchAll(PDO::FETCH_ASSOC);
+
 $sqlSelTeams = "SELECT * FROM tbl_teams";
-$teams = $db_conn->query($sqlSelTeams)->fetchAll(PDO::FETCH_ASSOC);
+$teams = $db_conn->prepare($sqlSelTeams);
+$teams->execute();
+$teams = $teams->fetchAll(PDO::FETCH_ASSOC);
 
 session_start();
 
@@ -78,7 +95,8 @@ else{
                     <h2>Unassigned Players</h2>
                         <?php
                         $sqlSel = "SELECT * FROM tbl_players WHERE team_id IS NULL ";
-                        $players = $db_conn->query($sqlSel);
+                        $players = $db_conn->prepare($sqlSel);
+                        $players->execute();
 
                         foreach ($players as $player){
                             echo "<ul class=\"flex\">
@@ -102,10 +120,15 @@ else{
                     <h2>Assinged Players</h2>
                     <?php
                     $sqlSel = "SELECT * FROM tbl_players WHERE team_id IS NOT NULL ";
-                    $players = $db_conn->query($sqlSel);
+                    $players = $db_conn->prepare($sqlSel);
+                    $players->execute();
+
                     foreach ($players as $player){
-                        $sqlSel = "SELECT * FROM tbl_teams WHERE id = '{$player['team_id']}'";
-                        $teamName = $db_conn->query($sqlSel)->fetchAll(PDO::FETCH_ASSOC);
+                        $sqlSel = "SELECT * FROM tbl_teams WHERE id = :team_id";
+                        $teamName = $db_conn->prepare($sqlSel);
+                        $teamName->execute(['team_id' => $player['team_id']]);
+                        $teamName = $teamName->fetchAll(PDO::FETCH_ASSOC);
+
                         echo "<ul class=\"flex align-center\">
                         <li class=\"player-name\">{$player['first_name']} {$player['last_name']}</li>
                         <li>{$teamName[0]['name']}</li>";
@@ -132,7 +155,9 @@ else{
                     <h2>Unassigned Teams</h2>
                     <?php
                     $sqlSel = "SELECT * FROM tbl_teams WHERE poule_id IS NULL";
-                    $teams = $db_conn->query($sqlSel);
+                    $teams = $db_conn->prepare($sqlSel);
+                    $teams->execute();
+
                     foreach ($teams as $team){
                         echo "<ul class=\"flex\">
                                 <li>{$team['name']}</li>";
@@ -158,7 +183,9 @@ else{
                     <h2>Poules</h2>
                     <?php
                     $sqlSel = "SELECT * FROM tbl_teams WHERE poule_id IS NOT NULL";
-                    $teams = $db_conn->query($sqlSel);
+                    $teams = $db_conn->prepare($sqlSel);
+                    $teams->execute();
+
                     foreach ($poules as $poule){
                         echo "<ul>
                             <li>{$poule['name']}";
@@ -169,11 +196,15 @@ else{
                                 <input class=\"add-player player-add\" type=\"submit\" value=\"Clear Poule\">
                             </form>";
                         }
-                        $sqlSel = "SELECT * FROM tbl_poules WHERE name = '{$poule['name']}'";
-                        $pouleId = $db_conn->query($sqlSel)->fetchAll(PDO::FETCH_ASSOC);
+                        $sqlSel = "SELECT * FROM tbl_poules WHERE name = :name";
+                        $pouleId = $db_conn->prepare($sqlSel);
+                        $pouleId->execute(['name' => $poule['name']]);
+                        $pouleId = $pouleId->fetchAll(PDO::FETCH_ASSOC);
                         $pouleId = $pouleId[0]['id'];
-                        $sqlSel = "SELECT * FROM tbl_teams WHERE poule_id = '$pouleId'";
-                        $teams = $db_conn->query($sqlSel);
+
+                        $sqlSel = "SELECT * FROM tbl_teams WHERE poule_id = :pouleId";
+                        $teams = $db_conn->prepare($sqlSel);
+                        $teams->execute(['pouleId' => $pouleId]);
 
                         foreach ($teams as $team){
                             echo "<ul><li>{$team['name']}</li></ul>";
@@ -203,10 +234,13 @@ else{
                         break;
                     }
                     else {
-                        $sqlT1Players = "SELECT * FROM tbl_players WHERE team_id = '{$sqlATeams[0]['id']}'";
-                        $sqlT1Players = $db_conn->query($sqlT1Players);
-                        $sqlT2Players = "SELECT * FROM tbl_players WHERE team_id = '{$sqlBTeams[0]['id']}'";
-                        $sqlT2Players = $db_conn->query($sqlT2Players);
+                        $sqlT1Players = "SELECT * FROM tbl_players WHERE team_id = :id";
+                        $sqlT1Players = $db_conn->prepare($sqlT1Players);
+                        $sqlT1Players->execute(['id' => $sqlATeams[0]['id']]);
+
+                        $sqlT2Players = "SELECT * FROM tbl_players WHERE team_id = :id";
+                        $sqlT2Players = $db_conn->prepare($sqlT2Players);
+                        $sqlT2Players->execute(['id' => $sqlBTeams[0]['id']]);
 
                         echo "<tr class=\"align-center\">
                                 <td>Poule: {$sqlPoules[0]['name']}</td>
@@ -255,13 +289,18 @@ else{
 
                     if ($sqlCount >= 1) {
                     $sqlSel = "SELECT * FROM tbl_playoffs WHERE playoff_ranking_a = 0 AND playoff_ranking_b = 0 AND finished = 0";
-                    $quaterFinals = $db_conn->query($sqlSel);
+                    $quaterFinals = $db_conn->prepare($sqlSel);
+                    $quaterFinals->execute();
                     $quaterCount = $quaterFinals->rowCount();
+
                     $sqlSel = "SELECT * FROM tbl_playoffs WHERE playoff_ranking_a = 1 AND playoff_ranking_b = 1 AND finished = 0";
-                    $semiFinals = $db_conn->query($sqlSel);
+                    $semiFinals = $db_conn->prepare($sqlSel);
+                    $semiFinals->execute();
                     $semiCount = $semiFinals->rowCount();
+
                     $sqlSel = "SELECT * FROM tbl_playoffs WHERE playoff_ranking_a = 2 AND playoff_ranking_b = 2 AND finished = 0";
-                    $finals = $db_conn->query($sqlSel);
+                    $finals = $db_conn->prepare($sqlSel);
+                    $finals->execute();
 
                     foreach ($quaterFinals as $quaterFinal){
                         $sqlSel = "SELECT * FROM tbl_teams WHERE poule_ranking = '{$quaterFinal['poule_ranking_a']}'";

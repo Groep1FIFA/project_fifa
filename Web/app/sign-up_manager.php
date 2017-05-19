@@ -14,12 +14,12 @@ if (!empty($_POST['firstname']) && !empty($_POST['lastname']) && !empty($_POST['
 
     $sqlSel = "SELECT * FROM tbl_players WHERE student_id = :id";
     $sqlCount = $db_conn->prepare($sqlSel);
-    $sqlCount->bindParam(':id', $id);
-    $sqlCount->execute();
+    $sqlCount->execute(['id' => $id]);
 
     if ($sqlCount->rowCount() == 0){
-        $sqlIns = "INSERT INTO tbl_players (first_name, last_name, student_id) VALUES ('$fname', '$lname', '$id')";
-        $db_conn->query($sqlIns);
+        $sqlIns = "INSERT INTO tbl_players (first_name, last_name, student_id) VALUES (:fname, :lname, :id)";
+        $sqlPre = $db_conn->prepare($sqlIns);
+        $sqlPre->execute(['fname' => $fname, 'lname' => $lname, 'id' => $id]);
 
         $message = 'You have been registered';
         header("Location: ../public/home/?message=$message");

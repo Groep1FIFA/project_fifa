@@ -2,15 +2,29 @@
 <?php
 require("../../app/database.php");
 $sqlSelAdmin = "SELECT * FROM tbl_admin";
-$admins = $db_conn->query($sqlSelAdmin)->fetchAll(PDO::FETCH_ASSOC);
+$admin = $db_conn->prepare($sqlSelAdmin);
+$admin->execute();
+$admin = $admin->fetchAll(PDO::FETCH_ASSOC);
+
 $sqlSelMatches = "SELECT * FROM tbl_matches WHERE finished = '0' ORDER BY start_time ASC";
-$matches = $db_conn->query($sqlSelMatches)->fetchAll(PDO::FETCH_ASSOC);
+$matches = $db_conn->prepare($sqlSelMatches);
+$matches->execute();
+$matches = $matches->fetchAll(PDO::FETCH_ASSOC);
+
 $sqlSelPlayers = "SELECT * FROM  tbl_players";
-$players = $db_conn->query($sqlSelPlayers)->fetchAll(PDO::FETCH_ASSOC);
+$players = $db_conn->prepare($sqlSelPlayers);
+$players->execute();
+$players = $players->fetchAll(PDO::FETCH_ASSOC);
+
 $sqlSelPoules = "SELECT * FROM tbl_poules";
-$poules = $db_conn->query($sqlSelPoules)->fetchAll(PDO::FETCH_ASSOC);
+$poules = $db_conn->prepare($sqlSelPoules);
+$poules->execute();
+$poules = $poules->fetchAll(PDO::FETCH_ASSOC);
+
 $sqlSelTeams = "SELECT * FROM tbl_teams";
-$teams = $db_conn->query($sqlSelTeams)->fetchAll(PDO::FETCH_ASSOC);
+$teams = $db_conn->prepare($sqlSelTeams);
+$teams->execute();
+$teams = $teams->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!doctype html>
 <html lang="en">
