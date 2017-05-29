@@ -222,14 +222,22 @@ else{
                 <table>
                 <?php
                 foreach ($matches as $match) {
-                    $sqlPoules = "SELECT * FROM tbl_poules WHERE id = '{$match['poule_id']}'";
-                    $sqlPoules = $db_conn->query($sqlPoules)->fetchAll(PDO::FETCH_ASSOC);
-                    $sqlATeams = "SELECT * FROM tbl_teams WHERE poule_id = '{$match['poule_id']}' AND team_nr = '{$match['team_id_a']}'";
-                    $sqlATeams = $db_conn->query($sqlATeams)->fetchAll(PDO::FETCH_ASSOC);
-                    $sqlBTeams = "SELECT * FROM tbl_teams WHERE poule_id = '{$match['poule_id']}' AND team_nr = '{$match['team_id_b']}'";
-                    $sqlBTeams = $db_conn->query($sqlBTeams)->fetchAll(PDO::FETCH_ASSOC);
+                    $sqlPoules = "SELECT * FROM tbl_poules WHERE id = :poule_id";
+                    $sqlPoules = $db_conn->prepare($sqlPoules);
+                    $sqlPoules->execute(['poule_id' => $match['poule_id']]);
+                    $sqlPoules = $sqlPoules->fetchAll(PDO::FETCH_ASSOC);
 
-                    if (!isset($sqlATeams[0]['name']) && !isset($sqlBTeams[0]['name'])){
+                    $sqlATeams = "SELECT * FROM tbl_teams WHERE poule_id = :poule_id AND team_nr = :team_id_a";
+                    $sqlATeams = $db_conn->prepare($sqlATeams);
+                    $sqlATeams->execute(['poule_id' => $match['poule_id'], 'team_id_a' => $match['team_id_a']]);
+                    $sqlATeams = $sqlATeams->fetchAll(PDO::FETCH_ASSOC);
+
+                    $sqlBTeams = "SELECT * FROM tbl_teams WHERE poule_id = :poule_id AND team_nr = :team_id_b";
+                    $sqlBTeams = $db_conn->prepare($sqlBTeams);
+                    $sqlBTeams->execute(['poule_id' => $match['poule_id'], 'team_id_b' => $match['team_id_b']]);
+                    $sqlBTeams = $sqlBTeams->fetchAll(PDO::FETCH_ASSOC);
+
+                    if (!isset($sqlATeams[0]['name']) || !isset($sqlBTeams[0]['name'])){
                         echo 'Vul de poulen tot maximaal 4 teams.';
                         break;
                     }
