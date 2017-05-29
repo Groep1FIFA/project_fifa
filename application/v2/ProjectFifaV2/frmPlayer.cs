@@ -20,7 +20,6 @@ namespace ProjectFifaV2
         private DataTable tblUsers;
         private DataRow rowUser;
 
-        List<TextBox> txtBoxList;
         TextBox[,] rows = new TextBox[lengthOutterArray, lengthInnerArray];
         public frmPlayer(Form frm, string un)
         {
@@ -324,7 +323,7 @@ namespace ProjectFifaV2
                         }
                     }
                 }
-                if (game["HomeTeamScore"] == null && game["AwayTeamScore"] == null)
+                if (game["HomeTeamScore"] == null && game["AwayTeamScore"] == null && (home != null || away != "") && (away != null || away != ""))
                 {
                     dbh.Execute("UPDATE tblPredictions SET PredictedHomeScore=" + home + ", PredictedAwayScore=" + away + " WHERE (User_id=" +
                     rowUser["id"] + " AND Game_id=" + Convert.ToInt32(j) + ")");
