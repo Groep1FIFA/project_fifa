@@ -263,7 +263,6 @@ $currentPage = "index.php";
                         }
                 echo "</ul>
                 </ul>";
-                $i++;
             }
             ?>
         </div>

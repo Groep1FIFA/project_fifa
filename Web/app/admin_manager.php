@@ -66,7 +66,8 @@ if (isset($_POST['form-type'])){
             }
         }
         else{
-
+            $message = 'Please fill in a team name';
+            header("Location: ../public/admin/admin_panel.php?message=$message");
         }
     }
 //DELETE PLAYER FROM TEAM
