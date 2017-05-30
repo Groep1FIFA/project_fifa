@@ -55,7 +55,13 @@ namespace ProjectFifaV2
 
         public void OpenConnectionToDB()
         {
-            con.Open();
+            try {
+                con.Open();
+            }
+            catch
+            {
+
+            }
         }
 
         public void CloseConnectionToDB()
@@ -67,18 +73,17 @@ namespace ProjectFifaV2
         {
             SqlCommand queryExecute = new SqlCommand(query, con);
 
-            try
-            { 
+            //try
+            //{ 
                 OpenConnectionToDB();
                 int result = queryExecute.ExecuteNonQuery();
-                MessageBox.Show("Success saving to database");
                 CloseConnectionToDB();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString(), "Error");
-                CloseConnectionToDB();
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show(ex.ToString(), "Error");
+            //    CloseConnectionToDB();
+            //}
         }
 
         public System.Data.DataTable FillDT(string query)

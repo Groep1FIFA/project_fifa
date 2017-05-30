@@ -28,27 +28,30 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmPlayer));
             this.btnEditPrediction = new System.Windows.Forms.Button();
             this.btnClearPrediction = new System.Windows.Forms.Button();
             this.btnLogOut = new System.Windows.Forms.Button();
             this.lblResultsOverview = new System.Windows.Forms.Label();
             this.btnShowRanking = new System.Windows.Forms.Button();
-            this.lvOverview = new System.Windows.Forms.ListView();
+            this.lvOverviewP1 = new System.Windows.Forms.ListView();
             this.clmHomeTeam = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmHomeTeamScore = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmAwayTeamScore = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.clmAwayTeam = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.clmPoule = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.pnlPredCard = new System.Windows.Forms.Panel();
             this.btnInsertPrediction = new System.Windows.Forms.Button();
             this.unLbl = new System.Windows.Forms.Label();
+            this.browserLauncher = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnEditPrediction
             // 
-            this.btnEditPrediction.Location = new System.Drawing.Point(485, 86);
+            this.btnEditPrediction.Location = new System.Drawing.Point(563, 123);
             this.btnEditPrediction.Margin = new System.Windows.Forms.Padding(4);
             this.btnEditPrediction.Name = "btnEditPrediction";
-            this.btnEditPrediction.Size = new System.Drawing.Size(141, 37);
+            this.btnEditPrediction.Size = new System.Drawing.Size(141, 35);
             this.btnEditPrediction.TabIndex = 1;
             this.btnEditPrediction.Text = "Edit Prediction";
             this.btnEditPrediction.UseVisualStyleBackColor = true;
@@ -56,7 +59,7 @@
             // 
             // btnClearPrediction
             // 
-            this.btnClearPrediction.Location = new System.Drawing.Point(485, 146);
+            this.btnClearPrediction.Location = new System.Drawing.Point(563, 166);
             this.btnClearPrediction.Margin = new System.Windows.Forms.Padding(4);
             this.btnClearPrediction.Name = "btnClearPrediction";
             this.btnClearPrediction.Size = new System.Drawing.Size(141, 37);
@@ -67,7 +70,7 @@
             // 
             // btnLogOut
             // 
-            this.btnLogOut.Location = new System.Drawing.Point(485, 213);
+            this.btnLogOut.Location = new System.Drawing.Point(563, 297);
             this.btnLogOut.Margin = new System.Windows.Forms.Padding(4);
             this.btnLogOut.Name = "btnLogOut";
             this.btnLogOut.Size = new System.Drawing.Size(141, 37);
@@ -79,7 +82,7 @@
             // lblResultsOverview
             // 
             this.lblResultsOverview.AutoSize = true;
-            this.lblResultsOverview.Location = new System.Drawing.Point(776, 25);
+            this.lblResultsOverview.Location = new System.Drawing.Point(778, 52);
             this.lblResultsOverview.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblResultsOverview.Name = "lblResultsOverview";
             this.lblResultsOverview.Size = new System.Drawing.Size(117, 17);
@@ -88,7 +91,7 @@
             // 
             // btnShowRanking
             // 
-            this.btnShowRanking.Location = new System.Drawing.Point(485, 26);
+            this.btnShowRanking.Location = new System.Drawing.Point(563, 78);
             this.btnShowRanking.Margin = new System.Windows.Forms.Padding(4);
             this.btnShowRanking.Name = "btnShowRanking";
             this.btnShowRanking.Size = new System.Drawing.Size(141, 37);
@@ -97,20 +100,22 @@
             this.btnShowRanking.UseVisualStyleBackColor = true;
             this.btnShowRanking.Click += new System.EventHandler(this.btnShowRanking_Click);
             // 
-            // lvOverview
+            // lvOverviewP1
             // 
-            this.lvOverview.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.lvOverviewP1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.clmHomeTeam,
             this.clmHomeTeamScore,
             this.clmAwayTeamScore,
-            this.clmAwayTeam});
-            this.lvOverview.Location = new System.Drawing.Point(635, 44);
-            this.lvOverview.Margin = new System.Windows.Forms.Padding(4);
-            this.lvOverview.Name = "lvOverview";
-            this.lvOverview.Size = new System.Drawing.Size(412, 738);
-            this.lvOverview.TabIndex = 7;
-            this.lvOverview.UseCompatibleStateImageBehavior = false;
-            this.lvOverview.View = System.Windows.Forms.View.Details;
+            this.clmAwayTeam,
+            this.clmPoule});
+            this.lvOverviewP1.FullRowSelect = true;
+            this.lvOverviewP1.Location = new System.Drawing.Point(781, 78);
+            this.lvOverviewP1.Margin = new System.Windows.Forms.Padding(4);
+            this.lvOverviewP1.Name = "lvOverviewP1";
+            this.lvOverviewP1.Size = new System.Drawing.Size(518, 546);
+            this.lvOverviewP1.TabIndex = 7;
+            this.lvOverviewP1.UseCompatibleStateImageBehavior = false;
+            this.lvOverviewP1.View = System.Windows.Forms.View.Details;
             // 
             // clmHomeTeam
             // 
@@ -134,17 +139,22 @@
             this.clmAwayTeam.Text = "Away Team";
             this.clmAwayTeam.Width = 100;
             // 
+            // clmPoule
+            // 
+            this.clmPoule.Text = "Poule";
+            // 
             // pnlPredCard
             // 
-            this.pnlPredCard.Location = new System.Drawing.Point(16, 44);
+            this.pnlPredCard.AutoScroll = true;
+            this.pnlPredCard.Location = new System.Drawing.Point(43, 78);
             this.pnlPredCard.Margin = new System.Windows.Forms.Padding(4);
             this.pnlPredCard.Name = "pnlPredCard";
-            this.pnlPredCard.Size = new System.Drawing.Size(461, 737);
+            this.pnlPredCard.Size = new System.Drawing.Size(461, 546);
             this.pnlPredCard.TabIndex = 8;
             // 
             // btnInsertPrediction
             // 
-            this.btnInsertPrediction.Location = new System.Drawing.Point(485, 258);
+            this.btnInsertPrediction.Location = new System.Drawing.Point(563, 211);
             this.btnInsertPrediction.Margin = new System.Windows.Forms.Padding(4);
             this.btnInsertPrediction.Name = "btnInsertPrediction";
             this.btnInsertPrediction.Size = new System.Drawing.Size(141, 37);
@@ -161,15 +171,27 @@
             this.unLbl.Size = new System.Drawing.Size(0, 17);
             this.unLbl.TabIndex = 10;
             // 
+            // browserLauncher
+            // 
+            this.browserLauncher.Location = new System.Drawing.Point(563, 255);
+            this.browserLauncher.Name = "browserLauncher";
+            this.browserLauncher.Size = new System.Drawing.Size(141, 35);
+            this.browserLauncher.TabIndex = 12;
+            this.browserLauncher.Text = "Browser";
+            this.browserLauncher.UseVisualStyleBackColor = true;
+            this.browserLauncher.Click += new System.EventHandler(this.browserLauncher_Click);
+            // 
             // frmPlayer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(1344, 898);
+            this.Controls.Add(this.browserLauncher);
             this.Controls.Add(this.unLbl);
             this.Controls.Add(this.btnInsertPrediction);
             this.Controls.Add(this.pnlPredCard);
-            this.Controls.Add(this.lvOverview);
+            this.Controls.Add(this.lvOverviewP1);
             this.Controls.Add(this.btnShowRanking);
             this.Controls.Add(this.lblResultsOverview);
             this.Controls.Add(this.btnLogOut);
@@ -189,7 +211,7 @@
         private System.Windows.Forms.Button btnLogOut;
         private System.Windows.Forms.Label lblResultsOverview;
         private System.Windows.Forms.Button btnShowRanking;
-        private System.Windows.Forms.ListView lvOverview;
+        private System.Windows.Forms.ListView lvOverviewP1;
         private System.Windows.Forms.ColumnHeader clmHomeTeam;
         private System.Windows.Forms.ColumnHeader clmHomeTeamScore;
         private System.Windows.Forms.ColumnHeader clmAwayTeamScore;
@@ -198,5 +220,7 @@
         private System.Windows.Forms.Button btnEditPrediction;
         private System.Windows.Forms.Button btnInsertPrediction;
         private System.Windows.Forms.Label unLbl;
+        private System.Windows.Forms.ColumnHeader clmPoule;
+        private System.Windows.Forms.Button browserLauncher;
     }
 }
