@@ -15,7 +15,6 @@ if (isset($_POST['form-type'])){
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename=teams.csv');
         $output = fopen("php://output", "w");
-        fputcsv($output, array('id', 'poule_id', 'name', 'team_nr', 'poule_ranking', 'playoff_ranking'));
 
         $sqlSel = 'SELECT id, poule_id, name, team_nr, poule_ranking, playoff_ranking FROM tbl_teams';
         $sqlPre = $db_conn->prepare($sqlSel);
@@ -31,7 +30,6 @@ if (isset($_POST['form-type'])){
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename=matches.csv');
         $output = fopen("php://output", "w");
-        fputcsv($output, array('id', 'team_id_a', 'team_id_b', 'poule_id', 'score_team_a', 'score_team_b', 'finished'));
 
         $sqlSel = 'SELECT * FROM tbl_matches';
         $sqlPre = $db_conn->prepare($sqlSel);
@@ -47,7 +45,6 @@ if (isset($_POST['form-type'])){
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename=playoffs.csv');
         $output = fopen("php://output", "w");
-        fputcsv($output, array('id', 'poule_id_a', 'poule_id_b', 'poule_ranking_a', 'poule_ranking_b', 'playoff_id_a', 'playoff_id_b', 'playoff_ranking_a', 'playoff_ranking_b', 'score_team_a', 'score_team_b', 'finished'));
 
         $sqlSel = 'SELECT * FROM tbl_playoffs';
         $sqlPre = $db_conn->prepare($sqlSel);
