@@ -26,7 +26,7 @@ if (isset($_POST['form-type'])){
         }
         fclose($output);
     }
-    elseif ($formtype == 'download_matches'){
+    elseif ($formtype == 'download_schedule'){
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename=matches.csv');
         $output = fopen("php://output", "w");
