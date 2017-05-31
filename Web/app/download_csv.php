@@ -31,7 +31,7 @@ if (isset($_POST['form-type'])){
         header('Content-Disposition: attachment; filename=matches.csv');
         $output = fopen("php://output", "w");
 
-        $sqlSel = 'SELECT * FROM tbl_matches';
+        $sqlSel = 'SELECT id, team_id_a, team_id_b, poule_id, score_team_a, score_team_b, finished FROM tbl_matches';
         $sqlPre = $db_conn->prepare($sqlSel);
         $sqlPre->execute();
 
