@@ -79,7 +79,12 @@ else{
                     }
                     ?>
                 </ul>
-
+                <div class="flex-center download_csv">
+                    <form action="../../app/download_csv.php" method="post">
+                        <input type="hidden" name="form-type" value="download_teams">
+                        <input id="download-teams" type="submit" value="Download Teams">
+                    </form>
+                </div>
                 <div class="create-team flex-center">
                     <form action="../../app/admin_manager.php" method="post" class="flex-column align-center">
                         <input type="text" name="teamName" placeholder="Create a new team">
@@ -218,7 +223,13 @@ else{
         </section>
         <section>
             <div class="schedule admin-schedule">
-                <h2>Schedule</h2>
+                <div class="flex-between download_csv">
+                    <h2>Schedule</h2>
+                    <form action="../../app/download_csv.php" method="post">
+                        <input type="hidden" name="form-type" value="download_schedule">
+                        <input type="submit" value="Download Schedule">
+                    </form>
+                </div>
                 <table>
                 <?php
                 foreach ($matches as $match) {
@@ -289,7 +300,13 @@ else{
                 </table>
             </div>
             <div class="playoffs">
-                <h2>Playoffs</h2>
+                <div class="flex-between download_csv">
+                    <h2>Playoffs</h2>
+                    <form action="../../app/download_csv.php" method="post">
+                        <input type="hidden" name="form-type" value="download_playoffs">
+                        <input type="submit" value="Download Playoffs">
+                    </form>
+                </div>
                 <table class="align-center">
                     <?php
                     $sqlSel = "SELECT * FROM tbl_matches WHERE finished = 0";

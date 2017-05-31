@@ -80,6 +80,16 @@ span{
     padding: 20px 0;
     background: rgba(0, 0, 0, 0.4);
 }
+.download_csv input{
+    padding: 11px 30px;
+    margin: 0 30px 0 0;
+    background: rgb(120, 120, 120);
+    border: none;
+    cursor: pointer;
+}
+#download-teams{
+    margin: 0 0 20px 0;
+}
 /*HEADER*/
 header{
     background: rgba(0, 0, 0, 0.5);
@@ -344,7 +354,7 @@ h3{
     overflow-y: auto;
 }
 .players ul{
-    border-bottom: 1px solid #FFF;
+    border-top: 1px solid #FFF;
     position: relative;
 }
 .players li{
