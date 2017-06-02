@@ -11,61 +11,63 @@ namespace ProjectFifaV2
 {
     public partial class frmScoreInput : Form
     {
-        const int lengthInnerArray = 2;
-        const int lengthOutterArray = 12;
+        private int lengthInnerArray;
+        private int lengthOutterArray;
         private DatabaseHandler dbh;
-        TextBox[,] rows = new TextBox[lengthOutterArray, lengthInnerArray];
-
+        private TextBox[,] rows;
+        private int[] index;
         public frmScoreInput()
         {
             InitializeComponent();
             dbh = new DatabaseHandler();
             ViewMatches();
-            
         }
 
         private void ViewMatches()
         {
-            DataTable matches = dbh.FillDT("SELECT * FROM tblGames");
-            for (int j = 0; j < matches.Rows.Count; j++)
+            string query = "SELECT team1.teamName AS Home, team2.teamName AS Away, game.HomeTeamScore AS HomeScore, game.AwayTeamScore AS AwayScore, game.Game_ID AS Game_ID FROM ((tblGames AS game INNER JOIN tblTeams AS team1 ON game.HomeTeam = team1.teamNr AND game.PouleId = team1.PouleId) INNER JOIN tblTeams AS team2 ON game.AwayTeam = team2.teamNr AND game.PouleID = team2.PouleId) ORDER BY game.PouleId, game.Game_Id ASC";
+            DataTable results = dbh.FillDT(query);
+            dbh.CloseConnectionToDB();
+
+            lengthInnerArray = 2;
+            lengthOutterArray = results.Rows.Count;
+
+            rows = new TextBox[lengthOutterArray, lengthInnerArray];
+            index = new int[lengthOutterArray];
+
+            for (int i = 0; i < results.Rows.Count; i++)
             {
-                DataTable team1 = dbh.FillDT("SELECT * FROM tblTeams WHERE pouleId='" + matches.Rows[j]["pouleId"].ToString() + "' AND teamNr='" + matches.Rows[j]["HomeTeam"].ToString() + "'");
-                DataTable team2 = dbh.FillDT("SELECT * FROM tblTeams WHERE pouleId='" + matches.Rows[j]["pouleId"].ToString() + "' AND teamNr='" + matches.Rows[j]["AwayTeam"].ToString() + "'");
-                dbh.CloseConnectionToDB();
-                for (int i = 0; i < team1.Rows.Count; i++)
-                {
-                    DataRow dataRowHome = team1.Rows[i];
-                    DataRow dataRowAway = team2.Rows[i];
+                DataRow match = results.Rows[i];
+                Label lblHomeTeam = new Label();
+                Label lblAwayTeam = new Label();
+                TextBox txtHomePred = new TextBox();
+                TextBox txtAwayPred = new TextBox();
 
-                    Label lblHomeTeam = new Label();
-                    Label lblAwayTeam = new Label();
-                    TextBox txtHomePred = new TextBox();
-                    TextBox txtAwayPred = new TextBox();
+                lblHomeTeam.TextAlign = ContentAlignment.BottomRight;
+                lblHomeTeam.Text = match["Home"].ToString();
+                lblHomeTeam.Location = new Point(15, txtHomePred.Bottom + (i * 30));
+                lblHomeTeam.AutoSize = true;
 
-                    lblHomeTeam.TextAlign = ContentAlignment.BottomRight;
-                    lblHomeTeam.Text = dataRowHome["TeamName"].ToString();
-                    lblHomeTeam.Location = new Point(15, txtHomePred.Bottom + (j * 30));
-                    lblHomeTeam.AutoSize = true;
+                txtHomePred.Text = "";
+                txtHomePred.Location = new Point(lblHomeTeam.Width, lblHomeTeam.Top - 3);
+                txtHomePred.Width = 40;
+                rows[i, 0] = txtHomePred;
 
-                    txtHomePred.Text = "";
-                    txtHomePred.Location = new Point(lblHomeTeam.Width, lblHomeTeam.Top - 3);
-                    txtHomePred.Width = 40;
-                    rows[j, 0] = txtHomePred;
+                txtAwayPred.Text = "";
+                txtAwayPred.Location = new Point(txtHomePred.Width + lblHomeTeam.Width, txtHomePred.Top);
+                txtAwayPred.Width = 40;
+                rows[i, 1] = txtAwayPred;
 
-                    txtAwayPred.Text = "";
-                    txtAwayPred.Location = new Point(txtHomePred.Width + lblHomeTeam.Width, txtHomePred.Top);
-                    txtAwayPred.Width = 40;
-                    rows[j, 1] = txtAwayPred;
+                int.TryParse(match["Game_ID"].ToString(), out index[i]);
 
-                    lblAwayTeam.Text = dataRowAway["TeamName"].ToString();
-                    lblAwayTeam.Location = new Point(txtHomePred.Width + lblHomeTeam.Width + txtAwayPred.Width, txtHomePred.Top + 3);
-                    lblAwayTeam.AutoSize = true;
+                lblAwayTeam.Text = match["Away"].ToString();
+                lblAwayTeam.Location = new Point(txtHomePred.Width + lblHomeTeam.Width + txtAwayPred.Width, txtHomePred.Top + 3);
+                lblAwayTeam.AutoSize = true;
 
-                    pnlScores.Controls.Add(lblHomeTeam);
-                    pnlScores.Controls.Add(txtHomePred);
-                    pnlScores.Controls.Add(txtAwayPred);
-                    pnlScores.Controls.Add(lblAwayTeam);
-                }
+                pnlScores.Controls.Add(lblHomeTeam);
+                pnlScores.Controls.Add(txtHomePred);
+                pnlScores.Controls.Add(txtAwayPred);
+                pnlScores.Controls.Add(lblAwayTeam);
             }
         }
 
@@ -74,7 +76,7 @@ namespace ProjectFifaV2
             string home = "";
             string away = "";
 
-            for (int j = 0; j < lengthOutterArray; j++)
+            for (int j = 0; j < lengthOutterArray - 1; j++)
             {
                 for (int k = 0; k < lengthInnerArray; k++)
                 {
@@ -103,7 +105,7 @@ namespace ProjectFifaV2
                 }
                 if (home != null && away != null)
                 {
-                    dbh.Execute("UPDATE tblGames SET HomeTeamScore=" + home + ", AwayTeamScore=" + away + " WHERE (Game_id=" + (Convert.ToInt32(j) + 1) + ")");
+                    dbh.Execute("UPDATE tblGames SET HomeTeamScore=" + home + ", AwayTeamScore=" + away + " WHERE (Game_id=" + index[j] + ")");
                 }
             }
         }
@@ -116,60 +118,50 @@ namespace ProjectFifaV2
             {
                 DataRow user = users.Rows[i];
                 int score = 0;
-                DataTable games = dbh.FillDT("SELECT * FROM tblGames");
+                string queryNew = "SELECT pred.PredictedHomeScore AS pred1, pred.PredictedAwayScore AS pred2, game.HomeTeamScore AS HomeTeamScore, game.AwayTeamScore AS AwayTeamScore FROM (tblPredictions AS pred INNER JOIN tblGames AS game ON pred.Game_id = game.Game_id) WHERE pred.User_id = " + user["id"] + "";
+                DataTable games = dbh.FillDT(queryNew);
                 
-
+                
                 for (int j = 0; j < games.Rows.Count; j++)
                 {
                     DataRow game = games.Rows[j];
-                    DataTable predi = dbh.FillDT("SELECT * FROM tblPredictions WHERE User_Id='" + user["Id"].ToString() + "' AND Game_Id='" + j.ToString() + "'");
-                    if (predi.Rows.Count > 0)
+
+                    int predHome;
+                    int predAway;
+                    int home;
+                    int away;
+                    int.TryParse(game["pred1"].ToString(), out predHome);
+                    int.TryParse(game["pred2"].ToString(), out predAway);
+                    int.TryParse(game["HomeTeamScore"].ToString(), out home);
+                    int.TryParse(game["AwayTeamScore"].ToString(), out away);
+
+                    if (home > away)
                     {
-                        DataRow prediRow = predi.Rows[0];
-
-                        int predHome = Convert.ToInt32(prediRow["PredictedHomeScore"].ToString());
-                        int predAway = Convert.ToInt32(prediRow["PredictedAwayScore"].ToString());
-                        if (game["HomeTeamScore"].ToString() != "" && game["HomeTeamScore"] != null)
+                        if (predHome == home && predAway == away)
                         {
-                            var home = Convert.ToInt32(game["HomeTeamScore"].ToString());
-                            int away = Convert.ToInt32(game["AwayTeamScore"].ToString());
-                            if (home > away)
-                            {
-                                if (predHome == home && predAway == away)
-                                {
-                                    score += 2;
-                                }
-                                else if (predHome > predAway)
-                                {
-                                    score += 1;
-                                }
-                                else
-                                {
-
-                                }
-                            }
-                            else if (home < away)
-                            {
-                                if (predHome == home && predAway == away)
-                                {
-                                    score += 2;
-                                }
-                                else if (predHome > predAway)
-                                {
-                                    score += 1;
-                                }
-                                else
-                                {
-
-                                }
-                            }
-                            else
-                            {
-                                if (predHome == home && predAway == away)
-                                {
-                                    score += 2;
-                                }
-                            }
+                            score += 2;
+                        }
+                        else if (predHome > predAway)
+                        {
+                            score += 1;
+                        }
+                    }
+                    else if (away > home)
+                    {
+                        if (predHome == home && predAway == away)
+                        {
+                            score += 2;
+                        }
+                        else if (predHome < predAway)
+                        {
+                            score += 1;
+                        }
+                    }
+                    else
+                    {
+                        if (predHome == home && predAway == away)
+                        {
+                            score += 2;
                         }
                     }
                 }

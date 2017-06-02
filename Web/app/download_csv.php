@@ -26,12 +26,12 @@ if (isset($_POST['form-type'])){
         }
         fclose($output);
     }
-    elseif ($formtype == 'download_matches'){
+    elseif ($formtype == 'download_schedule'){
         header('Content-Type: text/csv; charset=utf-8');
         header('Content-Disposition: attachment; filename=matches.csv');
         $output = fopen("php://output", "w");
 
-        $sqlSel = 'SELECT * FROM tbl_matches';
+        $sqlSel = 'SELECT id, team_id_a, team_id_b, poule_id, score_team_a, score_team_b, finished FROM tbl_matches';
         $sqlPre = $db_conn->prepare($sqlSel);
         $sqlPre->execute();
 
@@ -50,7 +50,7 @@ if (isset($_POST['form-type'])){
         $sqlPre = $db_conn->prepare($sqlSel);
         $sqlPre->execute();
 
-        while($row = $selPre->fetch(PDO::FETCH_ASSOC))
+        while($row = $sqlPre->fetch(PDO::FETCH_ASSOC))
         {
             fputcsv($output, $row);
         }

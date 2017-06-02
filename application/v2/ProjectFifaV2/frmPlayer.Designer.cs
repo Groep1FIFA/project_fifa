@@ -44,6 +44,7 @@
             this.btnInsertPrediction = new System.Windows.Forms.Button();
             this.unLbl = new System.Windows.Forms.Label();
             this.browserLauncher = new System.Windows.Forms.Button();
+            this.MessageLbl = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnEditPrediction
@@ -181,12 +182,23 @@
             this.browserLauncher.UseVisualStyleBackColor = true;
             this.browserLauncher.Click += new System.EventHandler(this.browserLauncher_Click);
             // 
+            // MessageLbl
+            // 
+            this.MessageLbl.AutoSize = true;
+            this.MessageLbl.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.MessageLbl.Location = new System.Drawing.Point(40, 57);
+            this.MessageLbl.Name = "MessageLbl";
+            this.MessageLbl.Size = new System.Drawing.Size(294, 17);
+            this.MessageLbl.TabIndex = 13;
+            this.MessageLbl.Text = "Please fill in both fields even when 0-1 or 0-0!";
+            // 
             // frmPlayer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(1344, 898);
+            this.Controls.Add(this.MessageLbl);
             this.Controls.Add(this.browserLauncher);
             this.Controls.Add(this.unLbl);
             this.Controls.Add(this.btnInsertPrediction);
@@ -222,5 +234,6 @@
         private System.Windows.Forms.Label unLbl;
         private System.Windows.Forms.ColumnHeader clmPoule;
         private System.Windows.Forms.Button browserLauncher;
+        private System.Windows.Forms.Label MessageLbl;
     }
 }

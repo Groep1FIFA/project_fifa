@@ -14,14 +14,9 @@ namespace ProjectFifaV2
 
         public DatabaseHandler()
         {
-            //SqlCeEngine engine = new SqlCeEngine(@"Data Source=.\DB.sdf");
-            //engine.Upgrade(@"Data Source=.\DB2.sdf");
-
-
             string Path = Environment.CurrentDirectory;
             string[] appPath = Path.Split(new string[] { "bin" }, StringSplitOptions.None);
             AppDomain.CurrentDomain.SetData("DataDirectory", appPath[0]);
-            
 
             con = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename='|DataDirectory|\db.mdf';Integrated Security=True;Connect Timeout=30");
         }
@@ -73,17 +68,9 @@ namespace ProjectFifaV2
         {
             SqlCommand queryExecute = new SqlCommand(query, con);
 
-            //try
-            //{ 
-                OpenConnectionToDB();
-                int result = queryExecute.ExecuteNonQuery();
-                CloseConnectionToDB();
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.ToString(), "Error");
-            //    CloseConnectionToDB();
-            //}
+            OpenConnectionToDB();
+            int result = queryExecute.ExecuteNonQuery();
+            CloseConnectionToDB();
         }
 
         public System.Data.DataTable FillDT(string query)

@@ -48,6 +48,7 @@
             // 
             // button1
             // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.button1.Location = new System.Drawing.Point(379, 12);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(113, 60);
@@ -58,6 +59,7 @@
             // 
             // calculateScore
             // 
+            this.calculateScore.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.calculateScore.Location = new System.Drawing.Point(379, 78);
             this.calculateScore.Name = "calculateScore";
             this.calculateScore.Size = new System.Drawing.Size(113, 59);
