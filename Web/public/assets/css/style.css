@@ -479,6 +479,34 @@ h3{
     padding: 5px 0;
     cursor: pointer;
 }
+.admin-schedule tr{
+    position: relative;
+}
+.start-match{
+    position: absolute;
+    width: 100%;
+    height: 22.7px;
+    left: 0;
+    top: 0;
+    display: none;
+}
+.start-match input{
+    padding: 5px 20px;
+    background: rgb(60, 60, 60);
+    border: none;
+    cursor: pointer;
+}
+.admin-schedule tr:hover .start-match{
+    display: block;
+    background: rgba(200, 200, 200, 0.6);
+}
+.admin-playoffs tr{
+    position: relative;
+}
+.admin-playoffs tr:hover .start-match {
+    display: block;
+    background: rgba(200, 200, 200, 0.6);
+}
 .playoffs{
     background: rgba(0, 0, 0, 0.5);
     border: 2px solid #FFF;

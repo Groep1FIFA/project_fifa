@@ -229,24 +229,24 @@ $currentPage = "index.php";?>
     </div>
     <ul class="playoffs-schedule flex-between align-center">
         <?php
-        $sqlSel = "SELECT * FROM tbl_matches WHERE finished = 0";
+        $sqlSel = "SELECT * FROM tbl_matches";
         $sqlPre = $db_conn->prepare($sqlSel);
         $sqlPre->execute();
         $sqlCount = $sqlPre->rowCount();
 
         if ($sqlCount >= 1) {
-            $sqlSel = "SELECT * FROM tbl_playoffs WHERE playoff_ranking_a = 0 AND playoff_ranking_b = 0 AND finished = 0";
+            $sqlSel = "SELECT * FROM tbl_playoffs WHERE playoff_ranking_a = 0 AND playoff_ranking_b = 0";
             $quaterFinals = $db_conn->prepare($sqlSel);
             $quaterFinals->execute();
             $quaterCount = $quaterFinals->rowCount();
 
 
-            $sqlSel = "SELECT * FROM tbl_playoffs WHERE playoff_ranking_a = 1 AND playoff_ranking_b = 1 AND finished = 0";
+            $sqlSel = "SELECT * FROM tbl_playoffs WHERE playoff_ranking_a = 1 AND playoff_ranking_b = 1";
             $semiFinals = $db_conn->prepare($sqlSel);
             $semiFinals->execute();
             $semiCount = $semiFinals->rowCount();
 
-            $sqlSel = "SELECT * FROM tbl_playoffs WHERE playoff_ranking_a = 2 AND playoff_ranking_b = 2 AND finished = 0";
+            $sqlSel = "SELECT * FROM tbl_playoffs WHERE playoff_ranking_a = 2 AND playoff_ranking_b = 2";
             $finals = $db_conn->prepare($sqlSel);
             $finals->execute();
 

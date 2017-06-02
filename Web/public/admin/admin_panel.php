@@ -348,14 +348,24 @@ else{
                                 <input type=\"hidden\" name=\"team-id-a\" value=\"{$sqlATeams[0]['id']}\">
                                 <input type=\"hidden\" name=\"team-id-b\" value=\"{$sqlBTeams[0]['id']}\">
                                 <td><input class=\"end-button\" type=\"submit\" value=\"End\"></td>
-                              </form>
-                              </tr>";
+                              </form>";
+                        if  ($match['started'] == 0){
+                            echo "<td class=\"start-match align-center flex-center\">
+                                    <form action=\"../../app/admin_manager.php\" method=\"post\">
+                                        <input type=\"hidden\" name=\"form-type\" value=\"start-match\">
+                                        <input type=\"hidden\" name=\"match-id\" value=\"{$match['id']}\">
+                                        <input type=\"hidden\" name=\"match-type\" value=\"poule\">
+                                        <input type=\"submit\" value=\"Start Match\">
+                                    </form>
+                                </td>";
+                        }
+                        echo "</tr>";
                     }
                 }
                 ?>
                 </table>
             </div>
-            <div class="playoffs">
+            <div class="playoffs admin-playoffs">
                 <div class="flex-between download_csv">
                     <h2>Playoffs</h2>
                     <form action="../../app/download_csv.php" method="post">
@@ -429,7 +439,7 @@ else{
                             <input type=\"hidden\" name=\"match-id\" value=\"{$quaterFinal['id']}\">
                             <td><input class=\"score-button\" type=\"submit\" value=\"{$teamA[0]['name']} scored\"></td>
                             </form>
-                            <td>{$quaterFinal['score_team_a']} VS {$quaterFinal['score_team_b']}</td>
+                            <td>{$quaterFinal['score_team_a']} - {$quaterFinal['score_team_b']}</td>
                             <form action=\"../../app/admin_manager.php\" method=\"post\">
                             <input type=\"hidden\" name=\"form-type\" value=\"playoff-b-scored\">
                             <input type=\"hidden\" name=\"match-id\" value=\"{$quaterFinal['id']}\">
@@ -447,13 +457,23 @@ else{
                                 <input type=\"hidden\" name=\"team-id-a\" value=\"{$teamA[0]['id']}\">
                                 <input type=\"hidden\" name=\"team-id-b\" value=\"{$teamB[0]['id']}\">
                                 <td><input class=\"end-button\" type=\"submit\" value=\"End\"></td>
-                              </form>
-                            </tr>";
+                              </form>";
+                            if  ($quaterFinal['started'] == 0){
+                                echo "<td class=\"start-match align-center flex-center\">
+                                    <form action=\"../../app/admin_manager.php\" method=\"post\">
+                                        <input type=\"hidden\" name=\"form-type\" value=\"start-match\">
+                                        <input type=\"hidden\" name=\"match-id\" value=\"{$quaterFinal['id']}\">
+                                        <input type=\"hidden\" name=\"match-type\" value=\"playoff\">
+                                        <input type=\"submit\" value=\"Start Match\">
+                                    </form>
+                                </td>";
+                            }
+                            echo "</tr>";
                         }
                         else{
                             echo "<tr class=\"to-be-decided quaters\">
                             <td>Quater-Final</td>
-                            <td>T.B.D {$quaterFinal['score_team_a']} VS {$quaterFinal['score_team_b']} T.B.D</td>
+                            <td>T.B.D {$quaterFinal['score_team_a']} - {$quaterFinal['score_team_b']} T.B.D</td>
                             <td>{$quaterFinal['start_time']}</td>
                             </tr>";
                         }
@@ -492,7 +512,7 @@ else{
                             <input type=\"hidden\" name=\"match-id\" value=\"{$semiFinal['id']}\">
                             <td><input class=\"score-button\" type=\"submit\" value=\"{$teamA[0]['name']} scored\"></td>
                             </form>
-                            <td>{$semiFinal['score_team_a']} VS {$semiFinal['score_team_b']}</td>
+                            <td>{$semiFinal['score_team_a']} - {$semiFinal['score_team_b']}</td>
                             <form action=\"../../app/admin_manager.php\" method=\"post\">
                             <input type=\"hidden\" name=\"form-type\" value=\"playoff-b-scored\">
                             <input type=\"hidden\" name=\"match-id\" value=\"{$semiFinal['id']}\">
@@ -510,13 +530,23 @@ else{
                                 <input type=\"hidden\" name=\"team-id-a\" value=\"{$teamA[0]['id']}\">
                                 <input type=\"hidden\" name=\"team-id-b\" value=\"{$teamB[0]['id']}\">
                                 <td><input class=\"end-button\" type=\"submit\" value=\"End\"></td>
-                              </form>
-                            </tr>";
+                              </form>";
+                                if  ($semiFinal['started'] == 0){
+                                    echo "<td class=\"start-match align-center flex-center\">
+                                    <form action=\"../../app/admin_manager.php\" method=\"post\">
+                                        <input type=\"hidden\" name=\"form-type\" value=\"start-match\">
+                                        <input type=\"hidden\" name=\"match-id\" value=\"{$semiFinal['id']}\">
+                                        <input type=\"hidden\" name=\"match-type\" value=\"playoff\">
+                                        <input type=\"submit\" value=\"Start Match\">
+                                    </form>
+                                </td>";
+                                }
+                                echo "</tr>";
                             }
                             else {
                                 echo "<tr class=\"to-be-decided semis\">
                             <td>Semi-Final</td>
-                            <td>T.B.D {$semiFinal['score_team_a']} VS {$semiFinal['score_team_b']} T.B.D</td>
+                            <td>T.B.D {$semiFinal['score_team_a']} - {$semiFinal['score_team_b']} T.B.D</td>
                             <td>{$semiFinal['start_time']}</td>
                             </tr>";
                             }
@@ -555,7 +585,7 @@ else{
                                 <input type=\"hidden\" name=\"match-id\" value=\"{$final['id']}\">
                                 <td><input class=\"score-button\" type=\"submit\" value=\"{$teamA[0]['name']} scored\"></td>
                                 </form>
-                                <td>{$final['score_team_a']} VS {$final['score_team_b']}</td>
+                                <td>{$final['score_team_a']} - {$final['score_team_b']}</td>
                                 <form action=\"../../app/admin_manager.php\" method=\"post\">
                                 <input type=\"hidden\" name=\"form-type\" value=\"playoff-b-scored\">
                                 <input type=\"hidden\" name=\"match-id\" value=\"{$final['id']}\">
@@ -573,13 +603,23 @@ else{
                                 <input type=\"hidden\" name=\"team-id-a\" value=\"{$teamA[0]['id']}\">
                                 <input type=\"hidden\" name=\"team-id-b\" value=\"{$teamB[0]['id']}\">
                                 <td><input class=\"end-button\" type=\"submit\" value=\"End\"></td>
-                              </form>
-                            </tr>";
+                              </form>";
+                                if  ($final['started'] == 0){
+                                    echo "<td class=\"start-match align-center flex-center\">
+                                    <form action=\"../../app/admin_manager.php\" method=\"post\">
+                                        <input type=\"hidden\" name=\"form-type\" value=\"start-match\">
+                                        <input type=\"hidden\" name=\"match-id\" value=\"{$final['id']}\">
+                                        <input type=\"hidden\" name=\"match-type\" value=\"playoff\">
+                                        <input type=\"submit\" value=\"Start Match\">
+                                    </form>
+                                </td>";
+                                }
+                                echo "</tr>";
                             }
                             else{
                                 echo "<tr class=\"to-be-decided finals\">
                             <td>Final</td>
-                            <td>T.B.D {$final['score_team_a']} VS {$final['score_team_b']} T.B.D</td>
+                            <td>T.B.D {$final['score_team_a']} - {$final['score_team_b']} T.B.D</td>
                             <td>{$final['start_time']}</td>
                             </tr>";
                             }
@@ -601,21 +641,21 @@ else{
                         foreach ($quaterFinals as $quaterFinal){
                             echo "<tr class=\"to-be-decided quaters\">
                             <td>Quater-Final</td>
-                            <td>T.B.D {$quaterFinal['score_team_a']} VS {$quaterFinal['score_team_b']} T.B.D</td>
+                            <td>T.B.D {$quaterFinal['score_team_a']} - {$quaterFinal['score_team_b']} T.B.D</td>
                             <td>{$quaterFinal['start_time']}</td>
                             </tr>";
                         }
                         foreach ($semiFinals as $semiFinal){
                             echo "<tr class=\"to-be-decided quaters\">
                             <td>Semi-Final</td>
-                            <td>T.B.D {$semiFinal['score_team_a']} VS {$semiFinal['score_team_b']} T.B.D</td>
+                            <td>T.B.D {$semiFinal['score_team_a']} - {$semiFinal['score_team_b']} T.B.D</td>
                             <td>{$semiFinal['start_time']}</td>
                             </tr>";
                         }
                         foreach ($finals as $final) {
                             echo "<tr class=\"to-be-decided finals\">
                             <td>Final</td>
-                            <td>T.B.D {$final['score_team_a']} VS {$final['score_team_b']} T.B.D</td>
+                            <td>T.B.D {$final['score_team_a']} - {$final['score_team_b']} T.B.D</td>
                             <td>{$final['start_time']}</td>
                             </tr>";
                         }

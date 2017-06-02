@@ -297,6 +297,24 @@ if (isset($_POST['form-type'])){
         $message = 'Succesfully updated';
         header("Location: ../public/admin/admin_panel.php?message=$message");
     }
+//MATCH STARTED
+    elseif ($formType == 'start-match'){
+        $match_id = trim($_POST['match-id']);
+        $match_type = trim($_POST['match-type']);
+
+        if ($match_type == 'poule') {
+            $sqlUpd = "UPDATE tbl_matches SET score_team_a = 0 , score_team_b = 0, started = 1 WHERE id = :match_id";
+            $sqlPre = $db_conn->prepare($sqlUpd);
+            $sqlPre->execute(['match_id' => $match_id]);
+        }
+        elseif ($match_type == 'playoff'){
+            $sqlUpd = "UPDATE tbl_playoffs SET score_team_a = 0 , score_team_b = 0, started = 1 WHERE id = :match_id";
+            $sqlPre = $db_conn->prepare($sqlUpd);
+            $sqlPre->execute(['match_id' => $match_id]);
+        }
+        $message = 'This match has been started';
+        header("Location: ../public/admin/admin_panel.php?message=$message");
+    }
 //MATCH FINISHED
     elseif($formType == 'match-finished'){
         $matchId = trim($_POST['match-id']);
