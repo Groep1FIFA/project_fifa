@@ -32,6 +32,7 @@ $teams = $teams->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <title>Project Fifa</title>
     <link rel="stylesheet" href="../assets/css/style.css">
+    <meta name="viewport" content="width=device-width" />
 </head>
 <body>
 <div class="wrapper">
