@@ -55,7 +55,6 @@ namespace ProjectFifaV2
 
         private void ExecuteSQL(string selectCommandText)
         {
-            //dbh.TestConnection();
             SqlDataAdapter dataAdapter = new SqlDataAdapter(selectCommandText, dbh.GetCon());
             dataAdapter.Fill(table);
             dgvAdminData.DataSource = table;
@@ -82,37 +81,21 @@ namespace ProjectFifaV2
             string tableName = tableSelector.Text;
             if (!(txtPath.Text == null) || !(txtPath.Text == ""))
             {
-                /*string insert = "BULK INSERT TblTeams" +
-               " FROM '" + txtPath.Text + "'" +
-                "WITH" +
-                "(" +
-                   " FIRSTROW = 1," +
-                   " FIELDTERMINATOR = ',', " +
-                   " ROWTERMINATOR = ';', " +
-                   " TABLOCK" +
-                ")";
-                dbh.OpenConnectionToDB();
-                ExecuteSQL(insert);
-                dbh.CloseConnectionToDB();*/
-                //DataTable table = dbh.FillDT("SELECT * FROM " + tableName);
-                //if (table.Rows.Count != 0)
-                //{
-                    try {
-                        dbh.Execute("DROP table " + tableName);
-                    }
-                    catch
-                    {
+                try {
+                    dbh.Execute("DROP table " + tableName);
+                }
+                catch
+                {
                
-                    }
-                    if (tableName == "tblTeams")
-                    {
-                        dbh.Execute("CREATE table tblTeams (id int NOT NULL, pouleId int NOT NULL, teamName varchar(255) NOT NULL, teamNr int NOT NULL, PRIMARY KEY (id)) ");
-                    }
-                    else if (tableName == "tblGames")
-                    {
-                        dbh.Execute("CREATE table tblGames (Game_ID int NOT NULL, homeTeam int NOT NULL, awayTeam int NOT NULL, pouleId int NOT NULL, HomeTeamScore int NULL, AwayTeamScore int NULL, finished bit NOT NULL, PRIMARY KEY (Game_ID))");
-                    }
-                //}
+                }
+                if (tableName == "tblTeams")
+                {
+                    dbh.Execute("CREATE table tblTeams (id int NOT NULL, pouleId int NOT NULL, teamName varchar(255) NOT NULL, teamNr int NOT NULL, PRIMARY KEY (id)) ");
+                }
+                else if (tableName == "tblGames")
+                {
+                    dbh.Execute("CREATE table tblGames (Game_ID int NOT NULL, homeTeam int NOT NULL, awayTeam int NOT NULL, pouleId int NOT NULL, HomeTeamScore int NULL, AwayTeamScore int NULL, finished bit NOT NULL, PRIMARY KEY (Game_ID))");
+                }
                 using (StreamReader reader = new StreamReader(txtPath.Text))
                 {
                     string line;
@@ -146,14 +129,6 @@ namespace ProjectFifaV2
                         
                     } while (!reader.EndOfStream);
                 }
-                //string[][] data = File.ReadLines(filePath).Select(x => x.Split(',')).ToArray();
-                //foreach (var dataI in data)
-                //{
-                //    foreach (var dataJ in dataI)
-                //    {
-                //        MessageBox.Show(dataJ);
-                //    }
-                //}
             }
             else
             {
