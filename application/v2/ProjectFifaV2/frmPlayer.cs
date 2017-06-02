@@ -66,6 +66,11 @@ namespace ProjectFifaV2
                 DataRow rowUser = tblUsers.Rows[0];
                 // Clear predections
                 // Update DB
+                for (int i = 0; i < lengthOutterArray; i++)
+                {
+                    rows[i, 0].Text = "";
+                    rows[i, 1].Text = "";
+                }
                 dbh.Execute("DELETE FROM tblPredictions WHERE (User_id=" + rowUser["id"] + ")");
                 if (DisableButtons())
                 {
@@ -218,7 +223,6 @@ namespace ProjectFifaV2
                 {
                     string query2 = "SELECT * FROM tblPredictions WHERE (User_id = " + rowUser["id"] + " AND Game_id = " + index[j] + ")";
                     DataTable checkup = dbh.FillDT(query2);
-                    MessageBox.Show(checkup.Rows.Count.ToString());
                     if (checkup.Rows.Count == 1)
                     {
                         dbh.Execute("UPDATE tblPredictions SET PredictedHomeScore=" + home + ", PredictedAwayScore=" + away + " WHERE (User_id=" +
