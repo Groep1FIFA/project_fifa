@@ -50,7 +50,7 @@ if (isset($_POST['form-type'])){
         $sqlPre = $db_conn->prepare($sqlSel);
         $sqlPre->execute();
 
-        while($row = $selPre->fetch(PDO::FETCH_ASSOC))
+        while($row = $sqlPre->fetch(PDO::FETCH_ASSOC))
         {
             fputcsv($output, $row);
         }

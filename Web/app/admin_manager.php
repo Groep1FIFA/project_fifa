@@ -167,33 +167,39 @@ if (isset($_POST['form-type'])){
     }
 //TEAM A SCORED
     elseif($formType == 'team-a-scored') {
-        $matchId = trim($_POST['match-id']);
-        $playerId = trim($_POST['player-name']);
+        if (!isset($_POST['player-name'])){
+            $message = 'There are no players in that team';
+            header("Location: ../public/admin/admin_panel.php?message=$message");
+        }
+        else {
+            $matchId = trim($_POST['match-id']);
+            $playerId = trim($_POST['player-name']);
 
-        $matchSel = "SELECT * FROM tbl_matches WHERE id = :matchId";
-        $match = $db_conn->prepare($matchSel);
-        $match->execute(['matchId' => $matchId]);
-        $match = $match->fetchAll(PDO::FETCH_ASSOC);
+            $matchSel = "SELECT * FROM tbl_matches WHERE id = :matchId";
+            $match = $db_conn->prepare($matchSel);
+            $match->execute(['matchId' => $matchId]);
+            $match = $match->fetchAll(PDO::FETCH_ASSOC);
 
-        $matchGoals = $match[0]['score_team_a'] + 1;
+            $matchGoals = $match[0]['score_team_a'] + 1;
 
-        $playerSel = "SELECT * FROM tbl_players WHERE id = :playerId";
-        $player = $db_conn->prepare($playerSel);
-        $player->execute(['playerId' => $playerId]);
-        $player = $player->fetchAll(PDO::FETCH_ASSOC);
+            $playerSel = "SELECT * FROM tbl_players WHERE id = :playerId";
+            $player = $db_conn->prepare($playerSel);
+            $player->execute(['playerId' => $playerId]);
+            $player = $player->fetchAll(PDO::FETCH_ASSOC);
 
-        $playerGoals = $player[0]['goals'] + 1;
+            $playerGoals = $player[0]['goals'] + 1;
 
-        $matchUpdate = "UPDATE tbl_matches SET score_team_a = :matchGoals WHERE id = :matchId";
-        $sqlPre = $db_conn->prepare($matchUpdate);
-        $sqlPre->execute(['matchGoals' => $matchGoals, 'matchId' => $matchId]);
+            $matchUpdate = "UPDATE tbl_matches SET score_team_a = :matchGoals WHERE id = :matchId";
+            $sqlPre = $db_conn->prepare($matchUpdate);
+            $sqlPre->execute(['matchGoals' => $matchGoals, 'matchId' => $matchId]);
 
-        $playerUpdate = "UPDATE tbl_players SET goals = :playerGoals WHERE id = :playerId";
-        $sqlPre = $db_conn->prepare($playerUpdate);
-        $sqlPre->execute(['playerGoals' => $playerGoals, 'playerId' => $playerId]);
+            $playerUpdate = "UPDATE tbl_players SET goals = :playerGoals WHERE id = :playerId";
+            $sqlPre = $db_conn->prepare($playerUpdate);
+            $sqlPre->execute(['playerGoals' => $playerGoals, 'playerId' => $playerId]);
 
-        $message = 'Succesfully updated';
-        header("Location: ../public/admin/admin_panel.php?message=$message");
+            $message = 'Succesfully updated';
+            header("Location: ../public/admin/admin_panel.php?message=$message");
+        }
     }
 //QUATERFINALS TEAM A SCORED
     elseif($formType == 'playoff-a-scored'){
@@ -227,33 +233,39 @@ if (isset($_POST['form-type'])){
     }
 //TEAM B SCORED
     elseif($formType == 'team-b-scored'){
-        $matchId = trim($_POST['match-id']);
-        $playerId = trim($_POST['player-name']);
+        if (!isset($_POST['player-name'])){
+            $message = 'There are no players in that team';
+            header("Location: ../public/admin/admin_panel.php?message=$message");
+        }
+        else {
+            $matchId = trim($_POST['match-id']);
+            $playerId = trim($_POST['player-name']);
 
-        $matchSel = "SELECT * FROM tbl_matches WHERE id = :matchId";
-        $match = $db_conn->prepare($matchSel);
-        $match->execute(['matchId' => $matchId]);
-        $match = $match->fetchAll(PDO::FETCH_ASSOC);
+            $matchSel = "SELECT * FROM tbl_matches WHERE id = :matchId";
+            $match = $db_conn->prepare($matchSel);
+            $match->execute(['matchId' => $matchId]);
+            $match = $match->fetchAll(PDO::FETCH_ASSOC);
 
-        $matchGoals = $match[0]['score_team_b'] + 1;
+            $matchGoals = $match[0]['score_team_b'] + 1;
 
-        $playerSel = "SELECT * FROM tbl_players WHERE id = :playerId";
-        $player = $db_conn->prepare($playerSel);
-        $player->execute(['playerId' => $playerId]);
-        $player = $player->fetchAll(PDO::FETCH_ASSOC);
+            $playerSel = "SELECT * FROM tbl_players WHERE id = :playerId";
+            $player = $db_conn->prepare($playerSel);
+            $player->execute(['playerId' => $playerId]);
+            $player = $player->fetchAll(PDO::FETCH_ASSOC);
 
-        $playerGoals = $player[0]['goals'] + 1;
+            $playerGoals = $player[0]['goals'] + 1;
 
-        $matchUpdate = "UPDATE tbl_matches SET score_team_b = :matchGoals WHERE id = :matchId";
-        $sqlPre = $db_conn->prepare($matchUpdate);
-        $sqlPre->execute(['matchGoals' => $matchGoals, 'matchId' => $matchId]);
+            $matchUpdate = "UPDATE tbl_matches SET score_team_b = :matchGoals WHERE id = :matchId";
+            $sqlPre = $db_conn->prepare($matchUpdate);
+            $sqlPre->execute(['matchGoals' => $matchGoals, 'matchId' => $matchId]);
 
-        $playerUpdate = "UPDATE tbl_players SET goals = :playerGoals WHERE id = :playerId";
-        $sqlPre = $db_conn->prepare($playerUpdate);
-        $sqlPre->execute(['playerGoals' => $playerGoals, 'playerId' => $playerId]);
+            $playerUpdate = "UPDATE tbl_players SET goals = :playerGoals WHERE id = :playerId";
+            $sqlPre = $db_conn->prepare($playerUpdate);
+            $sqlPre->execute(['playerGoals' => $playerGoals, 'playerId' => $playerId]);
 
-        $message = 'Succesfully updated';
-        header("Location: ../public/admin/admin_panel.php?message=$message");
+            $message = 'Succesfully updated';
+            header("Location: ../public/admin/admin_panel.php?message=$message");
+        }
     }
 // QUATERFINALS TEAM B SCORED
     elseif($formType == 'playoff-b-scored'){

@@ -246,7 +246,12 @@ else{
                     $pouleGamesPerRound = $pouleSize / 2;
                     $pouleGamesCount = $pouleRounds * $pouleGamesPerRound;
 
-                    for ($j = 0; $j <= $pouleGamesCount; $j++) {
+                    $sqlSel = "SELECT * FROM tbl_matches WHERE poule_id = :poule_id";
+                    $sqlPre = $db_conn->prepare($sqlSel);
+                    $sqlPre->execute(['poule_id' => $poule['id']]);
+                    $gamesCount = $sqlPre->rowCount();
+
+                    for ($j = $gamesCount; $j < $pouleGamesCount; $j++) {
                         echo "<form action=\"../../app/admin_manager.php\" method=\"post\">
                                 <input type=\"hidden\" name=\"form-type\" value=\"create-match\">
                                 <select name=\"team_nr1\" id=\"team1\">";
@@ -629,6 +634,11 @@ else{
                 $sqlPre->execute();
                 $finishedMatches = $sqlPre->rowCount();
 
+                $sqlSel = "SELECT * FROM tbl_playoffs WHERE finished = 0";
+                $sqlPre = $db_conn->prepare($sqlSel);
+                $sqlPre->execute();
+                $finishedPlayoffs = $sqlPre->rowCount();
+
                 $sqlSel = "SELECT * FROM tbl_teams WHERE poule_ranking = 1 OR poule_ranking = 2";
                 $sqlPre = $db_conn->prepare($sqlSel);
                 $sqlPre->execute();
@@ -639,6 +649,9 @@ else{
                         <input type=\"hidden\" name=\"form-type\" value=\"start-playoffs\">
                         <input type=\"submit\" value=\"Start The Playoffs\">
                       </form>";
+                }
+                elseif ($finishedPlayoffs == 0){
+
                 }
                 else{
 
