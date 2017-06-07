@@ -31,7 +31,8 @@ namespace ProjectFifaV2
             
             InitializeComponent();
             this.unLbl.Text = un;
-            tblUsers = dbh.FillDT("select * from tblUsers WHERE (Username='" + unLbl.Text + "')");
+            object[,] obj = { { "username", unLbl.Text } };
+            tblUsers = dbh.FillDT("select * from tblUsers WHERE (Username=@username)", obj);
             rowUser = tblUsers.Rows[0];
             if (DisableButtons())
             {
@@ -63,7 +64,8 @@ namespace ProjectFifaV2
             DialogResult result = MessageBox.Show("Are you sure you want to clear your prediction?", "Clear Predictions", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
             if (result.Equals(DialogResult.OK))
             {
-                DataTable tblUsers = dbh.FillDT("select * from tblUsers WHERE (Username='" + unLbl.Text + "')");
+                object[,] obj = { { "username", unLbl.Text } };
+                DataTable tblUsers = dbh.FillDT("select * from tblUsers WHERE (Username=@username)", obj);
                 DataRow rowUser = tblUsers.Rows[0];
                 // Clear predections
                 // Update DB
@@ -72,8 +74,11 @@ namespace ProjectFifaV2
                     rows[i, 0].Text = "";
                     rows[i, 1].Text = "";
                 }
-                dbh.Execute("DELETE FROM tblPredictions WHERE (User_id=" + rowUser["id"] + ")");
-                dbh.Execute("DELETE FROM tblPlayoffPredictions WHERE (User_Id=" + rowUser["id"] + ")");
+
+                object[,] del = { { "id", rowUser["id"] } };
+
+                dbh.Execute("DELETE FROM tblPredictions WHERE (User_id=@id)", del);
+                dbh.Execute("DELETE FROM tblPlayoffPredictions WHERE (User_Id=@id)", del);
                 if (DisableButtons())
                 {
                     btnClearPrediction.Enabled = false;
@@ -96,8 +101,9 @@ namespace ProjectFifaV2
             DateTime deadline = new DateTime(2020, 06, 12);
             DateTime curTime = DateTime.Now;
             int result = DateTime.Compare(deadline, curTime);
-            DataTable predCheck = dbh.FillDT("SELECT * from tblPredictions WHERE (User_id='" + rowUser["id"] + "')");
-            DataTable playCheck = dbh.FillDT("SELECT * from tblPlayoffPredictions WHERE (User_Id='" + rowUser["id"] + "')");
+            object[,] obj = { { "id", rowUser["id"] } };
+            DataTable predCheck = dbh.FillDT("SELECT * from tblPredictions WHERE (User_id=@id)", obj);
+            DataTable playCheck = dbh.FillDT("SELECT * from tblPlayoffPredictions WHERE (User_Id=@id)", obj);
             if (result < 0 || (predCheck.Rows.Count == 0 && playCheck.Rows.Count == 0))
             {
                 hasPassed = true;
@@ -114,7 +120,6 @@ namespace ProjectFifaV2
         {
             string checkup = "SELECT * FROM tblGames WHERE finished = 0";
             DataTable dtCheck = dbh.FillDT(checkup);
-            string progress1 = ProjectFifaV2.Properties.Settings.Default.progress;
             if (dtCheck.Rows.Count > 0)
             {
                 string countPoules = "SELECT DISTINCT pouleId FROM tblGames";
@@ -163,21 +168,25 @@ namespace ProjectFifaV2
 
                 foreach (DataRow quarterFinal in quarterFinals.Rows)
                 {
-                    string quarterIntern1a = "SELECT * FROM tblTeams WHERE pouleRanking = " + quarterFinal["pouleRankingA"].ToString() + "";
-                    DataTable quarterIntern1b = dbh.FillDT(quarterIntern1a);
+                    object[,] quarter1d = { { "quarter", quarterFinal["pouleRankingA"] } };
+                    string quarterIntern1a = "SELECT * FROM tblTeams WHERE pouleRanking = @quarter";
+                    DataTable quarterIntern1b = dbh.FillDT(quarterIntern1a, quarter1d);
                     int quarterCount1c = quarterIntern1b.Rows.Count;
 
-                    string quarterIntern2a = "SELECT * FROM tblTeams WHERE pouleRanking = " + quarterFinal["pouleRankingB"].ToString() + "";
-                    DataTable quarterIntern2b = dbh.FillDT(quarterIntern2a);
+                    object[,] quarter2d = { { "quarter", quarterFinal["pouleRankingB"] } };
+                    string quarterIntern2a = "SELECT * FROM tblTeams WHERE pouleRanking = @quarter";
+                    DataTable quarterIntern2b = dbh.FillDT(quarterIntern2a, quarter2d);
                     int quarterCount2c = quarterIntern2b.Rows.Count;
 
                     if (quarterCount1c > 0 && quarterCount2c > 0)
                     {
-                        string teamAsql = "SELECT * FROM tblTeams WHERE pouleId = " + quarterFinal["pouleIdA"].ToString() + " AND pouleRanking = " + quarterFinal["pouleRankingA"].ToString() + "";
-                        DataTable teamAdt = dbh.FillDT(teamAsql);
+                        object[,] team1 = { { "quarter", quarterFinal["pouleIdA"] }, { "rank", quarterFinal["pouleRankingA"] } };
+                        string teamAsql = "SELECT * FROM tblTeams WHERE pouleId = @quarter AND pouleRanking = @rank";
+                        DataTable teamAdt = dbh.FillDT(teamAsql, team1);
 
-                        string teamBsql = "SELECT * FROM tblTeams WHERE pouleId = " + quarterFinal["pouleIdB"] + " AND pouleRanking = " + quarterFinal["pouleRankingB"] + "";
-                        DataTable teamBdt = dbh.FillDT(teamBsql);
+                        object[,] team2 = { { "quarter", quarterFinal["pouleIdB"] }, { "rank", quarterFinal["pouleRankingB"] } };
+                        string teamBsql = "SELECT * FROM tblTeams WHERE pouleId = @quarter AND pouleRanking = @rank";
+                        DataTable teamBdt = dbh.FillDT(teamBsql, team2);
 
                         for (int i = 0; i < teamAdt.Rows.Count; i++)
                         {
@@ -197,21 +206,25 @@ namespace ProjectFifaV2
                 {
                     if (quarterFinals.Rows.Count == 0)
                     {
-                        string semiIntern1a = "SELECT * FROM tblTeams WHERE pouleRanking = " + semiFinal["pouleRankingA"].ToString() + "";
-                        DataTable semiIntern1b = dbh.FillDT(semiIntern1a);
+                        object[,] team1 = { { "rank", semiFinal["pouleRankingA"] } };
+                        string semiIntern1a = "SELECT * FROM tblTeams WHERE pouleRanking =@rank";
+                        DataTable semiIntern1b = dbh.FillDT(semiIntern1a, team1);
                         int semiCount1c = semiIntern1b.Rows.Count;
 
-                        string semiIntern2a = "SELECT * FROM tblTeams WHERE pouleRanking = " + semiFinal["pouleRankingB"].ToString() + "";
-                        DataTable semiIntern2b = dbh.FillDT(semiIntern2a);
+                        object[,] team2 = { { "rank", semiFinal["pouleRankingB"] } };
+                        string semiIntern2a = "SELECT * FROM tblTeams WHERE pouleRanking = @rank";
+                        DataTable semiIntern2b = dbh.FillDT(semiIntern2a, team2);
                         int semiCount2c = semiIntern2b.Rows.Count;
 
                         if (semiCount1c > 0 && semiCount2c > 0)
                         {
+                            object[,] team1b = { { "poule", semiFinal["pouleIdA"] }, { "rank", semiFinal["pouleRankingA"] } };
                             string teamAsql = "SELECT * FROM tblTeams WHERE pouleId = " + semiFinal["pouleIdA"].ToString() + " AND pouleRanking = " + semiFinal["pouleRankingA"].ToString() + "";
-                            DataTable teamAdt = dbh.FillDT(teamAsql);
+                            DataTable teamAdt = dbh.FillDT(teamAsql, team1b);
 
+                            object[,] team2b = { { "poule", semiFinal["pouleIdB"] }, { "rank", semiFinal["pouleRankingB"] } };
                             string teamBsql = "SELECT * FROM tblTeams WHERE pouleId = " + semiFinal["pouleIdB"] + " AND pouleRanking = " + semiFinal["pouleRankingB"] + "";
-                            DataTable teamBdt = dbh.FillDT(teamBsql);
+                            DataTable teamBdt = dbh.FillDT(teamBsql,team2b);
 
                             ListViewItem lsItem = new ListViewItem("semi-final");
                             lsItem.Group = lvOverviewP1.Groups[1];
@@ -236,21 +249,25 @@ namespace ProjectFifaV2
                 {
                     if (semiFinals.Rows.Count == 0)
                     {
+                        object[,] team1 = { { "rank", final["pouleRankingA"] } };
                         string finalIntern1a = "SELECT * FROM tblTeams WHERE pouleRanking = " + final["pouleRankingA"].ToString() + "";
-                        DataTable finalIntern1b = dbh.FillDT(finalIntern1a);
+                        DataTable finalIntern1b = dbh.FillDT(finalIntern1a, team1);
                         int finalCount1c = finalIntern1b.Rows.Count;
 
+                        object[,] team2 = { { "rank", final["pouleRankingB"] } };
                         string finalIntern2a = "SELECT * FROM tblTeams WHERE pouleRanking = " + final["pouleRankingB"].ToString() + "";
-                        DataTable finalIntern2b = dbh.FillDT(finalIntern2a);
+                        DataTable finalIntern2b = dbh.FillDT(finalIntern2a, team2);
                         int finalCount2c = finalIntern2b.Rows.Count;
 
                         if (finalCount1c > 0 && finalCount2c > 0)
                         {
+                            object[,] team1b = { { "poule", final["pouleIdA"] }, { "rank", final["pouleRankingA"] } };
                             string teamAsql = "SELECT * FROM tblTeams WHERE pouleId = " + final["pouleIdA"].ToString() + " AND pouleRanking = " + final["pouleRankingA"].ToString() + "";
-                            DataTable teamAdt = dbh.FillDT(teamAsql);
+                            DataTable teamAdt = dbh.FillDT(teamAsql, team1b);
 
+                            object[,] team2b = { { "poule", final["pouleIdB"] }, { "rank", final["pouleRankingB"] } };
                             string teamBsql = "SELECT * FROM tblTeams WHERE pouleId = " + final["pouleIdB"] + " AND pouleRanking = " + final["pouleRankingB"] + "";
-                            DataTable teamBdt = dbh.FillDT(teamBsql);
+                            DataTable teamBdt = dbh.FillDT(teamBsql,team2b);
                             ListViewItem lsItem = new ListViewItem("final");
                             lsItem.Group = lvOverviewP1.Groups[2];
                             lvOverviewP1.Items.Add(lsItem);
@@ -349,11 +366,13 @@ namespace ProjectFifaV2
 
                     for (int i = 0; i < quarterFinals.Rows.Count; i++)
                     {
-                        string quarterIntern1a = "SELECT * FROM tblTeams WHERE pouleRanking = " + quarterFinals.Rows[i]["pouleRankingA"].ToString() + "";
-                        DataTable quarterIntern1b = dbh.FillDT(quarterIntern1a);
+                        object[,] obj = { { "poule", quarterFinals.Rows[i]["pouleRankingA"] } };
+                        string quarterIntern1a = "SELECT * FROM tblTeams WHERE pouleRanking = @poule";
+                        DataTable quarterIntern1b = dbh.FillDT(quarterIntern1a, obj);
 
-                        string quarterIntern2a = "SELECT * FROM tblTeams WHERE pouleRanking = " + quarterFinals.Rows[i]["pouleRankingB"].ToString() + "";
-                        DataTable quarterIntern2b = dbh.FillDT(quarterIntern2a);
+                        object[,] obj2 = { { "poule", quarterFinals.Rows[i]["pouleRankingA"] } };
+                        string quarterIntern2a = "SELECT * FROM tblTeams WHERE pouleRanking = @poule";
+                        DataTable quarterIntern2b = dbh.FillDT(quarterIntern2a, obj2);
 
                         
 
@@ -406,13 +425,13 @@ namespace ProjectFifaV2
                     index = new int[lengthOutterArray];
                     for (int i = 0; i < semiFinals.Rows.Count; i++)
                     {
-                    
-                        string semiIntern1a = "SELECT * FROM tblTeams WHERE pouleRanking = " + semiFinals.Rows[i]["pouleRankingA"].ToString() + "";
-                        DataTable semiIntern1b = dbh.FillDT(semiIntern1a);
+                        object[,] obj = { { "rank", semiFinals.Rows[i]["pouleRankingA"] } };
+                        string semiIntern1a = "SELECT * FROM tblTeams WHERE pouleRanking = @rank";
+                        DataTable semiIntern1b = dbh.FillDT(semiIntern1a, obj);
 
-                        string semiIntern2a = "SELECT * FROM tblTeams WHERE pouleRanking = " + semiFinals.Rows[i]["pouleRankingB"].ToString() + "";
-                        DataTable semiIntern2b = dbh.FillDT(semiIntern2a);
-
+                        object[,] obj2 = { { "rank", semiFinals.Rows[i]["pouleRankingB"] } };
+                        string semiIntern2a = "SELECT * FROM tblTeams WHERE pouleRanking = @rank";
+                        DataTable semiIntern2b = dbh.FillDT(semiIntern2a, obj2);
 
                         DataRow match = semiFinals.Rows[i];
                         Label lblHomeTeam = new Label();
@@ -460,12 +479,13 @@ namespace ProjectFifaV2
 
                     for (int i = 0; i < finals.Rows.Count; i++)
                     {
-                        string finalIntern1a = "SELECT * FROM tblTeams WHERE pouleRanking = " + finals.Rows[i]["pouleRankingA"].ToString() + "";
-                        DataTable finalIntern1b = dbh.FillDT(finalIntern1a);
+                        object[,] obj = { { "rank", finals.Rows[i]["pouleRankingA"] } };
+                        string finalIntern1a = "SELECT * FROM tblTeams WHERE pouleRanking =@rank";
+                        DataTable finalIntern1b = dbh.FillDT(finalIntern1a, obj);
 
-                        string finalIntern2a = "SELECT * FROM tblTeams WHERE pouleRanking = " + finals.Rows[i]["pouleRankingB"].ToString() + "";
-                        DataTable finalIntern2b = dbh.FillDT(finalIntern2a);
-
+                        object[,] obj2 = { { "rank", finals.Rows[i]["pouleRankingB"] } };
+                        string finalIntern2a = "SELECT * FROM tblTeams WHERE pouleRanking = @rank";
+                        DataTable finalIntern2b = dbh.FillDT(finalIntern2a, obj2);
 
                         DataRow match = finals.Rows[i];
                         Label lblHomeTeam = new Label();
@@ -506,45 +526,6 @@ namespace ProjectFifaV2
                     }
                 }
             }
-                    /*for (int i = 0; i < results.Rows.Count; i++)
-                    {
-                        DataRow match = results.Rows[i];
-                        Label lblHomeTeam = new Label();
-                        Label lblAwayTeam = new Label();
-                        TextBox txtHomePred = new TextBox();
-                        TextBox txtAwayPred = new TextBox();
-
-                        lblHomeTeam.TextAlign = ContentAlignment.BottomRight;
-                        lblHomeTeam.Text = match["Home"].ToString();
-                        lblHomeTeam.Location = new Point(15, txtHomePred.Bottom + (i * 30));
-                        lblHomeTeam.AutoSize = true;
-
-                        txtHomePred.Text = "";
-                        txtHomePred.Location = new Point(lblHomeTeam.Width, lblHomeTeam.Top - 3);
-                        txtHomePred.Width = 40;
-                        rows[i, 0] = txtHomePred;
-
-                        txtAwayPred.Text = "";
-                        txtAwayPred.Location = new Point(txtHomePred.Width + lblHomeTeam.Width, txtHomePred.Top);
-                        txtAwayPred.Width = 40;
-                        rows[i, 1] = txtAwayPred;
-
-                        int.TryParse(match["Game_ID"].ToString(), out index[i]);
-
-                        lblAwayTeam.Text = match["Away"].ToString();
-                        lblAwayTeam.Location = new Point(txtHomePred.Width + lblHomeTeam.Width + txtAwayPred.Width, txtHomePred.Top + 3);
-                        lblAwayTeam.AutoSize = true;
-
-                        pnlPredCard.Controls.Add(lblHomeTeam);
-                        pnlPredCard.Controls.Add(txtHomePred);
-                        pnlPredCard.Controls.Add(txtAwayPred);
-                        pnlPredCard.Controls.Add(lblAwayTeam);
-                        if ((match["HomeScore"].ToString() != null && match["HomeScore"].ToString() != "") || (match["AwayScore"].ToString() != null && match["AwayScore"].ToString() != ""))
-                        {
-                            rows[i, 0].ReadOnly = true;
-                            rows[i, 1].ReadOnly = true;
-                        }
-                    }*/
         }
 
         internal void GetUsername(string un)
@@ -554,7 +535,8 @@ namespace ProjectFifaV2
 
         private void btnEditPrediction_Click(object sender, EventArgs e)
         {
-            DataTable tblUsers = dbh.FillDT("select * from tblUsers WHERE (Username='" + unLbl.Text + "')");
+            object[,] ud = { { "username", unLbl.Text } };
+            DataTable tblUsers = dbh.FillDT("select * from tblUsers WHERE (Username=@username)", ud);
             DataRow rowUser = tblUsers.Rows[0];
             string home = "";
             string away = "";
@@ -595,16 +577,18 @@ namespace ProjectFifaV2
                     }
                     if ((game["HomeTeamScore"] == null || game["HomeTeamScore"].ToString() == "") && (game["AwayTeamScore"] == null || game["AwayTeamScore"].ToString() == "") && (home != null && home != "") && (away != null && away != ""))
                     {
-                        string query2 = "SELECT * FROM tblPredictions WHERE (User_id = " + rowUser["id"] + " AND Game_id = " + index[j] + ")";
-                        DataTable checkup = dbh.FillDT(query2);
+                        object[,] obj2 = { { "id", rowUser["id"] }, { "game", index[j] } };
+                        string query2 = "SELECT * FROM tblPredictions WHERE (User_id = @id AND Game_id = @game)";
+                        DataTable checkup = dbh.FillDT(query2, obj2);
                         if (checkup.Rows.Count == 1)
                         {
-                            dbh.Execute("UPDATE tblPredictions SET PredictedHomeScore=" + home + ", PredictedAwayScore=" + away + " WHERE (User_id=" +
-                            rowUser["id"] + " AND Game_id=" + index[j] + ")");
+                            object[,] upd = { { "home", home }, { "away", away }, { "id", rowUser["id"] }, { "game", index[j] } };
+                            dbh.Execute("UPDATE tblPredictions SET PredictedHomeScore=@home, PredictedAwayScore=@away WHERE (User_id=@id AND Game_id=@game)", upd);
                         }
                         else
                         {
-                            dbh.Execute("Insert Into tblPredictions (User_id, Game_id, PredictedHomeScore, PredictedAwayScore) VALUES ('" + rowUser["id"] + "', " + index[j] + ", '" + home + "', '" + away + "')");
+                            object[,] upd = { { "home", home }, { "away", away }, { "id", rowUser["id"] }, { "game", index[j] } };
+                            dbh.Execute("Insert Into tblPredictions (User_id, Game_id, PredictedHomeScore, PredictedAwayScore) VALUES (@id, @game, @home, @away)", upd);
                         }
                     }
                 }
@@ -642,16 +626,18 @@ namespace ProjectFifaV2
                     }
                     if ((game["HomeTeamScore"] == null || game["HomeTeamScore"].ToString() == "") && (game["AwayTeamScore"] == null || game["AwayTeamScore"].ToString() == "") && (home != null && home != "") && (away != null && away != ""))
                     {
-                        string query2 = "SELECT * FROM tblPlayoffPredictions WHERE (User_id = " + rowUser["id"] + " AND Game_id = " + index[i] + ")";
-                        DataTable checkup = dbh.FillDT(query2);
+                        object[,] pla = { { "id", rowUser["id"] }, { "game", index[i] } };
+                        string query2 = "SELECT * FROM tblPlayoffPredictions WHERE (User_id=@id AND Game_id=@game)";
+                        DataTable checkup = dbh.FillDT(query2, pla);
                         if (checkup.Rows.Count == 1)
                         {
-                            dbh.Execute("UPDATE tblPlayoffPredictions SET PredictedHomeScore=" + home + ", PredictedAwayScore=" + away + " WHERE (User_id=" +
-                            rowUser["id"] + " AND Game_id=" + index[i] + ")");
+                            object[,] upd = { { "home", home }, { "away", away }, { "id", rowUser["id"] }, { "game", index[i] } };
+                            dbh.Execute("UPDATE tblPlayoffPredictions SET PredictedHomeScore=@home, PredictedAwayScore=@away WHERE (User_id=@id AND Game_id=@game)", upd);
                         }
                         else
                         {
-                            dbh.Execute("Insert Into tblPlayoffPredictions (User_id, Game_id, PredictedHomeScore, PredictedAwayScore) VALUES ('" + rowUser["id"] + "', " + index[i] + ", '" + home + "', '" + away + "')");
+                            object[,] upd = { { "home", home }, { "away", away }, { "id", rowUser["id"] }, { "game", index[i] } };
+                            dbh.Execute("Insert Into tblPlayoffPredictions (User_id, Game_id, PredictedHomeScore, PredictedAwayScore) VALUES (@id, @game, @home, @away)", upd);
                         }
                     }
                 }
@@ -661,7 +647,8 @@ namespace ProjectFifaV2
 
         private void btnInsertPrediction_Click(object sender, EventArgs e)
         {
-            DataTable tblUsers = dbh.FillDT("SELECT * from tblUsers WHERE (Username='" + unLbl.Text + "')");
+            object[,] obj = { { "username", unLbl.Text } };
+            DataTable tblUsers = dbh.FillDT("SELECT * from tblUsers WHERE (Username=@username)", obj);
             DataRow rowUser = tblUsers.Rows[0];
             string home = "";
             string away = "";
@@ -702,7 +689,8 @@ namespace ProjectFifaV2
                     }
                     if ((game["HomeTeamScore"] == null || game["HomeTeamScore"].ToString() == "") && (game["AwayTeamScore"] == null || game["AwayTeamScore"].ToString() == "") && (home != null && home != "") && (away != null && away != ""))
                     {
-                        dbh.Execute("Insert Into tblPredictions (User_id, Game_id, PredictedHomeScore, PredictedAwayScore) VALUES ('" + rowUser["id"] + "', " + index[j] + ", '" + home + "', '" + away + "')");
+                        object[,] upd = { { "home", home }, { "away", away }, { "id", rowUser["id"] }, { "game", index[j] } };
+                        dbh.Execute("Insert Into tblPredictions (User_id, Game_id, PredictedHomeScore, PredictedAwayScore) VALUES (@id, @game, @home, @away)", upd);
                     }
                 }
             }
@@ -739,50 +727,11 @@ namespace ProjectFifaV2
                     }
                     if ((game["ScoreHomeTeam"] == null || game["ScoreHomeTeam"].ToString() == "") && (game["ScoreAwayTeam"] == null || game["ScoreAwayTeam"].ToString() == "") && (home != null && home != "") && (away != null && away != ""))
                     {
-                        dbh.Execute("Insert Into tblPlayoffPredictions (User_Id, Game_Id, PredictedHomeScore, PredictedAwayScore) VALUES ('" + rowUser["id"] + "', " + index[i] + ", '" + home + "', '" + away + "')");
+                        object[,] upd = { { "home", home }, { "away", away }, { "id", rowUser["id"] }, { "game", index[i] } };
+                        dbh.Execute("Insert Into tblPlayoffPredictions (User_Id, Game_Id, PredictedHomeScore, PredictedAwayScore) VALUES (@id, @game, @home, @away)", upd);
                     }
                 }
             }
-            /*
-            DataTable games = dbh.FillDT("SELECT * FROM tblGames");
-            for (int j = 0; j < lengthOutterArray; j++)
-            {
-                DataRow game = games.Rows[j];
-                for (int k = 0; k < 2; k++)
-                {
-                    if (k == 0)
-                    {
-                        if (rows[j, k].Text == "" || game["HomeTeamScore"] == null)
-                        {
-                            home = null;
-                        }
-                        else
-                        {
-                            home = rows[j, k].Text;
-                        }
-                    }
-                    else
-                    {
-                        if (rows[j, k].Text == "" || game["AwayTeamScore"] == null)
-                        {
-                            away = null;
-                        }
-                        else
-                        {
-                            away = rows[j, k].Text;
-                        }
-                    }
-                }
-                if (game["HomeTeamScore"] != null && game["AwayTeamScore"] != null && (home != null && home != "") && (away != null && away != ""))
-                {
-                    dbh.Execute("Insert Into tblPredictions (User_id, Game_id, PredictedHomeScore, PredictedAwayScore) VALUES ('" + rowUser["id"] + "', " + index[j] + ", '" + home + "', '" + away + "')");
-                }
-                else
-                {
-                    
-                }
-            }
-            */
             if (DisableButtons())
             {
                 btnClearPrediction.Enabled = false;
