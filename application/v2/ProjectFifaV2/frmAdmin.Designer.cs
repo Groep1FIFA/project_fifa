@@ -120,7 +120,8 @@
             this.tableSelector.FormattingEnabled = true;
             this.tableSelector.Items.AddRange(new object[] {
             "tblTeams",
-            "tblGames"});
+            "tblGames",
+            "tblPlayoffs"});
             this.tableSelector.Location = new System.Drawing.Point(16, 10);
             this.tableSelector.Name = "tableSelector";
             this.tableSelector.Size = new System.Drawing.Size(685, 24);

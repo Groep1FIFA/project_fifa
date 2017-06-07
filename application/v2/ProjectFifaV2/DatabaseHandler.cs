@@ -67,10 +67,41 @@ namespace ProjectFifaV2
         public void Execute(string query)
         {
             SqlCommand queryExecute = new SqlCommand(query, con);
+            try {
+                OpenConnectionToDB();
+                int result = queryExecute.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
 
-            OpenConnectionToDB();
-            int result = queryExecute.ExecuteNonQuery();
-            CloseConnectionToDB();
+            }
+            finally
+            {
+                CloseConnectionToDB();
+            }
+        }
+
+        public void Execute(string query, object[,] param)
+        {
+            SqlCommand queryExecute = new SqlCommand(query, con);
+            try
+            {
+                OpenConnectionToDB();
+                for (int i = 0; i < param.Length / 2; i++)
+                {
+                    queryExecute.Parameters.AddWithValue(param[i, 0].ToString(), param[i, 1]);
+                }
+            
+                int result = queryExecute.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+
+            }
+            finally
+            {
+                CloseConnectionToDB();
+            }
         }
 
         public System.Data.DataTable FillDT(string query)
@@ -82,6 +113,43 @@ namespace ProjectFifaV2
             DataTable dt = new DataTable();
             dataAdapter.Fill(dt);
             
+            CloseConnectionToDB();
+
+            return dt;
+        }
+
+        public System.Data.DataTable FillDT(string query, object[,] param)
+        {
+            TestConnection();
+            OpenConnectionToDB();
+
+            SqlDataAdapter dataAdapter = new SqlDataAdapter(query, GetCon());
+
+            SqlCommand command = new SqlCommand(query, GetCon());
+
+            // Add the parameters for the SelectCommand.
+            for (int i = 0; i < param.Length / 2; i++)
+            {
+                command.Parameters.AddWithValue(param[i, 0].ToString(), param[i, 1]);
+            }
+
+            dataAdapter.SelectCommand = command;
+
+            DataTable dt = new DataTable();
+            SqlDataReader read = command.ExecuteReader();
+            while (read.Read())
+            {
+                object[] row = new object[read.FieldCount];// dt.Rows.Add(read);
+                for (int i = 0; i < read.FieldCount; i++)
+                {
+                    row[i] = read[i];
+                    if (dt.Columns.Count < read.FieldCount)
+                    {
+                        dt.Columns.Add(read.GetName(i));
+                    }
+                }
+                dt.Rows.Add(row);
+            }
             CloseConnectionToDB();
 
             return dt;
