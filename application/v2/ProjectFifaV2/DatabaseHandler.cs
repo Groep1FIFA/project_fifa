@@ -67,10 +67,18 @@ namespace ProjectFifaV2
         public void Execute(string query)
         {
             SqlCommand queryExecute = new SqlCommand(query, con);
+            try {
+                OpenConnectionToDB();
+                int result = queryExecute.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
 
-            OpenConnectionToDB();
-            int result = queryExecute.ExecuteNonQuery();
-            CloseConnectionToDB();
+            }
+            finally
+            {
+                CloseConnectionToDB();
+            }
         }
 
         public System.Data.DataTable FillDT(string query)

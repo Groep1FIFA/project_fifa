@@ -62,18 +62,27 @@ namespace ProjectFifaV2
 
         private void btnSelectFile_Click(object sender, EventArgs e)
         {
-            txtPath.Text = null;
+            try
+            {
+                txtPath.Text = null;
+                string path = "";
             
-            string path = GetFilePath();
 
-            if (CheckExtension(path, "csv"))
-            {
-                txtPath.Text = path;
+                path = GetFilePath();
+
+            
+                if (!CheckExtension(path, ".csv"))
+                {
+                    MessageHandler.ShowMessage("The wrong filetype is selected.");
+                }
+                else
+                {
+                    txtPath.Text = path;
+                    //
+                }
             }
-            else
-            {
-                MessageHandler.ShowMessage("The wrong filetype is selected.");
-            }
+            catch (Exception ex)
+            { MessageBox.Show(ex.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1); }
         }
 
         private void btnLoadData_Click(object sender, EventArgs e)
@@ -81,58 +90,98 @@ namespace ProjectFifaV2
             string tableName = tableSelector.Text;
             if (!(txtPath.Text == null) || !(txtPath.Text == ""))
             {
-                try {
-                    dbh.Execute("DROP table " + tableName);
-                }
-                catch
+
+                if (tableName != "" && txtPath.Text != "")
                 {
-               
-                }
-                if (tableName == "tblTeams")
-                {
-                    dbh.Execute("CREATE table tblTeams (id int NOT NULL, pouleId int NOT NULL, teamName varchar(255) NOT NULL, teamNr int NOT NULL, PRIMARY KEY (id)) ");
-                }
-                else if (tableName == "tblGames")
-                {
-                    dbh.Execute("CREATE table tblGames (Game_ID int NOT NULL, homeTeam int NOT NULL, awayTeam int NOT NULL, pouleId int NOT NULL, HomeTeamScore int NULL, AwayTeamScore int NULL, finished bit NOT NULL, PRIMARY KEY (Game_ID))");
-                }
-                using (StreamReader reader = new StreamReader(txtPath.Text))
-                {
-                    string line;
-                    string[] lineWords;
-                    do
+                    if (!CheckExtension(txtPath.Text, ".csv"))
                     {
-                        line = reader.ReadLine();
-                        lineWords = line.Split(',');
-                        if (tableName == "tblTeams")
+                        MessageHandler.ShowMessage("The wrong filetype is selected.");
+                    }
+                    else
+                    {
+                        try
                         {
-                            string insert = "INSERT INTO tblTeams (id, pouleId, teamName, teamNr) VALUES ('" + lineWords[0].Trim('"') + "', '" + lineWords[1].Trim('"') + "', '" + lineWords[2].Trim('"') + "', '" + lineWords[3].Trim('"') + "')";
-                            dbh.Execute(insert);
+                            dbh.Execute("DROP table " + tableName);
                         }
-                        else if (tableName == "tblGames")
-                        {
-                            string insert;
-                            if (lineWords[6].Trim('"') == "0")
-                            {
-                                insert = "INSERT INTO tblGames (Game_ID, homeTeam, awayTeam, pouleId, finished) VALUES ('" + lineWords[0].Trim('"') + "', '" + lineWords[1].Trim('"') + "', '" + lineWords[2].Trim('"') + "', '" + lineWords[3].Trim('"') + "', '" + lineWords[6].Trim('"') + "')";
-                            }
-                            else
-                            {
-                                insert = "INSERT INTO tblGames (Game_ID, homeTeam, awayTeam, pouleId, HomeTeamScore, AwayTeamScore, finished) VALUES ('" + lineWords[0].Trim('"') + "', '" + lineWords[1].Trim('"') + "', '" + lineWords[2].Trim('"') + "', '" + lineWords[3].Trim('"') + "', '" + lineWords[4].Trim('"') + "', '" + lineWords[5].Trim('"') + "', '" + lineWords[6].Trim('"') + "')";
-                            }
-                            dbh.Execute(insert);
-                        }
-                        else
+                        catch
                         {
 
                         }
-                        
-                    } while (!reader.EndOfStream);
+                        if (tableName == "tblTeams")
+                        {
+                            dbh.Execute("CREATE table tblTeams (id int NOT NULL, pouleId int NOT NULL, teamName varchar(255) NOT NULL, teamNr int NOT NULL, pouleRanking int NOT NULL, playoffRanking int NOT NULL, PRIMARY KEY (id)) ");
+                        }
+                        else if (tableName == "tblGames")
+                        {
+                            dbh.Execute("CREATE table tblGames (Game_ID int NOT NULL, homeTeam int NOT NULL, awayTeam int NOT NULL, pouleId int NOT NULL, HomeTeamScore int NULL, AwayTeamScore int NULL, finished bit NOT NULL, PRIMARY KEY (Game_ID))");
+                        }
+                        else if (tableName == "tblPlayoffs")
+                        {
+                            dbh.Execute("CREATE TABLE tblPlayoffs (id int NOT NULL, pouleIdA int NULL, pouleIdB int NULL, pouleRankingA int NULL, pouleRankingB int NULL, playoffIdA int NULL, playoffIdB int NULL, playoffRankingA int NOT NULL, playoffRankingB int NOT NULL, scoreHomeTeam int NULL, scoreAwayTeam int NULL, finished bit NOT NULL, PRIMARY KEY (id))");
+                        }
+                        try
+                        {
+
+                            using (StreamReader reader = new StreamReader(txtPath.Text))
+                            {
+                                string line;
+                                string[] lineWords;
+                                do
+                                {
+                                    line = reader.ReadLine();
+                                    lineWords = line.Split(',');
+                                    if (tableName == "tblTeams")
+                                    {
+                                        string insert = "INSERT INTO tblTeams (id, pouleId, teamName, teamNr, pouleRanking, playoffRanking) VALUES ('" + lineWords[0].Trim('"') + "', '" + lineWords[1].Trim('"') + "', '" + lineWords[2].Trim('"') + "', '" + lineWords[3].Trim('"') + "', '" + lineWords[4].Trim('"') + "', '" + lineWords[5].Trim('"') + "')";
+                                        dbh.Execute(insert);
+                                    }
+                                    else if (tableName == "tblGames")
+                                    {
+                                        string insert;
+                                        if (lineWords[6].Trim('"') == "0")
+                                        {
+                                            insert = "INSERT INTO tblGames (Game_ID, homeTeam, awayTeam, pouleId, finished) VALUES ('" + lineWords[0].Trim('"') + "', '" + lineWords[1].Trim('"') + "', '" + lineWords[2].Trim('"') + "', '" + lineWords[3].Trim('"') + "', '" + lineWords[6].Trim('"') + "')";
+                                        }
+                                        else
+                                        {
+                                            insert = "INSERT INTO tblGames (Game_ID, homeTeam, awayTeam, pouleId, HomeTeamScore, AwayTeamScore, finished) VALUES ('" + lineWords[0].Trim('"') + "', '" + lineWords[1].Trim('"') + "', '" + lineWords[2].Trim('"') + "', '" + lineWords[3].Trim('"') + "', '" + lineWords[4].Trim('"') + "', '" + lineWords[5].Trim('"') + "', '" + lineWords[6].Trim('"') + "')";
+                                        }
+                                        dbh.Execute(insert);
+                                    }
+                                    else if (tableName == "tblPlayoffs")
+                                    {
+                                        string insert;
+                                        if (lineWords[12].Trim('"') == "1")
+                                        {
+                                            insert = "INSERT INTO tblPlayoffs (id, pouleIdA, pouleIdB, pouleRankingA, pouleRankingB, playoffIdA, playoffIdB, playoffRankingA, playoffRankingB, scoreHomeTeam, scoreAwayTeam, finished) VALUES ('" + lineWords[0].Trim('"') + "', '" + lineWords[1].Trim('"') + "', '" + lineWords[2].Trim('"') + "', '" + lineWords[3].Trim('"') + "', '" + lineWords[4].Trim('"') + "', '" + lineWords[5].Trim('"') + "', '" + lineWords[6].Trim('"') + "', '" + lineWords[7].Trim('"') + "', '" + lineWords[8].Trim('"') + "', '" + lineWords[9].Trim('"') + "', '" + lineWords[10].Trim('"') + "', '" + lineWords[12].Trim('"') + "')";
+                                        }
+                                        else
+                                        {
+                                            insert = "INSERT INTO tblPlayoffs (id, pouleIdA, pouleIdB, pouleRankingA, pouleRankingB, playoffIdA, playoffIdB, playoffRankingA, playoffRankingB, finished) VALUES ('" + lineWords[0].Trim('"') + "', '" + lineWords[1].Trim('"') + "', '" + lineWords[2].Trim('"') + "', '" + lineWords[3].Trim('"') + "', '" + lineWords[4].Trim('"') + "', '" + lineWords[5].Trim('"') + "', '" + lineWords[6].Trim('"') + "', '" + lineWords[7].Trim('"') + "', '" + lineWords[8].Trim('"') + "', '" + lineWords[12].Trim('"') + "')";
+                                        }
+                                        dbh.Execute(insert);
+                                    }
+                                    else
+                                    {
+
+                                    }
+
+                                } while (!reader.EndOfStream);
+                            }
+
+                        }
+
+                        catch (Exception ex)
+                        {
+
+                        }
+
+                    }
                 }
-            }
-            else
-            {
-                MessageHandler.ShowMessage("No filename selected.");
+                else
+                {
+                    MessageHandler.ShowMessage("No filename selected.");
+                }
             }
         }
         
@@ -155,8 +204,14 @@ namespace ProjectFifaV2
         {
             int extensionLength = extension.Length;
             int strLength = fileString.Length;
+            string ext = "";
+            try {
+                ext = fileString.Substring(strLength - extensionLength, extensionLength);
+            }
+            catch (Exception ex)
+            {
 
-            string ext = fileString.Substring(strLength - extensionLength, extensionLength);
+            }
 
             if (ext == extension)
             {

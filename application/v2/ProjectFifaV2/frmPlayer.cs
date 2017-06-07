@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Resources;
 using System.Windows.Forms;
 
 namespace ProjectFifaV2
@@ -72,6 +73,7 @@ namespace ProjectFifaV2
                     rows[i, 1].Text = "";
                 }
                 dbh.Execute("DELETE FROM tblPredictions WHERE (User_id=" + rowUser["id"] + ")");
+                dbh.Execute("DELETE FROM tblPlayoffPredictions WHERE (User_Id=" + rowUser["id"] + ")");
                 if (DisableButtons())
                 {
                     btnClearPrediction.Enabled = false;
@@ -95,7 +97,8 @@ namespace ProjectFifaV2
             DateTime curTime = DateTime.Now;
             int result = DateTime.Compare(deadline, curTime);
             DataTable predCheck = dbh.FillDT("SELECT * from tblPredictions WHERE (User_id='" + rowUser["id"] + "')");
-            if (result < 0 || predCheck.Rows.Count == 0)
+            DataTable playCheck = dbh.FillDT("SELECT * from tblPlayoffPredictions WHERE (User_Id='" + rowUser["id"] + "')");
+            if (result < 0 || (predCheck.Rows.Count == 0 && playCheck.Rows.Count == 0))
             {
                 hasPassed = true;
             }
@@ -109,74 +112,439 @@ namespace ProjectFifaV2
 
         private void ShowResults()
         {
-            string query = "SELECT team1.teamName AS Home, game.HomeTeamScore AS HomeScore, game.AwayTeamScore AS AwayScore, team2.teamName AS Away, game.PouleId as poule FROM ((tblGames AS game INNER JOIN tblTeams AS team1 ON game.HomeTeam = team1.teamNr AND game.PouleId = team1.PouleId) INNER JOIN tblTeams AS team2 ON game.AwayTeam = team2.teamNr AND game.PouleId = team2.PouleId) ORDER BY game.PouleId, game.Game_Id ASC;";
-            DataTable results = dbh.FillDT(query);
-            dbh.CloseConnectionToDB();
+            string checkup = "SELECT * FROM tblGames WHERE finished = 0";
+            DataTable dtCheck = dbh.FillDT(checkup);
+            string progress1 = ProjectFifaV2.Properties.Settings.Default.progress;
+            if (dtCheck.Rows.Count > 0)
+            {
+                string countPoules = "SELECT DISTINCT pouleId FROM tblGames";
+                DataTable pouleCount = dbh.FillDT(countPoules);
+
+                for (int i = 0; i < pouleCount.Rows.Count; i++)
+                {
+                    DataRow dr = pouleCount.Rows[i];
+                    lvOverviewP1.Groups.Add("poule" + i + "Group", "Poule " + dr["pouleId"].ToString());
+                }
+
+
+                string query = "SELECT team1.teamName AS Home, game.HomeTeamScore AS HomeScore, game.AwayTeamScore AS AwayScore, team2.teamName AS Away, game.PouleId as poule FROM ((tblGames AS game INNER JOIN tblTeams AS team1 ON game.HomeTeam = team1.teamNr AND game.PouleId = team1.PouleId) INNER JOIN tblTeams AS team2 ON game.AwayTeam = team2.teamNr AND game.PouleId = team2.PouleId) ORDER BY game.PouleId, game.Game_Id ASC;";
+                DataTable results = dbh.FillDT(query);
+                dbh.CloseConnectionToDB();
 
             
 
-            foreach (DataRow match in results.Rows)
+                foreach (DataRow match in results.Rows)
+                {
+                    ListViewItem lstItem = new ListViewItem(match["Home"].ToString());
+                    lstItem.SubItems.Add(match["HomeScore"].ToString());
+                    lstItem.SubItems.Add(match["AwayScore"].ToString());
+                    lstItem.SubItems.Add(match["Away"].ToString());
+                    lstItem.SubItems.Add(match["poule"].ToString());
+                    int poule;
+                    int.TryParse(match["poule"].ToString(), out poule);
+                    poule--;
+                    lstItem.Group = lvOverviewP1.Groups[poule];
+                    lvOverviewP1.Items.Add(lstItem);
+                }
+            }
+            else
             {
-                ListViewItem lstItem = new ListViewItem(match["Home"].ToString());
-                lstItem.SubItems.Add(match["HomeScore"].ToString());
-                lstItem.SubItems.Add(match["AwayScore"].ToString());
-                lstItem.SubItems.Add(match["Away"].ToString());
-                lstItem.SubItems.Add(match["poule"].ToString());
-                lvOverviewP1.Items.Add(lstItem);
+                lvOverviewP1.Groups.Add("quarterFinals", "Quarter Finals");
+                lvOverviewP1.Groups.Add("semiFinals", "Semi-Finals");
+                lvOverviewP1.Groups.Add("finals", "Finals");
+                string quarterQuery = "SELECT * FROM tblPlayoffs WHERE playoffRankingA = 0 AND playoffRankingB = 0 AND finished = 0";
+                DataTable quarterFinals = dbh.FillDT(quarterQuery);
+
+                string semiQuery = "SELECT * FROM tblPlayoffs WHERE playoffRankingA = 1 AND playoffRankingB = 1 AND finished = 0"; 
+                DataTable semiFinals = dbh.FillDT(semiQuery);
+
+                string finalQuery = "SELECT * FROM tblPlayoffs WHERE playoffRankingA = 2 AND playoffRankingB = 2 AND finished = 0";
+                DataTable finals = dbh.FillDT(finalQuery);
+
+                foreach (DataRow quarterFinal in quarterFinals.Rows)
+                {
+                    string quarterIntern1a = "SELECT * FROM tblTeams WHERE pouleRanking = " + quarterFinal["pouleRankingA"].ToString() + "";
+                    DataTable quarterIntern1b = dbh.FillDT(quarterIntern1a);
+                    int quarterCount1c = quarterIntern1b.Rows.Count;
+
+                    string quarterIntern2a = "SELECT * FROM tblTeams WHERE pouleRanking = " + quarterFinal["pouleRankingB"].ToString() + "";
+                    DataTable quarterIntern2b = dbh.FillDT(quarterIntern2a);
+                    int quarterCount2c = quarterIntern2b.Rows.Count;
+
+                    if (quarterCount1c > 0 && quarterCount2c > 0)
+                    {
+                        string teamAsql = "SELECT * FROM tblTeams WHERE pouleId = " + quarterFinal["pouleIdA"].ToString() + " AND pouleRanking = " + quarterFinal["pouleRankingA"].ToString() + "";
+                        DataTable teamAdt = dbh.FillDT(teamAsql);
+
+                        string teamBsql = "SELECT * FROM tblTeams WHERE pouleId = " + quarterFinal["pouleIdB"] + " AND pouleRanking = " + quarterFinal["pouleRankingB"] + "";
+                        DataTable teamBdt = dbh.FillDT(teamBsql);
+
+                        for (int i = 0; i < teamAdt.Rows.Count; i++)
+                        {
+                            DataRow teamArow = teamAdt.Rows[i];
+                            DataRow teamBrow = teamBdt.Rows[i];
+
+                            ListViewItem lstItem = new ListViewItem(teamArow["teamName"].ToString());
+                            lstItem.SubItems.Add(quarterFinal["scoreHomeTeam"].ToString());
+                            lstItem.SubItems.Add(quarterFinal["scoreAwayTeam"].ToString());
+                            lstItem.SubItems.Add(teamBrow["teamName"].ToString());
+                            lstItem.Group = lvOverviewP1.Groups[0];
+                            lvOverviewP1.Items.Add(lstItem);
+                        }
+                    }
+                }
+                foreach (DataRow semiFinal in semiFinals.Rows)
+                {
+                    if (quarterFinals.Rows.Count == 0)
+                    {
+                        string semiIntern1a = "SELECT * FROM tblTeams WHERE pouleRanking = " + semiFinal["pouleRankingA"].ToString() + "";
+                        DataTable semiIntern1b = dbh.FillDT(semiIntern1a);
+                        int semiCount1c = semiIntern1b.Rows.Count;
+
+                        string semiIntern2a = "SELECT * FROM tblTeams WHERE pouleRanking = " + semiFinal["pouleRankingB"].ToString() + "";
+                        DataTable semiIntern2b = dbh.FillDT(semiIntern2a);
+                        int semiCount2c = semiIntern2b.Rows.Count;
+
+                        if (semiCount1c > 0 && semiCount2c > 0)
+                        {
+                            string teamAsql = "SELECT * FROM tblTeams WHERE pouleId = " + semiFinal["pouleIdA"].ToString() + " AND pouleRanking = " + semiFinal["pouleRankingA"].ToString() + "";
+                            DataTable teamAdt = dbh.FillDT(teamAsql);
+
+                            string teamBsql = "SELECT * FROM tblTeams WHERE pouleId = " + semiFinal["pouleIdB"] + " AND pouleRanking = " + semiFinal["pouleRankingB"] + "";
+                            DataTable teamBdt = dbh.FillDT(teamBsql);
+
+                            ListViewItem lsItem = new ListViewItem("semi-final");
+                            lsItem.Group = lvOverviewP1.Groups[1];
+                            lvOverviewP1.Items.Add(lsItem);
+
+                            for (int i = 0; i < teamAdt.Rows.Count; i++)
+                            {
+                                DataRow teamArow = teamAdt.Rows[i];
+                                DataRow teamBrow = teamBdt.Rows[i];
+
+                                ListViewItem lstItem = new ListViewItem(teamArow["teamName"].ToString());
+                                lstItem.SubItems.Add(semiFinal["scoreHomeTeam"].ToString());
+                                lstItem.SubItems.Add(semiFinal["scoreAwayTeam"].ToString());
+                                lstItem.SubItems.Add(teamBrow["teamName"].ToString());
+                                lstItem.Group = lvOverviewP1.Groups[1];
+                                lvOverviewP1.Items.Add(lstItem);
+                            }
+                        }
+                    }
+                }
+                foreach (DataRow final in finals.Rows)
+                {
+                    if (semiFinals.Rows.Count == 0)
+                    {
+                        string finalIntern1a = "SELECT * FROM tblTeams WHERE pouleRanking = " + final["pouleRankingA"].ToString() + "";
+                        DataTable finalIntern1b = dbh.FillDT(finalIntern1a);
+                        int finalCount1c = finalIntern1b.Rows.Count;
+
+                        string finalIntern2a = "SELECT * FROM tblTeams WHERE pouleRanking = " + final["pouleRankingB"].ToString() + "";
+                        DataTable finalIntern2b = dbh.FillDT(finalIntern2a);
+                        int finalCount2c = finalIntern2b.Rows.Count;
+
+                        if (finalCount1c > 0 && finalCount2c > 0)
+                        {
+                            string teamAsql = "SELECT * FROM tblTeams WHERE pouleId = " + final["pouleIdA"].ToString() + " AND pouleRanking = " + final["pouleRankingA"].ToString() + "";
+                            DataTable teamAdt = dbh.FillDT(teamAsql);
+
+                            string teamBsql = "SELECT * FROM tblTeams WHERE pouleId = " + final["pouleIdB"] + " AND pouleRanking = " + final["pouleRankingB"] + "";
+                            DataTable teamBdt = dbh.FillDT(teamBsql);
+                            ListViewItem lsItem = new ListViewItem("final");
+                            lsItem.Group = lvOverviewP1.Groups[2];
+                            lvOverviewP1.Items.Add(lsItem);
+                            for (int i = 0; i < teamAdt.Rows.Count; i++)
+                            {
+                                DataRow teamArow = teamAdt.Rows[i];
+                                DataRow teamBrow = teamBdt.Rows[i];
+
+                                ListViewItem lstItem = new ListViewItem(teamArow["teamName"].ToString());
+                                lstItem.SubItems.Add(final["scoreHomeTeam"].ToString());
+                                lstItem.SubItems.Add(final["scoreAwayTeam"].ToString());
+                                lstItem.SubItems.Add(teamBrow["teamName"].ToString());
+                                lstItem.Group = lvOverviewP1.Groups[2];
+                                lvOverviewP1.Items.Add(lstItem);
+                            }
+                        }
+                    }
+                }
             }
         }
 
         private void ShowScoreCard()
         {
-            string query = "SELECT team1.teamName AS Home, team2.teamName AS Away, game.HomeTeamScore AS HomeScore, game.AwayTeamScore AS AwayScore, game.Game_ID AS Game_ID FROM ((tblGames AS game INNER JOIN tblTeams AS team1 ON game.HomeTeam = team1.teamNr AND game.PouleId = team1.PouleId) INNER JOIN tblTeams AS team2 ON game.AwayTeam = team2.teamNr AND game.PouleID = team2.PouleId) ORDER BY game.PouleId, game.Game_Id ASC";
-            DataTable results = dbh.FillDT(query);
-            dbh.CloseConnectionToDB();
-
-            lengthOutterArray = results.Rows.Count;
-            rows = new TextBox[lengthOutterArray, lengthInnerArray];
-            index = new int[lengthOutterArray];
-
-            for (int i = 0; i < results.Rows.Count; i++)
+            string checkup = "SELECT * FROM tblGames WHERE finished = 0";
+            DataTable dtCheck = dbh.FillDT(checkup);
+            if (dtCheck.Rows.Count > 0)
             {
-                DataRow match = results.Rows[i];
-                Label lblHomeTeam = new Label();
-                Label lblAwayTeam = new Label();
-                TextBox txtHomePred = new TextBox();
-                TextBox txtAwayPred = new TextBox();
+                string countPoules = "SELECT DISTINCT pouleId FROM tblGames";
+                DataTable pouleCount = dbh.FillDT(countPoules);
 
-                lblHomeTeam.TextAlign = ContentAlignment.BottomRight;
-                lblHomeTeam.Text = match["Home"].ToString();
-                lblHomeTeam.Location = new Point(15, txtHomePred.Bottom + (i * 30));
-                lblHomeTeam.AutoSize = true;
+                string query = "SELECT team1.teamName AS Home, team2.teamName AS Away, game.HomeTeamScore AS HomeScore, game.AwayTeamScore AS AwayScore, game.Game_ID AS Game_ID FROM ((tblGames AS game INNER JOIN tblTeams AS team1 ON game.HomeTeam = team1.teamNr AND game.PouleId = team1.PouleId) INNER JOIN tblTeams AS team2 ON game.AwayTeam = team2.teamNr AND game.PouleID = team2.PouleId) ORDER BY game.PouleId, game.Game_Id ASC";
+                DataTable results = dbh.FillDT(query);
+                dbh.CloseConnectionToDB();
 
-                txtHomePred.Text = "";
-                txtHomePred.Location = new Point(lblHomeTeam.Width, lblHomeTeam.Top - 3);
-                txtHomePred.Width = 40;
-                rows[i, 0] = txtHomePred;
-
-                txtAwayPred.Text = "";
-                txtAwayPred.Location = new Point(txtHomePred.Width + lblHomeTeam.Width, txtHomePred.Top);
-                txtAwayPred.Width = 40;
-                rows[i, 1] = txtAwayPred;
-
-                int.TryParse(match["Game_ID"].ToString(), out index[i]);
-
-                lblAwayTeam.Text = match["Away"].ToString();
-                lblAwayTeam.Location = new Point(txtHomePred.Width + lblHomeTeam.Width + txtAwayPred.Width, txtHomePred.Top + 3);
-                lblAwayTeam.AutoSize = true;
-
-                pnlPredCard.Controls.Add(lblHomeTeam);
-                pnlPredCard.Controls.Add(txtHomePred);
-                pnlPredCard.Controls.Add(txtAwayPred);
-                pnlPredCard.Controls.Add(lblAwayTeam);
-                if ((match["HomeScore"].ToString() != null && match["HomeScore"].ToString() != "") || (match["AwayScore"].ToString() != null && match["AwayScore"].ToString() != ""))
+                lengthOutterArray = results.Rows.Count;
+                rows = new TextBox[lengthOutterArray, lengthInnerArray];
+                index = new int[lengthOutterArray];
+                for (int i = 0; i < results.Rows.Count; i++)
                 {
-                    rows[i, 0].ReadOnly = true;
-                    rows[i, 1].ReadOnly = true;
+
+                    DataRow match = results.Rows[i];
+                    Label lblHomeTeam = new Label();
+                    Label lblAwayTeam = new Label();
+                    TextBox txtHomePred = new TextBox();
+                    TextBox txtAwayPred = new TextBox();
+
+                    lblHomeTeam.TextAlign = ContentAlignment.BottomRight;
+                    lblHomeTeam.Text = match["Home"].ToString();
+                    lblHomeTeam.Location = new Point(15, txtHomePred.Bottom + (i * 30));
+                    lblHomeTeam.AutoSize = true;
+
+                    txtHomePred.Text = "";
+                    txtHomePred.Location = new Point(lblHomeTeam.Width, lblHomeTeam.Top - 3);
+                    txtHomePred.Width = 40;
+                    rows[i, 0] = txtHomePred;
+
+                    txtAwayPred.Text = "";
+                    txtAwayPred.Location = new Point(txtHomePred.Width + lblHomeTeam.Width, txtHomePred.Top);
+                    txtAwayPred.Width = 40;
+                    rows[i, 1] = txtAwayPred;
+
+                    int.TryParse(match["Game_ID"].ToString(), out index[i]);
+
+                    lblAwayTeam.Text = match["Away"].ToString();
+                    lblAwayTeam.Location = new Point(txtHomePred.Width + lblHomeTeam.Width + txtAwayPred.Width, txtHomePred.Top + 3);
+                    lblAwayTeam.AutoSize = true;
+
+                    pnlPredCard.Controls.Add(lblHomeTeam);
+                    pnlPredCard.Controls.Add(txtHomePred);
+                    pnlPredCard.Controls.Add(txtAwayPred);
+                    pnlPredCard.Controls.Add(lblAwayTeam);
+                    if ((match["HomeScore"].ToString() != null && match["HomeScore"].ToString() != "") || (match["AwayScore"].ToString() != null && match["AwayScore"].ToString() != ""))
+                    {
+                        rows[i, 0].ReadOnly = true;
+                        rows[i, 1].ReadOnly = true;
+                    }
+
                 }
             }
+            else
+            {
+                string quarterQuery = "SELECT * FROM tblPlayoffs WHERE playoffRankingA = 0 AND playoffRankingB = 0 AND finished = 0";
+                DataTable quarterFinals = dbh.FillDT(quarterQuery);
 
-            
+                string semiQuery = "SELECT * FROM tblPlayoffs WHERE playoffRankingA = 1 AND playoffRankingB = 1 AND finished = 0";
+                DataTable semiFinals = dbh.FillDT(semiQuery);
+
+                string finalQuery = "SELECT * FROM tblPlayoffs WHERE playoffRankingA = 2 AND playoffRankingB = 2 AND finished = 0";
+                DataTable finals = dbh.FillDT(finalQuery);
+
+                if (quarterFinals.Rows.Count > 0)
+                {
+                    lengthOutterArray = quarterFinals.Rows.Count;
+                    rows = new TextBox[lengthOutterArray, lengthInnerArray];
+                    index = new int[lengthOutterArray];
+
+                    for (int i = 0; i < quarterFinals.Rows.Count; i++)
+                    {
+                        string quarterIntern1a = "SELECT * FROM tblTeams WHERE pouleRanking = " + quarterFinals.Rows[i]["pouleRankingA"].ToString() + "";
+                        DataTable quarterIntern1b = dbh.FillDT(quarterIntern1a);
+
+                        string quarterIntern2a = "SELECT * FROM tblTeams WHERE pouleRanking = " + quarterFinals.Rows[i]["pouleRankingB"].ToString() + "";
+                        DataTable quarterIntern2b = dbh.FillDT(quarterIntern2a);
+
+                        
+
+                        //if (quarterFinals.Rows[i]["finished"].ToString() == "0")
+                        //{
+                        DataRow match = quarterFinals.Rows[i];
+                        Label lblHomeTeam = new Label();
+                        Label lblAwayTeam = new Label();
+                        TextBox txtHomePred = new TextBox();
+                        TextBox txtAwayPred = new TextBox();
+
+                        lblHomeTeam.TextAlign = ContentAlignment.BottomRight;
+                        lblHomeTeam.Text = quarterIntern1b.Rows[0]["teamName"].ToString();
+                        lblHomeTeam.Location = new Point(15, txtHomePred.Bottom + (i * 30));
+                        lblHomeTeam.AutoSize = true;
+
+                        txtHomePred.Text = "";
+                        txtHomePred.Location = new Point(lblHomeTeam.Width, lblHomeTeam.Top - 3);
+                        txtHomePred.Width = 40;
+                        rows[i, 0] = txtHomePred;
+
+                        txtAwayPred.Text = "";
+                        txtAwayPred.Location = new Point(txtHomePred.Width + lblHomeTeam.Width, txtHomePred.Top);
+                        txtAwayPred.Width = 40;
+                        rows[i, 1] = txtAwayPred;
+
+                        int.TryParse(match["id"].ToString(), out index[i]);
+
+                        lblAwayTeam.Text = quarterIntern2b.Rows[0]["teamName"].ToString();
+                        lblAwayTeam.Location = new Point(txtHomePred.Width + lblHomeTeam.Width + txtAwayPred.Width, txtHomePred.Top + 3);
+                        lblAwayTeam.AutoSize = true;
+
+                        pnlPredCard.Controls.Add(lblHomeTeam);
+                        pnlPredCard.Controls.Add(txtHomePred);
+                        pnlPredCard.Controls.Add(txtAwayPred);
+                        pnlPredCard.Controls.Add(lblAwayTeam);
+                        if ((match["ScoreHomeTeam"].ToString() != null && match["ScoreHomeTeam"].ToString() != "") || (match["ScoreAwayTeam"].ToString() != null && match["ScoreAwayTeam"].ToString() != ""))
+                        {
+                            rows[i, 0].ReadOnly = true;
+                            rows[i, 1].ReadOnly = true;
+                        }
+                        //}
+                    }
+                }
+                if (quarterFinals.Rows.Count == 0)
+                {
+
+                    lengthOutterArray = semiFinals.Rows.Count;
+                    rows = new TextBox[lengthOutterArray, lengthInnerArray];
+                    index = new int[lengthOutterArray];
+                    for (int i = 0; i < semiFinals.Rows.Count; i++)
+                    {
+                    
+                        string semiIntern1a = "SELECT * FROM tblTeams WHERE pouleRanking = " + semiFinals.Rows[i]["pouleRankingA"].ToString() + "";
+                        DataTable semiIntern1b = dbh.FillDT(semiIntern1a);
+
+                        string semiIntern2a = "SELECT * FROM tblTeams WHERE pouleRanking = " + semiFinals.Rows[i]["pouleRankingB"].ToString() + "";
+                        DataTable semiIntern2b = dbh.FillDT(semiIntern2a);
+
+
+                        DataRow match = semiFinals.Rows[i];
+                        Label lblHomeTeam = new Label();
+                        Label lblAwayTeam = new Label();
+                        TextBox txtHomePred = new TextBox();
+                        TextBox txtAwayPred = new TextBox();
+
+                        lblHomeTeam.TextAlign = ContentAlignment.BottomRight;
+                        lblHomeTeam.Text = semiIntern1b.Rows[0]["teamName"].ToString();
+                        lblHomeTeam.Location = new Point(15, txtHomePred.Bottom + (i * 30));
+                        lblHomeTeam.AutoSize = true;
+
+                        txtHomePred.Text = "";
+                        txtHomePred.Location = new Point(lblHomeTeam.Width, lblHomeTeam.Top - 3);
+                        txtHomePred.Width = 40;
+                        rows[i, 0] = txtHomePred;
+
+                        txtAwayPred.Text = "";
+                        txtAwayPred.Location = new Point(txtHomePred.Width + lblHomeTeam.Width, txtHomePred.Top);
+                        txtAwayPred.Width = 40;
+                        rows[i, 1] = txtAwayPred;
+
+                        int.TryParse(match["id"].ToString(), out index[i]);
+
+                        lblAwayTeam.Text = semiIntern2b.Rows[0]["teamName"].ToString();
+                        lblAwayTeam.Location = new Point(txtHomePred.Width + lblHomeTeam.Width + txtAwayPred.Width, txtHomePred.Top + 3);
+                        lblAwayTeam.AutoSize = true;
+
+                        pnlPredCard.Controls.Add(lblHomeTeam);
+                        pnlPredCard.Controls.Add(txtHomePred);
+                        pnlPredCard.Controls.Add(txtAwayPred);
+                        pnlPredCard.Controls.Add(lblAwayTeam);
+                        if ((match["ScoreHomeTeam"].ToString() != null && match["ScoreHomeTeam"].ToString() != "") || (match["ScoreAwayTeam"].ToString() != null && match["ScoreAwayTeam"].ToString() != ""))
+                        {
+                            rows[i, 0].ReadOnly = true;
+                            rows[i, 1].ReadOnly = true;
+                        }
+                    }
+                }
+                if (quarterFinals.Rows.Count == 0 && semiFinals.Rows.Count == 0)
+                {
+                    lengthOutterArray = finals.Rows.Count;
+                    rows = new TextBox[lengthOutterArray, lengthInnerArray];
+                    index = new int[lengthOutterArray];
+
+                    for (int i = 0; i < finals.Rows.Count; i++)
+                    {
+                        string finalIntern1a = "SELECT * FROM tblTeams WHERE pouleRanking = " + finals.Rows[i]["pouleRankingA"].ToString() + "";
+                        DataTable finalIntern1b = dbh.FillDT(finalIntern1a);
+
+                        string finalIntern2a = "SELECT * FROM tblTeams WHERE pouleRanking = " + finals.Rows[i]["pouleRankingB"].ToString() + "";
+                        DataTable finalIntern2b = dbh.FillDT(finalIntern2a);
+
+
+                        DataRow match = finals.Rows[i];
+                        Label lblHomeTeam = new Label();
+                        Label lblAwayTeam = new Label();
+                        TextBox txtHomePred = new TextBox();
+                        TextBox txtAwayPred = new TextBox();
+
+                        lblHomeTeam.TextAlign = ContentAlignment.BottomRight;
+                        lblHomeTeam.Text = finalIntern1b.Rows[0]["teamName"].ToString();
+                        lblHomeTeam.Location = new Point(15, txtHomePred.Bottom + (i * 30));
+                        lblHomeTeam.AutoSize = true;
+
+                        txtHomePred.Text = "";
+                        txtHomePred.Location = new Point(lblHomeTeam.Width, lblHomeTeam.Top - 3);
+                        txtHomePred.Width = 40;
+                        rows[i, 0] = txtHomePred;
+
+                        txtAwayPred.Text = "";
+                        txtAwayPred.Location = new Point(txtHomePred.Width + lblHomeTeam.Width, txtHomePred.Top);
+                        txtAwayPred.Width = 40;
+                        rows[i, 1] = txtAwayPred;
+
+                        int.TryParse(match["id"].ToString(), out index[i]);
+
+                        lblAwayTeam.Text = finalIntern2b.Rows[0]["teamName"].ToString();
+                        lblAwayTeam.Location = new Point(txtHomePred.Width + lblHomeTeam.Width + txtAwayPred.Width, txtHomePred.Top + 3);
+                        lblAwayTeam.AutoSize = true;
+
+                        pnlPredCard.Controls.Add(lblHomeTeam);
+                        pnlPredCard.Controls.Add(txtHomePred);
+                        pnlPredCard.Controls.Add(txtAwayPred);
+                        pnlPredCard.Controls.Add(lblAwayTeam);
+                        if ((match["ScoreHomeTeam"].ToString() != null && match["ScoreHomeTeam"].ToString() != "") || (match["ScoreAwayTeam"].ToString() != null && match["ScoreAwayTeam"].ToString() != ""))
+                        {
+                            rows[i, 0].ReadOnly = true;
+                            rows[i, 1].ReadOnly = true;
+                        }
+                    }
+                }
+            }
+                    /*for (int i = 0; i < results.Rows.Count; i++)
+                    {
+                        DataRow match = results.Rows[i];
+                        Label lblHomeTeam = new Label();
+                        Label lblAwayTeam = new Label();
+                        TextBox txtHomePred = new TextBox();
+                        TextBox txtAwayPred = new TextBox();
+
+                        lblHomeTeam.TextAlign = ContentAlignment.BottomRight;
+                        lblHomeTeam.Text = match["Home"].ToString();
+                        lblHomeTeam.Location = new Point(15, txtHomePred.Bottom + (i * 30));
+                        lblHomeTeam.AutoSize = true;
+
+                        txtHomePred.Text = "";
+                        txtHomePred.Location = new Point(lblHomeTeam.Width, lblHomeTeam.Top - 3);
+                        txtHomePred.Width = 40;
+                        rows[i, 0] = txtHomePred;
+
+                        txtAwayPred.Text = "";
+                        txtAwayPred.Location = new Point(txtHomePred.Width + lblHomeTeam.Width, txtHomePred.Top);
+                        txtAwayPred.Width = 40;
+                        rows[i, 1] = txtAwayPred;
+
+                        int.TryParse(match["Game_ID"].ToString(), out index[i]);
+
+                        lblAwayTeam.Text = match["Away"].ToString();
+                        lblAwayTeam.Location = new Point(txtHomePred.Width + lblHomeTeam.Width + txtAwayPred.Width, txtHomePred.Top + 3);
+                        lblAwayTeam.AutoSize = true;
+
+                        pnlPredCard.Controls.Add(lblHomeTeam);
+                        pnlPredCard.Controls.Add(txtHomePred);
+                        pnlPredCard.Controls.Add(txtAwayPred);
+                        pnlPredCard.Controls.Add(lblAwayTeam);
+                        if ((match["HomeScore"].ToString() != null && match["HomeScore"].ToString() != "") || (match["AwayScore"].ToString() != null && match["AwayScore"].ToString() != ""))
+                        {
+                            rows[i, 0].ReadOnly = true;
+                            rows[i, 1].ReadOnly = true;
+                        }
+                    }*/
         }
 
         internal void GetUsername(string un)
@@ -190,54 +558,103 @@ namespace ProjectFifaV2
             DataRow rowUser = tblUsers.Rows[0];
             string home = "";
             string away = "";
-            DataTable tblGames = dbh.FillDT("SELECT * FROM tblGames");
-            for (int j = 0; j < lengthOutterArray; j++)
-            {
-                DataRow game = tblGames.Rows[j];
-                for (int k = 0; k < lengthInnerArray; k++)
-                {
-                    if (k == 0)
-                    {
-                        if (rows[j, k].Text == "" || game["HomeTeamScore"] == null)
-                        {
-                            home = null;
-                        }
-                        else
-                        {
-                            home = rows[j, k].Text;
-                        }
-                    }
-                    else
-                    {
-                        if (rows[j, k].Text == "" || game["AwayTeamScore"] == null)
-                        {
-                            away = null;
-                        }
-                        else
-                        {
-                            away = rows[j, k].Text;
-                        }
-                    }
-                }
-                if ((game["HomeTeamScore"] == null || game["HomeTeamScore"].ToString() == "") && (game["AwayTeamScore"] == null || game["AwayTeamScore"].ToString() == "") && (home != null && home != "") && (away != null && away != ""))
-                {
-                    string query2 = "SELECT * FROM tblPredictions WHERE (User_id = " + rowUser["id"] + " AND Game_id = " + index[j] + ")";
-                    DataTable checkup = dbh.FillDT(query2);
-                    if (checkup.Rows.Count == 1)
-                    {
-                        dbh.Execute("UPDATE tblPredictions SET PredictedHomeScore=" + home + ", PredictedAwayScore=" + away + " WHERE (User_id=" +
-                        rowUser["id"] + " AND Game_id=" + index[j] + ")");
-                    }
-                    else
-                    {
-                        dbh.Execute("Insert Into tblPredictions (User_id, Game_id, PredictedHomeScore, PredictedAwayScore) VALUES ('" + rowUser["id"] + "', " + index[j] + ", '" + home + "', '" + away + "')");
-                    }
-                }
-                else
-                {
-                }
 
-                
+            DataTable tblGames = dbh.FillDT("SELECT * FROM tblGames");
+
+            DataTable playoffs = dbh.FillDT("SELECT * FROM tblPlayoffs");
+
+            if (tblGames.Rows.Count > 0)
+            {
+                for (int j = 0; j < lengthOutterArray; j++)
+                {
+                    DataRow game = tblGames.Rows[j];
+                    for (int k = 0; k < lengthInnerArray; k++)
+                    {
+                        if (k == 0)
+                        {
+                            if (rows[j, k].Text == "" || game["HomeTeamScore"] == null)
+                            {
+                                home = null;
+                            }
+                            else
+                            {
+                                home = rows[j, k].Text;
+                            }
+                        }
+                        else
+                        {
+                            if (rows[j, k].Text == "" || game["AwayTeamScore"] == null)
+                            {
+                                away = null;
+                            }
+                            else
+                            {
+                                away = rows[j, k].Text;
+                            }
+                        }
+                    }
+                    if ((game["HomeTeamScore"] == null || game["HomeTeamScore"].ToString() == "") && (game["AwayTeamScore"] == null || game["AwayTeamScore"].ToString() == "") && (home != null && home != "") && (away != null && away != ""))
+                    {
+                        string query2 = "SELECT * FROM tblPredictions WHERE (User_id = " + rowUser["id"] + " AND Game_id = " + index[j] + ")";
+                        DataTable checkup = dbh.FillDT(query2);
+                        if (checkup.Rows.Count == 1)
+                        {
+                            dbh.Execute("UPDATE tblPredictions SET PredictedHomeScore=" + home + ", PredictedAwayScore=" + away + " WHERE (User_id=" +
+                            rowUser["id"] + " AND Game_id=" + index[j] + ")");
+                        }
+                        else
+                        {
+                            dbh.Execute("Insert Into tblPredictions (User_id, Game_id, PredictedHomeScore, PredictedAwayScore) VALUES ('" + rowUser["id"] + "', " + index[j] + ", '" + home + "', '" + away + "')");
+                        }
+                    }
+                }
+            }
+            else
+            {
+                DataTable dt = dbh.FillDT("SELECT * FROM tblPlayoffPredictions");
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    DataRow game = dt.Rows[i];
+                    for (int k = 0; k < lengthInnerArray; k++)
+                    {
+                        if (k == 0)
+                        {
+                            if (rows[i, k].Text == "" || game["ScoreHomeTeam"] == null)
+                            {
+                                home = null;
+                            }
+                            else
+                            {
+                                home = rows[i, k].Text;
+                            }
+                        }
+                        else
+                        {
+                            if (rows[i, k].Text == "" || game["ScoreAwayTeam"] == null)
+                            {
+                                away = null;
+                            }
+                            else
+                            {
+                                away = rows[i, k].Text;
+                            }
+                        }
+                    }
+                    if ((game["HomeTeamScore"] == null || game["HomeTeamScore"].ToString() == "") && (game["AwayTeamScore"] == null || game["AwayTeamScore"].ToString() == "") && (home != null && home != "") && (away != null && away != ""))
+                    {
+                        string query2 = "SELECT * FROM tblPlayoffPredictions WHERE (User_id = " + rowUser["id"] + " AND Game_id = " + index[i] + ")";
+                        DataTable checkup = dbh.FillDT(query2);
+                        if (checkup.Rows.Count == 1)
+                        {
+                            dbh.Execute("UPDATE tblPlayoffPredictions SET PredictedHomeScore=" + home + ", PredictedAwayScore=" + away + " WHERE (User_id=" +
+                            rowUser["id"] + " AND Game_id=" + index[i] + ")");
+                        }
+                        else
+                        {
+                            dbh.Execute("Insert Into tblPlayoffPredictions (User_id, Game_id, PredictedHomeScore, PredictedAwayScore) VALUES ('" + rowUser["id"] + "', " + index[i] + ", '" + home + "', '" + away + "')");
+                        }
+                    }
+                }
             }
 
         }
@@ -248,6 +665,85 @@ namespace ProjectFifaV2
             DataRow rowUser = tblUsers.Rows[0];
             string home = "";
             string away = "";
+
+            DataTable tblGames = dbh.FillDT("SELECT * FROM tblGames WHERE finished = 0");
+
+            DataTable playoffs = dbh.FillDT("SELECT * FROM tblPlayoffs");
+
+            if (tblGames.Rows.Count > 0)
+            {
+                for (int j = 0; j < lengthOutterArray; j++)
+                {
+                    DataRow game = tblGames.Rows[j];
+                    for (int k = 0; k < lengthInnerArray; k++)
+                    {
+                        if (k == 0)
+                        {
+                            if (rows[j, k].Text == "" || game["HomeTeamScore"] == null)
+                            {
+                                home = null;
+                            }
+                            else
+                            {
+                                home = rows[j, k].Text;
+                            }
+                        }
+                        else
+                        {
+                            if (rows[j, k].Text == "" || game["AwayTeamScore"] == null)
+                            {
+                                away = null;
+                            }
+                            else
+                            {
+                                away = rows[j, k].Text;
+                            }
+                        }
+                    }
+                    if ((game["HomeTeamScore"] == null || game["HomeTeamScore"].ToString() == "") && (game["AwayTeamScore"] == null || game["AwayTeamScore"].ToString() == "") && (home != null && home != "") && (away != null && away != ""))
+                    {
+                        dbh.Execute("Insert Into tblPredictions (User_id, Game_id, PredictedHomeScore, PredictedAwayScore) VALUES ('" + rowUser["id"] + "', " + index[j] + ", '" + home + "', '" + away + "')");
+                    }
+                }
+            }
+            else
+            {
+                DataTable dt = dbh.FillDT("SELECT * FROM tblPlayoffs WHERE playoffRankingA = 0 AND playoffRankingB = 0");
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    DataRow game = dt.Rows[i];
+                    for (int k = 0; k < lengthInnerArray; k++)
+                    {
+                        if (k == 0)
+                        {
+                            if (rows[i, k].Text == "" || game["ScoreHomeTeam"] == null)
+                            {
+                                home = null;
+                            }
+                            else
+                            {
+                                home = rows[i, k].Text;
+                            }
+                        }
+                        else
+                        {
+                            if (rows[i, k].Text == "" || game["ScoreAwayTeam"] == null)
+                            {
+                                away = null;
+                            }
+                            else
+                            {
+                                away = rows[i, k].Text;
+                            }
+                        }
+                    }
+                    if ((game["ScoreHomeTeam"] == null || game["ScoreHomeTeam"].ToString() == "") && (game["ScoreAwayTeam"] == null || game["ScoreAwayTeam"].ToString() == "") && (home != null && home != "") && (away != null && away != ""))
+                    {
+                        dbh.Execute("Insert Into tblPlayoffPredictions (User_Id, Game_Id, PredictedHomeScore, PredictedAwayScore) VALUES ('" + rowUser["id"] + "', " + index[i] + ", '" + home + "', '" + away + "')");
+                    }
+                }
+            }
+            /*
             DataTable games = dbh.FillDT("SELECT * FROM tblGames");
             for (int j = 0; j < lengthOutterArray; j++)
             {
@@ -286,6 +782,7 @@ namespace ProjectFifaV2
                     
                 }
             }
+            */
             if (DisableButtons())
             {
                 btnClearPrediction.Enabled = false;

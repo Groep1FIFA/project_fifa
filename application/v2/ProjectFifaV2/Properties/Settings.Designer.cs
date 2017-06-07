@@ -45,5 +45,14 @@ namespace ProjectFifaV2.Properties {
                 this["usrName"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("match")]
+        public string progress {
+            get {
+                return ((string)(this["progress"]));
+            }
+        }
     }
 }
