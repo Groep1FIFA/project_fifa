@@ -606,14 +606,213 @@ footer h3{
     .standings td{
         font-size: 1.5em;
     }
+    .add-player{
+        left: 190px;
+        width: 60px;
+    }
+    .player-add{
+        left: 300px;
+    }
+    .asigned-players .add-player{
+        left: 220px;
+        width: 100px;
+    }
+    .admin-schedule{
+        overflow-x: hidden;
+        min-width: 800px;
+    }
+    .admin-schedule td{
+        padding: 5px;
+    }
+    .admin-schedule .start-match{
+        padding: 10px 0;
+    }
     .standings .poule-name{
         width: 80px;
         font-size: 7em;
     }
 }
 @media screen and (max-width: 800px){
-    .container{
+    .container, .banner, .admin-banner{
         width: 600px;
+    }
+    header h1{
+        font-size: 3em;
+    }
+    .navigation a{
+        font-size: 2em;
+    }
+    .poule-name{
+        font-size: 2em;
+    }
+    .poule-teams li{
+        font-size: 0.7em;
+    }
+    .section-schedule .flex-between{
+        flex-direction: column;
+        align-items: center;
+    }
+    .schedule{
+        width: 100%;
+        margin: 0 0 50px 0;
+    }
+    .topscoorders{
+        width: 50%;
+    }
+    .team-name, .cross{
+        font-size: 2em;
+    }
+    .team-players{
+        font-size: 0.7em;
+    }
+    footer form input{
+        width: 100px;
+    }
+    .poule-phase{
+        height: 500px;
+        overflow-y: auto;
+    }
+    .poule-phase .match-data{
+        width: 99.8%;
+    }
+    .playoffs-title{
+        width: 600px;
+    }
+    .playoffs-schedule{
+        width: 580px;
+        padding: 20px 10px;
+    }
+    .standings .poule-name{
+        width: 60px;
+    }
+    .section-admin-schedule{
+        width: 600px;
+        overflow: auto;
+        border-right: 2px solid #FFF;
+    }
+    .admin-schedule{
+        margin: 0;
+    }
+    .admin-banner li{
+        padding: 10px;
+        font-size: 2em;
+    }
+    .section-admin-players .flex-between{
+        flex-direction: column;
+        align-items: center;
+    }
+    .unasigned-players, .asigned-players{
+        width: 65%;
+    }
+    .unasigned-players{
+        margin: 0 0 50px 0;
+    }
+    .login input{
+        width: 300px;
+    }
+    .poule-phase{
+        border: 2px solid #FFF;
+    }
+}
+@media screen and (max-width: 600px){
+    .container, .banner, .admin-banner{
+        width: 360px;
+    }
+    .admin-banner li{
+        width: 70px;
+        font-size: 1.3em;
+        margin: 10px 43px;
+    }
+    .unasigned-players, .asigned-players, .unasigned-teams, .asigned-teams{
+        width: 360px;
+    }
+    .unasigned-teams{
+        margin-bottom: 0;
+    }
+    .section-admin-poules .flex-between{
+        flex-direction: column;
+    }
+    .section-admin-schedule{
+        width: 360px;
+    }
+    header h1{
+        font-size: 2em;
+    }
+    .navigation a{
+        font-size: 1.5em;
+    }
+    .navigation li{
+        padding: 20px 10px;
+    }
+    .banner{
+        padding-top: 80px;
+    }
+    .banner .poule-name{
+        font-size: 1.3em;
+    }
+    .banner li{
+        width:  60px;
+        font-size: 0.5em;
+        padding: 5px 6px;
+    }
+    .poule-teams{
+        width: 80px;
+    }
+    .schedule{
+        width: 360px;
+        overflow-x: auto;
+    }
+    .schedule table{
+        width: 500px;
+    }
+    .topscoorders{
+        width:  360px;
+        height: 420px;
+    }
+    .team{
+        width: 120px;
+        margin: 10px;
+    }
+    .team-name{
+        width: 100%;
+        padding: 5px 0;
+    }
+    .team-players li{
+        padding: 5px 0;
+    }
+
+    footer .flex-between{
+        flex-direction: column;
+    }
+    footer form input{
+        width: 315px;
+        margin: 10px 0
+    }
+    .poule-phase table{
+        width: 500px;
+    }
+    .play-offs, .playoffs-title{
+        width: 360px;
+    }
+    .playoffs-schedule{
+        width:  94.5%;
+    }
+    .playoffs-schedule li{
+        width: 80px;
+        padding: 5px 0;
+    }
+    .standings .poule-name{
+        width: 40px;
+        font-size: 4em;
+    }
+    .standings th{
+        font-size: 1.2em;
+    }
+    .login{
+        padding: 20px;
+    }
+    .login input{
+        width: 200px;
     }
 }
 

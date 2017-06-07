@@ -22,7 +22,7 @@ $currentPage = "index.php";
         
         ?>
     </div>
-<section>
+<section class="section-schedule">
     <div class="flex-between">
         <div class="schedule">
             <h2>Schedule</h2>
@@ -243,6 +243,7 @@ $currentPage = "index.php";
 <section>
     <div class="teams align-center">
         <h2>Teams</h2>
+        <ul class="team-players"></ul>
         <div class="teams-container" id="teams">
             <?php
             $sqlSel = "SELECT * FROM tbl_teams";

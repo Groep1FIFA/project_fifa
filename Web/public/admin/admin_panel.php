@@ -94,7 +94,7 @@ else{
                 </div>
             </div>
         </section>
-        <section>
+        <section class="section-admin-players">
             <div class="players flex-between">
                 <div class="unasigned-players">
                     <h2>Unassigned Players</h2>
@@ -154,7 +154,7 @@ else{
                 </div>
             </div>
         </section>
-        <section>
+        <section class="section-admin-poules">
             <div class="poules flex-between">
                 <div class="unasigned-teams">
                     <h2>Unassigned Teams</h2>
@@ -266,6 +266,7 @@ else{
                                         echo "<option value=\"{$pouleATeam['team_nr']}\">{$pouleATeam['name']}</option>";
                                     }
                                 echo "</select>
+                                <input type=\"datetime-local\" name=\"date-time\" placeholder=\"Year-Month-Day Hour-Minute-Second\">
                                 <input type=\"hidden\" name=\"poule_id\" value=\"{$poule['id']}\">
                                 <input type=\"submit\" value=\"Create Match\">
                             </form>";
@@ -278,6 +279,7 @@ else{
             </div>
         </section>
         <section>
+            <div class="section-admin-schedule">
             <div class="schedule admin-schedule">
                 <div class="flex-between download_csv">
                     <h2>Schedule</h2>
@@ -364,6 +366,7 @@ else{
                 }
                 ?>
                 </table>
+            </div>
             </div>
             <div class="playoffs admin-playoffs">
                 <div class="flex-between download_csv">

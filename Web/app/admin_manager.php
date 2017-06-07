@@ -134,6 +134,7 @@ if (isset($_POST['form-type'])){
     elseif ($formType == 'create-match'){
         $team_nr1 = trim($_POST['team_nr1']);
         $team_nr2 = trim($_POST['team_nr2']);
+        $dateTime = trim($_POST['date-time']);
         $poule_id = trim($_POST['poule_id']);
 
         if($team_nr1 != $team_nr2) {
@@ -148,9 +149,9 @@ if (isset($_POST['form-type'])){
             $matchesCount2 = $sqlPre->rowCount();
 
             if ($matchesCount1 == 0 && $matchesCount2 == 0) {
-                $sqlIns = "INSERT INTO tbl_matches (team_id_a, team_id_b, poule_id) VALUES (:team_nr1, :team_nr2, :poule_id)";
+                $sqlIns = "INSERT INTO tbl_matches (team_id_a, team_id_b, poule_id, start_time) VALUES (:team_nr1, :team_nr2, :poule_id, :start_time)";
                 $sqlPre = $db_conn->prepare($sqlIns);
-                $sqlPre->execute(['team_nr1' => $team_nr1, 'team_nr2' => $team_nr2, 'poule_id' => $poule_id]);
+                $sqlPre->execute(['team_nr1' => $team_nr1, 'team_nr2' => $team_nr2, 'poule_id' => $poule_id, 'start_time' => $dateTime]);
 
                 $message = 'Match has been created';
                 header("Location: ../public/admin/admin_panel.php?message=$message");
