@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Data.SqlClient;
+using System.Threading;
 
 namespace ProjectFifaV2
 {
@@ -82,11 +83,20 @@ namespace ProjectFifaV2
             frmRanking.Show(); 
         }
 
+        private string TrimVerifier(string input)
+        {
+            char[] trimmer = { '*', '\'', '"', '{', '}', '[', ']' };
+            input = input.Trim(trimmer);
+            input = input.Trim();
+            return input;
+        }
+
         private void btnLogin_Click(object sender, EventArgs e)
         {
             dbh.TestConnection();
             dbh.OpenConnectionToDB();
-
+            txtUsername.Text = TrimVerifier(txtUsername.Text);
+            txtPassword.Text = TrimVerifier(txtPassword.Text);
             bool exist = false;
             string username = txtUsername.Text;
             string password = txtPassword.Text;
@@ -112,6 +122,7 @@ namespace ProjectFifaV2
 
                 if (admin)
                 {
+                    frmAdmin = new frmAdmin();
                     frmAdmin.Show();
                 }
                 else
