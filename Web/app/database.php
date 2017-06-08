@@ -6,8 +6,8 @@
  * Time: 11:08 AM
  */
 $db_conn = new PDO(
-    "mysql:host=mysql-fifaproject;dbname=fifaproject_project_fifa",
-    "fifaproject",
+    "mysql:host=mysql-fifaproject.alwaysdata.net;dbname=fifaproject_project_fifa",
+    "139419",
     "igoerwhjfgrweiogfje"
 );
 $db_conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
