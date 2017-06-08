@@ -43,15 +43,15 @@
             this.pnlScores.BackColor = System.Drawing.Color.White;
             this.pnlScores.Location = new System.Drawing.Point(22, 26);
             this.pnlScores.Name = "pnlScores";
-            this.pnlScores.Size = new System.Drawing.Size(351, 358);
+            this.pnlScores.Size = new System.Drawing.Size(361, 358);
             this.pnlScores.TabIndex = 0;
             // 
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(379, 12);
+            this.button1.Location = new System.Drawing.Point(389, 12);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(113, 60);
+            this.button1.Size = new System.Drawing.Size(133, 60);
             this.button1.TabIndex = 1;
             this.button1.Text = "Insert";
             this.button1.UseVisualStyleBackColor = true;
@@ -60,9 +60,9 @@
             // calculateScore
             // 
             this.calculateScore.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.calculateScore.Location = new System.Drawing.Point(379, 78);
+            this.calculateScore.Location = new System.Drawing.Point(389, 78);
             this.calculateScore.Name = "calculateScore";
-            this.calculateScore.Size = new System.Drawing.Size(113, 59);
+            this.calculateScore.Size = new System.Drawing.Size(133, 59);
             this.calculateScore.TabIndex = 2;
             this.calculateScore.Text = "CalculateScore";
             this.calculateScore.UseVisualStyleBackColor = true;
@@ -73,7 +73,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
-            this.ClientSize = new System.Drawing.Size(504, 538);
+            this.ClientSize = new System.Drawing.Size(534, 538);
             this.Controls.Add(this.calculateScore);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.pnlScores);

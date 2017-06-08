@@ -71,7 +71,7 @@ namespace ProjectFifaV2
                 OpenConnectionToDB();
                 int result = queryExecute.ExecuteNonQuery();
             }
-            catch (Exception ex)
+            catch
             {
 
             }
@@ -94,7 +94,7 @@ namespace ProjectFifaV2
             
                 int result = queryExecute.ExecuteNonQuery();
             }
-            catch (Exception ex)
+            catch
             {
 
             }

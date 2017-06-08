@@ -33,7 +33,7 @@ namespace ProjectFifaV2
             txtQuery.Text = null;
             txtPath = null;
             dgvAdminData.DataSource = null;
-            Hide();
+            this.Close();
         }
 
         private void btnExecute_Click(object sender, EventArgs e)
@@ -171,7 +171,7 @@ namespace ProjectFifaV2
 
                         }
 
-                        catch (Exception ex)
+                        catch
                         {
 
                         }
@@ -208,11 +208,10 @@ namespace ProjectFifaV2
             try {
                 ext = fileString.Substring(strLength - extensionLength, extensionLength);
             }
-            catch (Exception ex)
+            catch
             {
 
             }
-
             if (ext == extension)
             {
                 return true;
