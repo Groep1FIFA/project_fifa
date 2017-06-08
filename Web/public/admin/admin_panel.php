@@ -75,7 +75,13 @@ else{
 
                     foreach ($teams as $team){
                         echo
-                        "<li class=\"align-center team-item\">{$team['name']}</li>";
+                        "<li class=\"align-center team-item\">{$team['name']}
+                    <form class=\"delete\" action=\"../../app/admin_manager.php\" method=\"post\">
+                        <input type=\"hidden\" name=\"form-type\" value=\"delete\">
+                        <input type=\"hidden\" name=\"tbl-name\" value=\"tbl_teams\">
+                        <input type=\"hidden\" name=\"id\" value=\"{$team['id']}\">
+                        <input type=\"submit\" value=\"Delete\">
+                    </form></li>";
                     }
                     ?>
                 </ul>
@@ -112,6 +118,12 @@ else{
                                     <input type=\"hidden\" name=\"form-type\" value=\"addToTeam\">
                                     <input type=\"hidden\" name=\"player_id\" value=\"{$player['id']}\">
                                     <input class=\"add-player player-add\" type=\"submit\" value=\"Add\">
+                                </form>
+                                <form class=\"delete\" action=\"../../app/admin_manager.php\" method=\"post\">
+                                    <input type=\"hidden\" name=\"form-type\" value=\"delete\">
+                                    <input type=\"hidden\" name=\"tbl-name\" value=\"tbl_players\">
+                                    <input type=\"hidden\" name=\"id\" value=\"{$player['id']}\">
+                                    <input type=\"submit\" value=\"Delete\">
                                 </form>";
                             }
                             else{
@@ -359,7 +371,14 @@ else{
                                         <input type=\"hidden\" name=\"match-type\" value=\"poule\">
                                         <input type=\"submit\" value=\"Start Match\">
                                     </form>
-                                </td>";
+                                  </td>
+                                  <td class=\"delete-match\">
+                                    <form action=\"../../app/admin_manager.php\" method=\"post\">
+                                        <input type=\"hidden\" name=\"form-type\" value=\"delete\">
+                                        <input type=\"hidden\" name=\"tbl-name\" value=\"tbl_matches\">
+                                        <input type=\"hidden\" name=\"id\" value=\"{$match['id']}\">
+                                        <input type=\"submit\" value=\"Delete\">
+                                    </form></td>";
                         }
                         echo "</tr>";
                     }

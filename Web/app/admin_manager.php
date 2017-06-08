@@ -35,6 +35,24 @@ if (isset($_POST['form-type'])){
             header("Location: ../public/admin/admin_panel.php?message=$message");
         }
     }
+//DELETE TEAM
+    elseif ($formType == 'delete'){
+        if (!empty('tbl-name') && !empty('id')){
+            $tblName = trim($_POST['tbl-name']);
+            $id = trim($_POST['id']);
+
+            $sqlDel = "DELETE FROM $tblName WHERE id = :id";
+            $sqlPre = $db_conn->prepare($sqlDel);
+            $sqlPre->execute(['id' => $id]);
+
+            $message = 'Deleted succesfully';
+            header("Location: ../public/admin/admin_panel.php?message=$message");
+        }
+        else{
+            $message = 'Failed to delete';
+            header("Location: ../public/admin/admin_panel.php?message=$message");
+        }
+    }
 //ADD PLAYER TO TEAM
     elseif ($formType == 'addToTeam'){
         if (!empty($_POST['addToTeam'])){

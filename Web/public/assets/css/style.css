@@ -309,6 +309,32 @@ h3{
     width: 800px;
     margin: 0 auto;
 }
+.delete{
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 10%
+}
+.delete input{
+    position: absolute;
+    padding: 5px 20px;
+    background: rgb(60, 60, 60);
+    border: none;
+    cursor: pointer;
+    left: 50%;
+    transform: translate( -50%, -50%);
+    -ms-transform: translate( -50%, -50%);
+}
+.team-item:hover .delete, .players ul:hover .delete{
+    display: block;
+}
+.team-item .delete{
+    left: 0;
+    top: -15px;
+}
+.team-item .delete, .unasigned-players .delete input{
+    position: relative;
+}  
 .logout{
     position: absolute;
     top: 0;
@@ -484,19 +510,31 @@ h3{
 }
 .start-match{
     position: absolute;
-    width: 100%;
+    width: 50%;
     height: 22.7px;
-    left: 0;
+    right: 0;
     top: 0;
     display: none;
 }
-.start-match input{
+.delete-match{
+    left: 0;
+    position: absolute;
+    width: 50%;
+    height: 22.7px;
+    top: 0;
+    display: none;
+}
+.start-match input, .delete-match input{
     padding: 5px 20px;
     background: rgb(60, 60, 60);
     border: none;
     cursor: pointer;
 }
 .admin-schedule tr:hover .start-match{
+    display: block;
+    background: rgba(200, 200, 200, 0.6);
+}
+.admin-schedule tr:hover .delete-match{
     display: block;
     background: rgba(200, 200, 200, 0.6);
 }
