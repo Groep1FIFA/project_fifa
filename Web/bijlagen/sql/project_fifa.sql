@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Gegenereerd op: 31 mei 2017 om 14:01
+-- Gegenereerd op: 08 jun 2017 om 11:59
 -- Serverversie: 10.1.21-MariaDB
 -- PHP-versie: 5.6.30
 
@@ -56,38 +56,9 @@ CREATE TABLE `tbl_matches` (
   `score_team_a` int(10) UNSIGNED DEFAULT NULL,
   `score_team_b` int(10) UNSIGNED DEFAULT NULL,
   `start_time` datetime NOT NULL,
+  `started` tinyint(1) NOT NULL DEFAULT '0',
   `finished` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
-
---
--- Gegevens worden geëxporteerd voor tabel `tbl_matches`
---
-
-INSERT INTO `tbl_matches` (`id`, `team_id_a`, `team_id_b`, `poule_id`, `score_team_a`, `score_team_b`, `start_time`, `finished`) VALUES
-(1, 1, 2, 1, 1, 2, '2017-04-13 18:00:00', 0),
-(2, 1, 2, 2, 1, 3, '2017-05-04 00:00:00', 0),
-(3, 3, 4, 1, 1, 1, '2017-05-05 00:00:00', 0),
-(4, 3, 4, 2, 1, NULL, '2017-05-04 00:00:00', 0),
-(5, 1, 4, 1, 0, 0, '2017-05-04 00:00:00', 0),
-(6, 1, 4, 2, 0, 0, '2017-05-04 00:00:00', 0),
-(7, 2, 3, 1, 0, 0, '2017-05-04 00:00:00', 0),
-(8, 2, 3, 2, 0, 0, '2017-05-04 00:00:00', 0),
-(9, 1, 3, 1, 1, 0, '2017-05-04 00:00:00', 0),
-(10, 1, 3, 2, 5, 0, '2017-05-04 00:00:00', 0),
-(11, 2, 4, 1, 1, 0, '2017-05-04 00:00:00', 0),
-(12, 2, 4, 2, 0, 0, '2017-05-04 00:00:00', 0),
-(13, 1, 2, 3, 0, 0, '0000-00-00 00:00:00', 0),
-(14, 1, 2, 4, 0, 0, '0000-00-00 00:00:00', 0),
-(15, 3, 4, 3, 0, 0, '2017-05-02 00:00:00', 0),
-(16, 3, 4, 4, 0, 0, '2017-05-02 00:00:00', 0),
-(17, 1, 4, 3, 0, 0, '2017-05-03 00:00:00', 0),
-(18, 1, 4, 4, 0, 0, '2017-05-02 00:00:00', 0),
-(19, 2, 3, 3, 0, 0, '2017-05-02 00:00:00', 0),
-(20, 2, 3, 4, 0, 0, '2017-05-02 00:00:00', 0),
-(21, 1, 3, 3, 0, 0, '2017-05-03 00:00:00', 0),
-(22, 1, 3, 4, 0, 0, '2017-05-02 00:00:00', 0),
-(23, 2, 4, 3, 0, 0, '2017-05-02 00:00:00', 0),
-(24, 2, 4, 4, 0, 0, '2017-05-03 00:00:00', 0);
 
 -- --------------------------------------------------------
 
@@ -111,20 +82,19 @@ CREATE TABLE `tbl_players` (
 --
 
 INSERT INTO `tbl_players` (`id`, `student_id`, `team_id`, `first_name`, `last_name`, `goals`, `created_at`, `deleted_at`) VALUES
-(1, 'd123456', 1, 'Lasse', 'Schöne', 5, '2017-04-13 09:44:13', NULL),
-(2, 'd5435435', 1, 'Davy ', 'Klaassen', 5, '2017-04-13 09:44:13', NULL),
+(1, 'd123456', 1, 'Lasse', 'Schöne', 0, '2017-04-13 09:44:13', NULL),
+(2, 'd5435435', 1, 'Davy ', 'Klaassen', 0, '2017-04-13 09:44:13', NULL),
 (3, 'd545454', 1, 'Hakim ', 'Ziyech', 0, '2017-04-13 09:45:47', NULL),
 (4, 'd666555', 1, 'Kasper', 'Dolberg', 0, '2017-04-13 09:45:47', NULL),
 (5, 'd74745', 2, 'Luuk', 'de Jong', 6, '2017-04-13 09:48:23', NULL),
-(6, 'd987665', 2, 'Siem', 'de Jong', 1, '2017-04-13 09:48:23', NULL),
+(6, 'd987665', 2, 'Siem', 'de Jong', 0, '2017-04-13 09:48:23', NULL),
 (7, 'd11555', 2, 'Jeroen', 'Zoet', 0, '2017-04-13 09:48:23', NULL),
 (8, 'd544566', 2, 'Hector', 'Moreno', 0, '2017-04-13 09:48:23', NULL),
-(23, 'd233407', 3, 'Youri', 'van der Sande', 222, '2017-05-02 14:30:33', NULL),
+(23, 'd233407', 3, 'Youri', 'van der Sande', 0, '2017-05-02 14:30:33', NULL),
 (24, 'd228788', 9, 'Alex', 'Haverkamp', 0, '2017-05-02 14:31:07', NULL),
 (25, 'd167788', 9, 'Dave', 'van Oosterhout', 0, '2017-05-02 15:43:00', NULL),
-(26, 'd223344', 5, 'Bart', 'Roos', 1, '2017-05-02 16:26:48', NULL),
+(26, 'd223344', 5, 'Bart', 'Roos', 0, '2017-05-02 16:26:48', NULL),
 (27, 'd181761', NULL, 'Jurriaan', 'Roelen', 0, '2017-05-03 14:00:45', NULL),
-(28, 'd223013', NULL, 'Dion', 'Rodie', 0, '2017-05-04 08:44:30', NULL),
 (29, 'd229606', NULL, 'Armin', 'Fahim', 0, '2017-05-15 16:44:40', NULL),
 (30, 'd229294', NULL, 'Wouter', 'Mevius', 0, '2017-05-16 14:08:44', NULL),
 (31, 'bp153373', NULL, 'Bjorn', 'Patje', 0, '2017-05-16 16:17:30', NULL);
@@ -145,9 +115,10 @@ CREATE TABLE `tbl_playoffs` (
   `playoff_id_b` int(10) DEFAULT NULL,
   `playoff_ranking_a` int(10) NOT NULL DEFAULT '0',
   `playoff_ranking_b` int(10) NOT NULL DEFAULT '0',
-  `score_team_a` int(10) NOT NULL DEFAULT '0',
-  `score_team_b` int(10) NOT NULL DEFAULT '0',
+  `score_team_a` int(10) DEFAULT NULL,
+  `score_team_b` int(10) DEFAULT NULL,
   `start_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `started` tinyint(1) NOT NULL DEFAULT '0',
   `finished` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -155,14 +126,14 @@ CREATE TABLE `tbl_playoffs` (
 -- Gegevens worden geëxporteerd voor tabel `tbl_playoffs`
 --
 
-INSERT INTO `tbl_playoffs` (`id`, `poule_id_a`, `poule_id_b`, `poule_ranking_a`, `poule_ranking_b`, `playoff_id_a`, `playoff_id_b`, `playoff_ranking_a`, `playoff_ranking_b`, `score_team_a`, `score_team_b`, `start_time`, `finished`) VALUES
-(1, 1, 2, 1, 2, NULL, NULL, 0, 0, 0, 0, '2017-05-11 11:15:57', 0),
-(2, 1, 2, 2, 1, NULL, NULL, 0, 0, 0, 0, '2017-05-11 11:15:57', 0),
-(3, 3, 4, 1, 2, NULL, NULL, 0, 0, 0, 0, '2017-05-11 11:17:00', 0),
-(4, 3, 4, 2, 1, NULL, NULL, 0, 0, 0, 0, '2017-05-11 11:17:00', 0),
-(5, NULL, NULL, NULL, NULL, 1, 2, 1, 1, 0, 0, '2017-05-11 11:29:34', 0),
-(6, NULL, NULL, NULL, NULL, 3, 4, 1, 1, 0, 0, '2017-05-11 11:30:04', 0),
-(7, NULL, NULL, NULL, NULL, 5, 6, 2, 2, 0, 0, '2017-05-11 11:30:41', 0);
+INSERT INTO `tbl_playoffs` (`id`, `poule_id_a`, `poule_id_b`, `poule_ranking_a`, `poule_ranking_b`, `playoff_id_a`, `playoff_id_b`, `playoff_ranking_a`, `playoff_ranking_b`, `score_team_a`, `score_team_b`, `start_time`, `started`, `finished`) VALUES
+(1, 1, 2, 1, 2, NULL, NULL, 0, 0, NULL, NULL, '2017-05-11 11:15:57', 0, 0),
+(2, 1, 2, 2, 1, NULL, NULL, 0, 0, NULL, NULL, '2017-05-11 11:15:57', 0, 0),
+(3, 3, 4, 1, 2, NULL, NULL, 0, 0, NULL, NULL, '2017-05-11 11:17:00', 0, 0),
+(4, 3, 4, 2, 1, NULL, NULL, 0, 0, NULL, NULL, '2017-05-11 11:17:00', 0, 0),
+(5, NULL, NULL, NULL, NULL, 1, 2, 1, 1, NULL, NULL, '2017-05-11 11:29:34', 0, 0),
+(6, NULL, NULL, NULL, NULL, 3, 4, 1, 1, NULL, NULL, '2017-05-11 11:30:04', 0, 0),
+(7, NULL, NULL, NULL, NULL, 5, 6, 2, 2, NULL, NULL, '2017-05-11 11:30:41', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -215,22 +186,22 @@ CREATE TABLE `tbl_teams` (
 --
 
 INSERT INTO `tbl_teams` (`id`, `poule_id`, `name`, `points`, `team_nr`, `poule_ranking`, `playoff_ranking`, `playoff_id`, `win`, `lose`, `tie`, `goal_balance`, `created_at`, `deleted_at`) VALUES
-(1, 1, 'Ajax', 3, 1, 0, 0, 0, 1, 2, 0, -2, '2017-04-13 09:42:45', NULL),
-(2, 2, 'PSV', 69, 1, 0, 0, 5, 3, 0, 0, 4, '2017-04-13 09:42:45', NULL),
-(3, 1, 'FC Twente', 3, 2, 0, 0, 0, 1, 14, 0, -4, '2017-05-01 16:22:55', NULL),
+(1, 1, 'Ajax', 3, 1, 0, 0, 0, 0, 0, 0, 0, '2017-04-13 09:42:45', NULL),
+(2, 2, 'PSV', 69, 1, 0, 0, 0, 0, 0, 0, 0, '2017-04-13 09:42:45', NULL),
+(3, 1, 'FC Twente', 3, 2, 0, 0, 0, 0, 0, 0, 0, '2017-05-01 16:22:55', NULL),
 (4, 1, 'NEC', 0, 3, 0, 0, 0, 0, 0, 0, 0, '2017-05-02 13:56:57', NULL),
-(5, 1, 'NAC', 48, 4, 0, 0, 0, 3, 1, 0, 3, '2017-05-02 13:57:03', NULL),
+(5, 1, 'NAC', 48, 4, 0, 0, 0, 0, 0, 0, 0, '2017-05-02 13:57:03', NULL),
 (6, 2, 'Sparta', 0, 3, 0, 0, 0, 0, 0, 0, 0, '2017-05-02 16:27:08', NULL),
-(7, 2, 'Willem II', 0, 2, 0, 0, 0, 0, 1, 0, -1, '2017-05-03 13:44:24', NULL),
+(7, 2, 'Willem II', 0, 2, 0, 0, 0, 0, 0, 0, 0, '2017-05-03 13:44:24', NULL),
 (8, 2, 'Vitesse', 0, 4, 0, 0, 0, 0, 0, 0, 0, '2017-05-04 11:55:20', NULL),
-(9, 3, 'Feyenoord', 0, 1, 0, 0, 0, 0, 1, 0, -1, '2017-05-11 09:03:47', NULL),
-(10, 3, 'AZ', 0, 2, 0, 0, 0, 0, 1, 0, -1, '2017-05-11 12:13:37', NULL),
-(11, 4, 'Excelsior', 30, 1, 0, 0, 0, 1, 1, 0, 0, '2017-05-12 09:19:20', NULL),
-(12, 4, 'Heerenveen', 48, 2, 0, 0, 6, 2, 0, 0, 2, '2017-05-12 09:19:27', NULL),
+(9, 3, 'Feyenoord', 6, 1, 0, 0, 0, 0, 0, 0, 0, '2017-05-11 09:03:47', NULL),
+(10, 3, 'AZ', 0, 2, 0, 0, 0, 0, 0, 0, 0, '2017-05-11 12:13:37', NULL),
+(11, 4, 'Excelsior', 30, 1, 0, 0, 0, 0, 0, 0, 0, '2017-05-12 09:19:20', NULL),
+(12, 4, 'Heerenveen', 48, 2, 0, 0, 0, 0, 0, 0, 0, '2017-05-12 09:19:27', NULL),
 (13, 3, 'Groningen', 0, 3, 0, 0, 0, 0, 0, 0, 0, '2017-05-15 16:19:08', NULL),
 (14, 3, 'Roda JC', 0, 4, 0, 0, 0, 0, 0, 0, 0, '2017-05-16 13:57:22', NULL),
-(15, 4, 'Heracles', 0, 3, 0, 0, 0, 0, 0, 0, 0, '2017-05-16 13:59:56', NULL),
-(16, 4, 'FC Utrecht', 0, 4, 0, 0, 0, 0, 0, 0, 0, '2017-05-17 15:52:39', NULL);
+(18, 4, 'FC Utrecht', 0, 3, 0, 0, 0, 0, 0, 0, 0, '2017-06-08 10:59:46', NULL),
+(19, 4, 'Heracles', 0, 4, 0, 0, 0, 0, 0, 0, 0, '2017-06-08 11:40:43', NULL);
 
 --
 -- Indexen voor geëxporteerde tabellen
@@ -291,12 +262,12 @@ ALTER TABLE `tbl_admin`
 -- AUTO_INCREMENT voor een tabel `tbl_matches`
 --
 ALTER TABLE `tbl_matches`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 --
 -- AUTO_INCREMENT voor een tabel `tbl_players`
 --
 ALTER TABLE `tbl_players`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 --
 -- AUTO_INCREMENT voor een tabel `tbl_playoffs`
 --
@@ -311,7 +282,7 @@ ALTER TABLE `tbl_poules`
 -- AUTO_INCREMENT voor een tabel `tbl_teams`
 --
 ALTER TABLE `tbl_teams`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 --
 -- Beperkingen voor geëxporteerde tabellen
 --
