@@ -366,12 +366,12 @@ namespace ProjectFifaV2
 
                     for (int i = 0; i < quarterFinals.Rows.Count; i++)
                     {
-                        object[,] obj = { { "poule", quarterFinals.Rows[i]["pouleRankingA"] } };
-                        string quarterIntern1a = "SELECT * FROM tblTeams WHERE pouleRanking = @poule";
+                        object[,] obj = { { "id2", quarterFinals.Rows[i]["pouleIdA"] }, { "poule", quarterFinals.Rows[i]["pouleRankingA"] }, { "id", quarterFinals.Rows[i]["pouleIdA"] } };
+                        string quarterIntern1a = "SELECT * FROM tblTeams WHERE pouleId=@id2 AND pouleRanking = @poule";
                         DataTable quarterIntern1b = dbh.FillDT(quarterIntern1a, obj);
 
-                        object[,] obj2 = { { "poule", quarterFinals.Rows[i]["pouleRankingA"] } };
-                        string quarterIntern2a = "SELECT * FROM tblTeams WHERE pouleRanking = @poule";
+                        object[,] obj2 = { { "id3", quarterFinals.Rows[i]["pouleIdB"] }, { "poule", quarterFinals.Rows[i]["pouleRankingB"] }, { "id", quarterFinals.Rows[i]["pouleIdB"] } };
+                        string quarterIntern2a = "SELECT * FROM tblTeams WHERE pouleId=@id3 AND pouleRanking = @poule";
                         DataTable quarterIntern2b = dbh.FillDT(quarterIntern2a, obj2);
 
                         
@@ -425,12 +425,12 @@ namespace ProjectFifaV2
                     index = new int[lengthOutterArray];
                     for (int i = 0; i < semiFinals.Rows.Count; i++)
                     {
-                        object[,] obj = { { "rank", semiFinals.Rows[i]["pouleRankingA"] } };
-                        string semiIntern1a = "SELECT * FROM tblTeams WHERE pouleRanking = @rank";
+                        object[,] obj = { { "id2", semiFinals.Rows[i]["pouleIdA"] }, { "rank", semiFinals.Rows[i]["pouleRankingA"] } };
+                        string semiIntern1a = "SELECT * FROM tblTeams WHERE pouleId=@id2 AND pouleRanking = @rank";
                         DataTable semiIntern1b = dbh.FillDT(semiIntern1a, obj);
 
-                        object[,] obj2 = { { "rank", semiFinals.Rows[i]["pouleRankingB"] } };
-                        string semiIntern2a = "SELECT * FROM tblTeams WHERE pouleRanking = @rank";
+                        object[,] obj2 = { { "id3", semiFinals.Rows[i]["pouleIdB"] }, { "rank", semiFinals.Rows[i]["pouleRankingB"] } };
+                        string semiIntern2a = "SELECT * FROM tblTeams WHERE pouleId=@id3 AND pouleRanking = @rank";
                         DataTable semiIntern2b = dbh.FillDT(semiIntern2a, obj2);
 
                         DataRow match = semiFinals.Rows[i];
@@ -479,12 +479,12 @@ namespace ProjectFifaV2
 
                     for (int i = 0; i < finals.Rows.Count; i++)
                     {
-                        object[,] obj = { { "rank", finals.Rows[i]["pouleRankingA"] } };
-                        string finalIntern1a = "SELECT * FROM tblTeams WHERE pouleRanking =@rank";
+                        object[,] obj = { { "id2", finals.Rows[i]["pouleIdA"] }, { "rank", finals.Rows[i]["pouleRankingA"] } };
+                        string finalIntern1a = "SELECT * FROM tblTeams WHERE pouleId=@id2 AND pouleRanking =@rank";
                         DataTable finalIntern1b = dbh.FillDT(finalIntern1a, obj);
 
-                        object[,] obj2 = { { "rank", finals.Rows[i]["pouleRankingB"] } };
-                        string finalIntern2a = "SELECT * FROM tblTeams WHERE pouleRanking = @rank";
+                        object[,] obj2 = { { "id3", finals.Rows[i]["pouleIdB"] }, { "rank", finals.Rows[i]["pouleRankingB"] } };
+                        string finalIntern2a = "SELECT * FROM tblTeams WHERE pouleId=@id3 AND pouleRanking = @rank";
                         DataTable finalIntern2b = dbh.FillDT(finalIntern2a, obj2);
 
                         DataRow match = finals.Rows[i];
